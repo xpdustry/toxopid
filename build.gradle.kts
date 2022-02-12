@@ -39,6 +39,7 @@ indra {
     github("Xpdustry", "Toxopid"){
         ci(true)
         issues(true)
+        scm(true)
     }
 
     configurePublications{
@@ -65,4 +66,6 @@ indraPluginPublishing {
         "Gradle plugin for deploying mindustry mods/plugins + some build utilities.",
         listOf("xpdustry", "gradle-plugin", "mindustry")
     )
+
+    website("https://github.com/Xpdustry/Toxopid")
 }
