@@ -27,11 +27,3 @@ jobs:
       - name: Check artifact
         id: build
         run: ./gradlew check
-
-      - name: Publish tests
-        uses: "actions/upload-artifact@v2"
-        with:
-          name: test-results
-          path: |
-            build/reports/
-            */build/reports/
