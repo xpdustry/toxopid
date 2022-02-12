@@ -4,6 +4,7 @@ abstract class MindustryRepository(val repo: String) {
     companion object {
         @JvmField
         val MAIN: MindustryRepository = MainMindustryRepository
+
         @JvmField
         val BE: MindustryRepository = BeMindustryRepository
     }

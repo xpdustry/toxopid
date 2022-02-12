@@ -1,13 +1,11 @@
 package fr.xpdustry.toxopid.util
 
-import groovy.json.JsonSlurper
+import org.gradle.internal.impldep.com.google.gson.Gson
+import org.hjson.JsonValue
 import java.io.File
 
-/**
- * Utility class to easily represent mod/plugin data.
- */
-@Suppress("UNCHECKED_CAST")
-data class PluginMetadata(
+/** Utility class to easily represent mod/plugin data. */
+data class ModMetadata(
     val name: String,
     val description: String,
     val author: String,
@@ -20,19 +18,11 @@ data class PluginMetadata(
     val java: Boolean = true,
     val dependencies: List<String> = emptyList()
 ) {
-    private constructor(map: Map<String, Any>) : this(
-        map["name"]!! as String,
-        map["description"]!! as String,
-        map["author"]!! as String,
-        map["version"]!! as String,
-        map["main"]!! as String,
-        map["repo"]!! as String?,
-        map.getOrDefault("displayName", map["name"]) as String,
-        map.getOrDefault("minGameVersion", "v126") as String,
-        map.getOrDefault("hidden", true) as Boolean,
-        map.getOrDefault("java", true) as Boolean,
-        if("dependencies" in map) (map["dependencies"] as Iterable<String>).toList() else emptyList<String>()
-    )
+    companion object {
+        private val GSON = Gson()
 
-    constructor(file: File) : this(JsonSlurper().parseText(file.readText()) as Map<String, Any>)
+        @JvmStatic
+        fun of(file: File): ModMetadata =
+            GSON.fromJson(JsonValue.readHjson(file.readText()).toString(), ModMetadata::class.java)
+    }
 }

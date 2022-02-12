@@ -18,28 +18,31 @@ abstract class MindustryExec @Inject constructor(@get:Internal val target: Mindu
     init {
         mainClass.set(target.mainClass)
         artifacts.set(listOf(project.tasks.named("shadowJar", ShadowJar::class.java).get()))
-        dependsOn.addAll(artifacts.get())
     }
 
     @TaskAction
     override fun exec() {
+        dependsOn.addAll(artifacts.get())
+
         val extension = project.extensions.getByType(ToxopidExtension::class.java)
         val version = extension.mindustryRuntimeVersion.getOrElse(extension.mindustryCompileVersion.get())
 
-        val mindustry = extension.repository.get().getArtifactName(target, version)
-        val mindustryUrl = URL("https://github.com/${extension.repository.get().repo}/releases/download/$version/$mindustry")
+        val mindustry = extension.mindustryRepository.get().getArtifactName(target, version)
+        val mindustryUrl = URL("https://github.com/${extension.mindustryRepository.get().repo}/releases/download/$version/$mindustry")
         val mindustryFile = temporaryDir.resolve(mindustry)
 
         val metadata = Metadata(mindustryUrl.toString(), extension.modDependencies.get())
         val metadataFile = temporaryDir.resolve("metadata.txt")
-        val oldMetadata = if(metadataFile.exists()) metadataFile.readText() else null
+        val oldMetadata = if (metadataFile.exists()) metadataFile.readText() else null
 
         val modDirectory = temporaryDir.resolve(target.modDirectory).apply { mkdirs() }
 
         if (oldMetadata == null || metadata.toString() != oldMetadata) {
             project.delete(temporaryDir.listFiles { f -> f.name != "metadata.txt" })
             mindustryUrl.downloadTo(mindustryFile)
-            extension.modDependencies.get().forEach { it.url.downloadTo(modDirectory.resolve(it.artifact ?: "${it.repo.replace('/', '-')}.zip")) }
+            extension.modDependencies.get().forEach {
+                it.url.downloadTo(modDirectory.resolve(it.artifact ?: "${it.repo.replace('/', '-')}.zip"))
+            }
         }
 
         artifacts.get().forEach {

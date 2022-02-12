@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package fr.xpdustry.toxopid
 
 import com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
@@ -10,6 +8,7 @@ import fr.xpdustry.toxopid.task.MindustryExec
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.component.AdhocComponentWithVariants
+import java.io.FileNotFoundException
 
 @Suppress("unused")
 class ToxopidPlugin : Plugin<Project> {
@@ -37,7 +36,16 @@ class ToxopidPlugin : Plugin<Project> {
         }
 
         val shadow = project.tasks.named("shadowJar", ShadowJar::class.java) {
-            if(extension.modFile.isPresent) it.from(extension.modFile.get())
+            val file = if (extension.modFile.isPresent) {
+                extension.modFile.get().asFile
+            } else {
+                project.rootDir.listFiles()?.find { f -> f.name.matches(Regex("^(mod|plugin)\\.h?json$")) }
+            }
+
+            if (file == null || !file.exists())
+                throw FileNotFoundException("[mod|plugin].[h]json file not found.")
+
+            it.from(file)
         }
 
         project.tasks.getByName("build").dependsOn(shadow.get())
@@ -49,7 +57,7 @@ class ToxopidPlugin : Plugin<Project> {
             it.group = TOXOPID_GROUP_NAME
         }
 
-        if(!extension.publishShadowJar.get()){
+        if (!extension.publishShadowJar.get()) {
             // Ugly way to avoid publishing shadow artifacts to maven repos
             // -> https://github.com/johnrengelman/shadow/issues/651
             project.components.withType(AdhocComponentWithVariants::class.java).forEach { c ->

@@ -1,29 +1,18 @@
 # Toxopid
 
-![Xpdustry Toxopid](https://repo.xpdustry.fr/api/badge/latest/releases/fr/xpdustry/toxopid?color=00FFFF&name=Toxopid&prefix=v)
-
 ## Description
 
 Gradle plugin for deploying mindustry mods/plugins + some build utilities.
 
 ## Usage
 
-Put this in your `settings.gradle`:
+/!\ Waiting gradle approval for publishing, the plugin is unusable for now...
 
-```gradle
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven { url = uri("https://repo.xpdustry.fr/releases") }
-    }
-}
-```
-
-Then apply the plugin in your `build.gradle` with:
+Apply the plugin in your `build.gradle` with:
 
 ```gradle
 plugins {
-    id("fr.xpdustry.toxopid") version "1.0.0"
+    id("fr.xpdustry.toxopid") version "1.1.0"
 }
 ```
 
@@ -46,7 +35,7 @@ toxopid {
 
 - You can include external dependencies from GitHub by defining a list of `MindustryDependency` on `modDependencies`.
 
-- Don't forget to specify the `[mod|plugin].[h]json` location with `modFile`. It's set to `./plugin.json` by default for some reasons.
+- The plugin will look for a `./[mod|plugin].[h]json` and include it in the jar, but you can specify its location with `modFile`.
 
 - Mods/Plugins are bundled with shadow, no need to include them manually.
 
