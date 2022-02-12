@@ -21,7 +21,7 @@ pluginManagement {
 
 Then apply the plugin in your `build.gradle` with:
 
-```
+```gradle
 plugins {
     id("fr.xpdustry.toxopid") version "1.0.0"
 }
