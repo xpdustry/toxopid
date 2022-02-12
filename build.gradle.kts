@@ -28,6 +28,35 @@ dependencies {
     compileOnly(kotlin("stdlib"))
 }
 
+signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
+}
+
+indra {
+    mitLicense()
+    github("Xpdustry", "Toxopid"){
+        ci(true)
+        issues(true)
+    }
+
+    configurePublications{
+        pom{
+            organization{
+                name.set("Xpdustry")
+                url.set("https://www.xpdustry.fr")
+            }
+
+            developers {
+                developer {
+                    id.set("Phinner")
+                }
+            }
+        }
+    }
+}
+
 indraPluginPublishing {
     plugin(
         "fr.xpdustry.toxopid",
@@ -36,6 +65,4 @@ indraPluginPublishing {
         "Gradle plugin for deploying mindustry mods/plugins + some build utilities.",
         listOf("xpdustry", "gradle-plugin", "mindustry")
     )
-
-    website("https://github.com/Xpdustry/Toxopid")
 }
