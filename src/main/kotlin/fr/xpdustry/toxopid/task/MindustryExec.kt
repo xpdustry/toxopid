@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @Suppress("HasPlatformType")
 abstract class MindustryExec @Inject constructor(@get:Internal val target: MindustryTarget) : JavaExec() {
-    @get:Optional
+    @get:Input @get:Optional
     val artifacts = project.objects.listProperty(Jar::class.java)
 
     init {
@@ -24,7 +24,7 @@ abstract class MindustryExec @Inject constructor(@get:Internal val target: Mindu
     @TaskAction
     override fun exec() {
         val extension = project.extensions.getByType(ToxopidExtension::class.java)
-        val version = extension.runtimeVersion.getOrElse(extension.compileVersion.get())
+        val version = extension.mindustryRuntimeVersion.getOrElse(extension.mindustryCompileVersion.get())
 
         val mindustry = extension.repository.get().getArtifactName(target, version)
         val mindustryUrl = URL("https://github.com/${extension.repository.get().repo}/releases/download/$version/$mindustry")
@@ -57,7 +57,8 @@ abstract class MindustryExec @Inject constructor(@get:Internal val target: Mindu
         super.exec()
     }
 
-    data class Metadata(
+    /** Temporary data for refreshing the files. */
+    private data class Metadata(
         val url: String,
         val dependencies: List<MindustryDependency> = emptyList()
     )

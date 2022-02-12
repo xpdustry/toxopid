@@ -10,9 +10,11 @@ open class ToxopidExtension(project: Project) {
     /** The remote Mindustry repository. */
     val repository = project.objects.property(MindustryRepository::class.java)
     /** Mindustry compile version. */
-    val compileVersion = project.objects.property(String::class.java)
-    /** Mindustry runtime version. If not specified, fallbacks to [compileVersion]. */
-    val runtimeVersion = project.objects.property(String::class.java)
+    val mindustryCompileVersion = project.objects.property(String::class.java)
+    /** Arc compile version. If not specified, fallbacks to [mindustryCompileVersion]. */
+    val arcCompileVersion = project.objects.property(String::class.java)
+    /** Mindustry runtime version. If not specified, fallbacks to [mindustryCompileVersion]. */
+    val mindustryRuntimeVersion = project.objects.property(String::class.java)
     /** `[ mod|plugin ].[ h ]json` file. */
     val modFile = project.objects.fileProperty()
     /** List of dependencies grabbed from GitHub. */
@@ -25,7 +27,7 @@ open class ToxopidExtension(project: Project) {
     init {
         target.convention(MindustryTarget.DESKTOP)
         repository.convention(MindustryRepository.MAIN)
-        compileVersion.convention("v126.2")
+        mindustryCompileVersion.convention("v126.2")
         modFile.convention(project.fileProvider(project.file("./plugin.json")))
         modDependencies.convention(emptyList())
         addMindustryDependencies.convention(true)

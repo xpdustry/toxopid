@@ -24,17 +24,21 @@ class ToxopidPlugin : Plugin<Project> {
         val extension = project.extensions.create(TOXOPID_EXTENSION_NAME, ToxopidExtension::class.java, project)
 
         if (extension.addMindustryDependencies.get()) {
+            val arcCompileVersion = extension.arcCompileVersion.getOrElse(extension.mindustryCompileVersion.get())
+            project.repositories.mavenCentral()
             project.repositories.maven { it.url = project.uri("https://www.jitpack.io") }
-            project.mindustryDependency("com.github.Anuken.Arc:arc-core:${extension.compileVersion.get()}")
-            project.mindustryDependency("com.github.Anuken.Mindustry:core:${extension.compileVersion.get()}")
-            project.mindustryDependency("com.github.Anuken.Mindustry:annotations:${extension.compileVersion.get()}")
+            project.mindustryDependency("com.github.Anuken.Arc:arc-core:$arcCompileVersion")
+            project.mindustryDependency("com.github.Anuken.Mindustry:core:${extension.mindustryCompileVersion.get()}")
+            project.mindustryDependency("com.github.Anuken.Mindustry:annotations:${extension.mindustryCompileVersion.get()}")
             if (extension.target.get() == MindustryTarget.HEADLESS) {
-                project.mindustryDependency("com.github.Anuken.Arc:backend-headless:${extension.compileVersion.get()}")
-                project.mindustryDependency("com.github.Anuken.Mindustry:server:${extension.compileVersion.get()}")
+                project.mindustryDependency("com.github.Anuken.Arc:backend-headless:$arcCompileVersion")
+                project.mindustryDependency("com.github.Anuken.Mindustry:server:${extension.mindustryCompileVersion.get()}")
             }
         }
 
-        val shadow = project.tasks.named("shadowJar", ShadowJar::class.java) { it.from(extension.modFile.get()) }
+        val shadow = project.tasks.named("shadowJar", ShadowJar::class.java) {
+            if(extension.modFile.isPresent) it.from(extension.modFile.get())
+        }
 
         project.tasks.getByName("build").dependsOn(shadow.get())
 

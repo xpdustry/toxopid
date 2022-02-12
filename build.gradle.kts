@@ -5,7 +5,12 @@ plugins {
 }
 
 group = "fr.xpdustry"
-version = "1.0"
+version = "1.0.0"
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
 repositories {
     mavenCentral()
@@ -39,6 +44,13 @@ publishing {
                 url.set("https://www.xpdustry.fr")
             }
 
+            licenses {
+                license {
+                    name.set("MIT License")
+                    url.set("https://mit-license.org/")
+                }
+            }
+
             developers {
                 developer { name.set("Phinner") }
             }
@@ -46,7 +58,7 @@ publishing {
     }
 
     repositories.maven {
-        name = "releases"
+        name = "xpdustry"
         url = uri("https://repo.xpdustry.fr/releases")
 
         credentials {
