@@ -60,7 +60,7 @@ indra {
 
 indraPluginPublishing {
     plugin(
-        "fr.xpdustry.toxopid",
+        "toxopid",
         "fr.xpdustry.toxopid.ToxopidPlugin",
         "Xpdustry Mindustry Gradle plugin",
         "Gradle plugin for deploying mindustry mods/plugins + some build utilities.",
