@@ -48,4 +48,6 @@ toxopid {
 
 - Don't forget to specify the `[mod|plugin].[h]json` location with `modFile`. It's set to `./plugin.json` by default for some reasons.
 
+- Mods/Plugins are bundled with shadow, no need to include them manually.
+
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy).
