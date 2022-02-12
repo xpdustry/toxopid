@@ -47,3 +47,5 @@ toxopid {
 - You can include external dependencies from GitHub by defining a list of `MindustryDependency` on `modDependencies`.
 
 - Don't forget to specify the `[mod|plugin].[h]json` location with `modFile`. It's set to `./plugin.json` by default for some reasons.
+
+> Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy).
