@@ -1,12 +1,24 @@
 # Toxopid
 
+![Xpdustry Toxopid](https://repo.xpdustry.fr/api/badge/latest/releases/fr/xpdustry/toxopid?color=00FFFF&name=Toxopid&prefix=v)
+[![Commit](https://github.com/Xpdustry/Toxopid/actions/workflows/commit.yml/badge.svg?branch=master)](https://github.com/Xpdustry/Toxopid/actions/workflows/commit.yml)
+
 ## Description
 
 Gradle plugin for deploying mindustry mods/plugins + some build utilities.
 
 ## Usage
 
-/!\ Waiting gradle approval for publishing, the plugin is unusable for now...
+/!\ Waiting gradle approval for publishing, you will have to add this your `settings.gradle`:
+
+```gradle
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = uri("https://repo.xpdustry.fr/releases") }
+    }
+}
+```
 
 Apply the plugin in your `build.gradle` with:
 
