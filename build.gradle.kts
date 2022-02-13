@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "fr.xpdustry"
-version = "1.2.1"
+version = "1.3.0" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
 
 java {
     withJavadocJar()
@@ -34,6 +34,7 @@ signing {
 }
 
 indra {
+    publishSnapshotsTo("xpdustry", "https://repo.xpdustry.fr/snapshots")
     publishReleasesTo("xpdustry", "https://repo.xpdustry.fr/releases")
 
     mitLicense()

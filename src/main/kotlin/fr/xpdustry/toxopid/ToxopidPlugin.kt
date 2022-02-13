@@ -2,7 +2,7 @@ package fr.xpdustry.toxopid
 
 import com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import fr.xpdustry.toxopid.extension.MindustryTarget
+import fr.xpdustry.toxopid.extension.ModTarget
 import fr.xpdustry.toxopid.extension.ToxopidExtension
 import fr.xpdustry.toxopid.task.MindustryExec
 import org.gradle.api.Plugin
@@ -21,14 +21,14 @@ class ToxopidPlugin : Plugin<Project> {
 
         val extension = project.extensions.create(TOXOPID_EXTENSION_NAME, ToxopidExtension::class.java, project)
 
-        if (extension.addMindustryDependencies.get()) {
+        if (extension.mindustryBuildDependencies.get()) {
             val arcCompileVersion = extension.arcCompileVersion.getOrElse(extension.mindustryCompileVersion.get())
             project.repositories.mavenCentral()
             project.repositories.maven { it.url = project.uri("https://www.jitpack.io") }
             project.mindustryDependency("com.github.Anuken.Arc:arc-core:$arcCompileVersion")
             project.mindustryDependency("com.github.Anuken.Mindustry:core:${extension.mindustryCompileVersion.get()}")
             project.mindustryDependency("com.github.Anuken.Mindustry:annotations:${extension.mindustryCompileVersion.get()}")
-            if (extension.target.get() == MindustryTarget.HEADLESS) {
+            if (extension.modTarget.get() == ModTarget.HEADLESS) {
                 project.mindustryDependency("com.github.Anuken.Arc:backend-headless:$arcCompileVersion")
                 project.mindustryDependency("com.github.Anuken.Mindustry:server:${extension.mindustryCompileVersion.get()}")
             }
@@ -41,17 +41,14 @@ class ToxopidPlugin : Plugin<Project> {
                 project.rootDir.listFiles()?.find { f -> f.name.matches(Regex("^(mod|plugin)\\.h?json$")) }
             }
 
-            if (file == null || !file.exists())
-                it.logger.debug("[mod|plugin].[h]json file not found.")
-
-            it.from(file)
+            if (file != null && file.exists()) it.from(file)
         }
 
         project.tasks.getByName("build").dependsOn(shadow.get())
 
         project.configure(listOf(
-            project.tasks.create("runMindustryServer", MindustryExec::class.java, MindustryTarget.HEADLESS),
-            project.tasks.create("runMindustryClient", MindustryExec::class.java, MindustryTarget.DESKTOP)
+            project.tasks.create("runMindustryServer", MindustryExec::class.java, ModTarget.HEADLESS),
+            project.tasks.create("runMindustryClient", MindustryExec::class.java, ModTarget.DESKTOP)
         )) {
             it.group = TOXOPID_GROUP_NAME
         }
