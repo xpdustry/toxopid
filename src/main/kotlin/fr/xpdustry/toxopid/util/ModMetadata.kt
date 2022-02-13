@@ -1,6 +1,6 @@
 package fr.xpdustry.toxopid.util
 
-import org.gradle.internal.impldep.com.google.gson.Gson
+import org.hjson.JsonObject
 import org.hjson.JsonValue
 import java.io.File
 
@@ -18,11 +18,19 @@ data class ModMetadata(
     val java: Boolean = true,
     val dependencies: List<String> = emptyList()
 ) {
-    companion object {
-        private val GSON = Gson()
+    private constructor(json: JsonObject) : this(
+        json["name"]!!.asString(),
+        json["description"]!!.asString(),
+        json["author"]!!.asString(),
+        json["version"]!!.asString(),
+        json["main"]!!.asString(),
+        json["repo"]?.asString(),
+        json.getString("displayName", json["name"].asString()),
+        json.getString("minGameVersion", "v126"),
+        json.getBoolean("hidden", true),
+        json.getBoolean("java", true),
+        json["dependencies"]?.asArray()?.map { it.asString()!! } ?: emptyList()
+    )
 
-        @JvmStatic
-        fun of(file: File): ModMetadata =
-            GSON.fromJson(JsonValue.readHjson(file.readText()).toString(), ModMetadata::class.java)
-    }
+    constructor(file: File) : this(JsonValue.readHjson(file.readText()).asObject())
 }

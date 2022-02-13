@@ -8,7 +8,6 @@ import fr.xpdustry.toxopid.task.MindustryExec
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.component.AdhocComponentWithVariants
-import java.io.FileNotFoundException
 
 @Suppress("unused")
 class ToxopidPlugin : Plugin<Project> {
@@ -43,7 +42,7 @@ class ToxopidPlugin : Plugin<Project> {
             }
 
             if (file == null || !file.exists())
-                throw FileNotFoundException("[mod|plugin].[h]json file not found.")
+                it.logger.debug("[mod|plugin].[h]json file not found.")
 
             it.from(file)
         }

@@ -1,1 +1,1 @@
-- Random improvements
+- Removed static constructor of `ModMetadata`

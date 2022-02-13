@@ -38,7 +38,7 @@ jobs:
         run: ./gradlew build
 
       - name: Publish artifact
-        run: ./gradlew publishPlugins
+        run: ./gradlew publish publishPlugins
         env:
           ORG_GRADLE_PROJECT_signingKey:            "${{ secrets.XPDUSTRY_SIGNING_KEY }}"
           ORG_GRADLE_PROJECT_signingPassword:       "${{ secrets.XPDUSTRY_SIGNING_PASSWORD }}"

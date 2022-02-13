@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "fr.xpdustry"
-version = "1.1.0"
+version = "1.2.0"
 
 java {
     withJavadocJar()
@@ -21,7 +21,6 @@ repositories {
 
 dependencies {
     implementation("org.hjson:hjson:3.0.0")
-    implementation("com.google.code.gson:gson:2.9.0")
     implementation("gradle.plugin.com.github.johnrengelman:shadow:7.1.2")
 
     compileOnly(gradleApi())
@@ -35,7 +34,10 @@ signing {
 }
 
 indra {
+    publishReleasesTo("releases", "https://repo.xpdustry.fr/releases")
+
     mitLicense()
+
     github("Xpdustry", "Toxopid"){
         ci(true)
         issues(true)
@@ -52,6 +54,7 @@ indra {
             developers {
                 developer {
                     id.set("Phinner")
+                    timezone.set("Europe/Brussels")
                 }
             }
         }
