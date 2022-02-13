@@ -24,7 +24,7 @@ Apply the plugin in your `build.gradle` with:
 
 ```gradle
 plugins {
-    id("fr.xpdustry.toxopid") version "1.1.0"
+    id("fr.xpdustry.toxopid") version "1.3.0"
 }
 ```
 
