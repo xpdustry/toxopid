@@ -34,7 +34,7 @@ signing {
 }
 
 indra {
-    publishReleasesTo("releases", "https://repo.xpdustry.fr/releases")
+    publishReleasesTo("xpdustry", "https://repo.xpdustry.fr/releases")
 
     mitLicense()
 
