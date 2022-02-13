@@ -38,15 +38,15 @@ indra {
 
     mitLicense()
 
-    github("Xpdustry", "Toxopid"){
+    github("Xpdustry", "Toxopid") {
         ci(true)
         issues(true)
         scm(true)
     }
 
-    configurePublications{
-        pom{
-            organization{
+    configurePublications {
+        pom {
+            organization {
                 name.set("Xpdustry")
                 url.set("https://www.xpdustry.fr")
             }

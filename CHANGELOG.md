@@ -1,1 +1,1 @@
-- Removed static constructor of `ModMetadata`
+- Bug fixes
