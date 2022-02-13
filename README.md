@@ -1,7 +1,7 @@
 # Toxopid
 
 ![Xpdustry Toxopid](https://repo.xpdustry.fr/api/badge/latest/releases/fr/xpdustry/toxopid?color=00FFFF&name=Toxopid&prefix=v)
-[![Commit](https://github.com/Xpdustry/Toxopid/actions/workflows/commit.yml/badge.svg?branch=master)](https://github.com/Xpdustry/Toxopid/actions/workflows/commit.yml)
+[![Commit](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml)
 
 ## Description
 
@@ -41,14 +41,14 @@ toxopid {
 }
 ```
 
-- Toxopid automatically include mindustry dependencies, so you don't have to worry about that in your build script anymore, but if you wish to disable that, set `addMindustryDependencies` to `false`.
+- Toxopid automatically include mindustry dependencies, so you don't have to worry about that in your build script anymore, but if you wish to disable that, set `mindustryBuildDependencies` to `false`.
 
-- If you want to run your plugin/mod on a BE server, set `repository` to `MindustryRepository.BE` and set `mindustryRuntimeVersion` to the BE build number.
+- If you want to run your plugin/mod on a BE server, set `mindustryRepository` to `MindustryRepository.BE` and set `mindustryRuntimeVersion` to the BE build number.
 
-- You can include external dependencies from GitHub by defining a list of `MindustryDependency` on `modDependencies`.
+- You can include external dependencies from GitHub by defining a list of `ModDependency` on `modDependencies`.
 
-- The plugin will look for a `./[mod|plugin].[h]json` and include it in the jar, but you can specify its location with `modFile`.
+- The plugin will look for a `./[mod|plugin].[h]json` in the root dir of the project and include it automatically in the shadow jar.
 
-- Mods/Plugins are bundled with shadow, no need to include them manually.
+- Mods/Plugins are bundled with shadow, no need to use the fat jar trick. You just have to use `implementation` alone.
 
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy).

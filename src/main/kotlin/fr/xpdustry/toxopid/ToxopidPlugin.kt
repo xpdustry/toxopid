@@ -35,13 +35,8 @@ class ToxopidPlugin : Plugin<Project> {
         }
 
         val shadow = project.tasks.named("shadowJar", ShadowJar::class.java) {
-            val file = if (extension.modFile.isPresent) {
-                extension.modFile.get().asFile
-            } else {
-                project.rootDir.listFiles()?.find { f -> f.name.matches(Regex("^(mod|plugin)\\.h?json$")) }
-            }
-
-            if (file != null && file.exists()) it.from(file)
+            val file = project.rootDir.listFiles()?.find { f -> f.name.matches(Regex("^(mod|plugin)\\.h?json$")) }
+            if (file != null) it.from(file)
         }
 
         project.tasks.getByName("build").dependsOn(shadow.get())

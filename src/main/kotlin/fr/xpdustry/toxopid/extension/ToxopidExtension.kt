@@ -19,9 +19,6 @@ open class ToxopidExtension(project: Project) {
     /** Arc compile version. If not specified, fallbacks to [mindustryCompileVersion]. */
     val arcCompileVersion = project.objects.property(String::class.java)
 
-    /** `[ mod|plugin ].[ h ]json` file. */
-    val modFile = project.objects.fileProperty()
-
     /** The build target. */
     val modTarget = project.objects.property(ModTarget::class.java)
 
