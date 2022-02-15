@@ -13,7 +13,7 @@ data class ModMetadata(
     val main: String,
     val repo: String?,
     val displayName: String = name,
-    val minGameVersion: String = "v126",
+    val minGameVersion: String = "v126.2",
     val hidden: Boolean = true,
     val java: Boolean = true,
     val dependencies: List<String> = emptyList()
@@ -26,7 +26,7 @@ data class ModMetadata(
         json["main"]!!.asString(),
         json["repo"]?.asString(),
         json.getString("displayName", json["name"].asString()),
-        json.getString("minGameVersion", "v126"),
+        json.getString("minGameVersion", "v126.2"),
         json.getBoolean("hidden", true),
         json.getBoolean("java", true),
         json["dependencies"]?.asArray()?.map { it.asString()!! } ?: emptyList()

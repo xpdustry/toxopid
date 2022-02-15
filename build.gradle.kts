@@ -1,18 +1,14 @@
 plugins {
-    `java-gradle-plugin`
-    `maven-publish`
     kotlin("jvm") version "1.6.10"
+    `java-gradle-plugin`
     id("com.gradle.plugin-publish") version "0.20.0"
-    id("net.kyori.indra.publishing.gradle-plugin") version "2.1.0"
+    id("net.kyori.indra") version "2.1.1"
+    id("net.kyori.indra.publishing.gradle-plugin") version "2.1.1"
+    id("com.github.ben-manes.versions") version "0.42.0"
 }
 
 group = "fr.xpdustry"
-version = "1.3.0" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
+version = "1.3.1" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
 
 repositories {
     mavenCentral()
@@ -22,9 +18,8 @@ repositories {
 dependencies {
     implementation("org.hjson:hjson:3.0.0")
     implementation("gradle.plugin.com.github.johnrengelman:shadow:7.1.2")
-
-    compileOnly(gradleApi())
-    compileOnly(kotlin("stdlib"))
+    implementation(gradleApi())
+    implementation(kotlin("stdlib"))
 }
 
 signing {
@@ -34,6 +29,11 @@ signing {
 }
 
 indra {
+    javaVersions {
+        target(8)
+        minimumToolchain(17)
+    }
+
     publishSnapshotsTo("xpdustry", "https://repo.xpdustry.fr/snapshots")
     publishReleasesTo("xpdustry", "https://repo.xpdustry.fr/releases")
 
@@ -63,6 +63,8 @@ indra {
 }
 
 indraPluginPublishing {
+    website("https://github.com/Xpdustry/Toxopid")
+
     plugin(
         "toxopid",
         "fr.xpdustry.toxopid.ToxopidPlugin",
@@ -70,6 +72,4 @@ indraPluginPublishing {
         "Gradle plugin for deploying mindustry mods/plugins + some build utilities.",
         listOf("xpdustry", "gradle-plugin", "mindustry")
     )
-
-    website("https://github.com/Xpdustry/Toxopid")
 }

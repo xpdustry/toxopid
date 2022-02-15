@@ -6,6 +6,7 @@ import fr.xpdustry.toxopid.extension.ModTarget
 import fr.xpdustry.toxopid.extension.ToxopidExtension
 import fr.xpdustry.toxopid.util.downloadTo
 import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
@@ -13,7 +14,7 @@ import java.net.URL
 import javax.inject.Inject
 
 @Suppress("HasPlatformType")
-abstract class MindustryExec @Inject constructor(private val target: ModTarget) : DefaultTask() {
+abstract class MindustryExec @Inject constructor(@get:Internal val target: ModTarget) : DefaultTask() {
     private val artifacts = project.objects.setProperty(Jar::class.java)
 
     init {

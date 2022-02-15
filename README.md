@@ -41,14 +41,17 @@ toxopid {
 }
 ```
 
-- Toxopid automatically include mindustry dependencies, so you don't have to worry about that in your build script anymore, but if you wish to disable that, set `mindustryBuildDependencies` to `false`.
+- Toxopid automatically include mindustry dependencies, so you don't have to worry about that in your build script
+  anymore, but if you wish to disable that, set `mindustryBuildDependencies` to `false`.
 
-- If you want to run your plugin/mod on a BE server, set `mindustryRepository` to `MindustryRepository.BE` and set `mindustryRuntimeVersion` to the BE build number.
+- If you want to run your plugin/mod on a BE server, set `mindustryRepository` to `MindustryRepository.BE` and
+  set `mindustryRuntimeVersion` to the BE build number.
 
 - You can include external dependencies from GitHub by defining a list of `ModDependency` on `modDependencies`.
 
-- The plugin will look for a `./[mod|plugin].[h]json` in the root dir of the project and include it automatically in the shadow jar.
+- The plugin will look for a `./[mod|plugin].[h]json` in the root dir of the project and include it automatically in the
+  shadow jar.
 
-- Mods/Plugins are bundled with shadow, no need to use the fat jar trick. You just have to use `implementation` alone.
+- Mods/Plugins are bundled with shadow, no need to use the fat jar trick.
 
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy).

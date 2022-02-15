@@ -5,6 +5,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import fr.xpdustry.toxopid.extension.ModTarget
 import fr.xpdustry.toxopid.extension.ToxopidExtension
 import fr.xpdustry.toxopid.task.MindustryExec
+import fr.xpdustry.toxopid.util.findOrCreate
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.component.AdhocComponentWithVariants
@@ -18,21 +19,7 @@ class ToxopidPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
         project.plugins.apply(ShadowPlugin::class.java)
-
-        val extension = project.extensions.create(TOXOPID_EXTENSION_NAME, ToxopidExtension::class.java, project)
-
-        if (extension.mindustryBuildDependencies.get()) {
-            val arcCompileVersion = extension.arcCompileVersion.getOrElse(extension.mindustryCompileVersion.get())
-            project.repositories.mavenCentral()
-            project.repositories.maven { it.url = project.uri("https://www.jitpack.io") }
-            project.mindustryDependency("com.github.Anuken.Arc:arc-core:$arcCompileVersion")
-            project.mindustryDependency("com.github.Anuken.Mindustry:core:${extension.mindustryCompileVersion.get()}")
-            project.mindustryDependency("com.github.Anuken.Mindustry:annotations:${extension.mindustryCompileVersion.get()}")
-            if (extension.modTarget.get() == ModTarget.HEADLESS) {
-                project.mindustryDependency("com.github.Anuken.Arc:backend-headless:$arcCompileVersion")
-                project.mindustryDependency("com.github.Anuken.Mindustry:server:${extension.mindustryCompileVersion.get()}")
-            }
-        }
+        project.extensions.findOrCreate(TOXOPID_EXTENSION_NAME, ToxopidExtension::class.java, project)
 
         val shadow = project.tasks.named("shadowJar", ShadowJar::class.java) {
             val file = project.rootDir.listFiles()?.find { f -> f.name.matches(Regex("^(mod|plugin)\\.h?json$")) }
@@ -46,13 +33,38 @@ class ToxopidPlugin : Plugin<Project> {
             project.tasks.create("runMindustryClient", MindustryExec::class.java, ModTarget.DESKTOP)
         )) {
             it.group = TOXOPID_GROUP_NAME
+            it.description = "Run your artifacts in a ${it.target.name.lowercase()} environment."
         }
 
-        if (!extension.publishShadowJar.get()) {
-            // Ugly way to avoid publishing shadow artifacts to maven repos
-            // -> https://github.com/johnrengelman/shadow/issues/651
-            project.components.withType(AdhocComponentWithVariants::class.java).forEach { c ->
-                c.withVariantsFromConfiguration(project.configurations.getByName("shadowRuntimeElements")) { it.skip() }
+        project.repositories.mavenCentral()
+        project.repositories.maven {
+            it.name = "jitpack-anuken"
+            it.url = project.uri("https://www.jitpack.io")
+            it.mavenContent { c -> c.includeGroupByRegex("^com\\.github\\.Anuken.*") }
+        }
+
+        project.afterEvaluate { p ->
+            val ext = p.extensions.findByType(ToxopidExtension::class.java)!!
+
+            if (ext.mindustryBuildDependencies.get()) {
+                val arcCompileVersion = ext.arcCompileVersion.getOrElse(ext.mindustryCompileVersion.get())
+
+                p.mindustryDependency("com.github.Anuken.Arc:arc-core:$arcCompileVersion")
+                p.mindustryDependency("com.github.Anuken.Mindustry:core:${ext.mindustryCompileVersion.get()}")
+                p.mindustryDependency("com.github.Anuken.Mindustry:annotations:${ext.mindustryCompileVersion.get()}")
+
+                if (ext.modTarget.get() == ModTarget.HEADLESS) {
+                    p.mindustryDependency("com.github.Anuken.Arc:backend-headless:$arcCompileVersion")
+                    p.mindustryDependency("com.github.Anuken.Mindustry:server:${ext.mindustryCompileVersion.get()}")
+                }
+            }
+
+            if (!ext.publishShadowJar.get()) {
+                // Ugly way to avoid publishing shadow artifacts to maven repos
+                // -> https://github.com/johnrengelman/shadow/issues/651
+                p.components.withType(AdhocComponentWithVariants::class.java).forEach { c ->
+                    c.withVariantsFromConfiguration(p.configurations.getByName("shadowRuntimeElements")) { it.skip() }
+                }
             }
         }
     }
