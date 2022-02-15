@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.6.10"
+    id("org.jetbrains.dokka") version "1.6.10"
     `java-gradle-plugin`
     id("com.gradle.plugin-publish") version "0.20.0"
     id("net.kyori.indra") version "2.1.1"
@@ -9,6 +10,10 @@ plugins {
 
 group = "fr.xpdustry"
 version = "1.3.1" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
+
+tasks.javadocJar {
+    from(tasks.dokkaHtml)
+}
 
 repositories {
     mavenCentral()
@@ -20,6 +25,7 @@ dependencies {
     implementation("gradle.plugin.com.github.johnrengelman:shadow:7.1.2")
     implementation(gradleApi())
     implementation(kotlin("stdlib"))
+    dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.6.10")
 }
 
 signing {
