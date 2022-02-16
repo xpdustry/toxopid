@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "fr.xpdustry"
-version = "1.3.1" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
+version = "1.3.2" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
 
 tasks.javadocJar {
     from(tasks.dokkaHtml)

@@ -51,7 +51,6 @@ class ToxopidPlugin : Plugin<Project> {
 
                 p.mindustryDependency("com.github.Anuken.Arc:arc-core:$arcCompileVersion")
                 p.mindustryDependency("com.github.Anuken.Mindustry:core:${ext.mindustryCompileVersion.get()}")
-                p.mindustryDependency("com.github.Anuken.Mindustry:annotations:${ext.mindustryCompileVersion.get()}")
 
                 if (ext.modTarget.get() == ModTarget.HEADLESS) {
                     p.mindustryDependency("com.github.Anuken.Arc:backend-headless:$arcCompileVersion")

@@ -1,4 +1,3 @@
-v1.3.1
+v1.3.2
 
-- Fix bug where only the `ModTarget.DESKTOP` dependencies are applied.
-- Small changes
+- BugFix: removed `annotations` artifact since it's no longer published in V7.
