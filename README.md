@@ -9,17 +9,6 @@ Gradle plugin for deploying mindustry mods/plugins + some build utilities.
 
 ## Usage
 
-/!\ Waiting gradle approval for publishing, you will have to add this your `settings.gradle`:
-
-```gradle
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven { url = uri("https://repo.xpdustry.fr/releases") }
-    }
-}
-```
-
 Apply the plugin in your `build.gradle` with:
 
 ```gradle
@@ -27,8 +16,6 @@ plugins {
     id("fr.xpdustry.toxopid") version "1.3.1"
 }
 ```
-
-Finally, enjoy the plugin.
 
 ## Tips
 
