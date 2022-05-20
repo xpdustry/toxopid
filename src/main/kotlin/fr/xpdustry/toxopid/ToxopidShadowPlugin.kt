@@ -25,18 +25,17 @@
  */
 package fr.xpdustry.toxopid
 
+import fr.xpdustry.toxopid.task.MindustryExec
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.bundling.Jar
 
-class ToxopidPlugin : Plugin<Project> {
+class ToxopidShadowPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.plugins.apply(ToxopidBasePlugin::class.java)
-        project.plugins.withType(JavaPlugin::class.java) {
-            project.plugins.apply(ToxopidJavaPlugin::class.java)
-        }
-        if (project.plugins.hasPlugin("com.github.johnrengelman.shadow")) {
-            project.plugins.apply(ToxopidShadowPlugin::class.java)
+        val shadowJar = project.tasks.named("shadowJar", Jar::class.java)
+        project.tasks.withType(MindustryExec::class.java) {
+            it.artifacts.setBuiltBy(listOf(shadowJar))
+            it.artifacts.setFrom(shadowJar)
         }
     }
 }

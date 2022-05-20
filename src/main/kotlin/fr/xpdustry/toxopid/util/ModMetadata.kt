@@ -1,36 +1,68 @@
+/*
+ * This file is part of Toxopid, a Gradle plugin for Mindustry mods/plugins.
+ *
+ * MIT License
+ *
+ * Copyright (c) 2022 Xpdustry
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package fr.xpdustry.toxopid.util
 
+import groovy.json.JsonOutput
 import org.hjson.JsonObject
-import org.hjson.JsonValue
-import java.io.File
 
-/** Utility class to easily represent mod/plugin data. */
 data class ModMetadata(
-    val name: String,
-    val description: String,
-    val author: String,
-    val version: String,
-    val main: String,
-    val repo: String?,
-    val displayName: String = name,
-    val minGameVersion: String = "v126.2",
-    val hidden: Boolean = true,
-    val java: Boolean = true,
-    val dependencies: List<String> = emptyList()
+    var name: String = "",
+    var displayName: String = "",
+    var description: String = "",
+    var author: String = "",
+    var version: String = "",
+    var main: String = "",
+    var repo: String = "",
+    var minGameVersion: String = "126.2",
+    var hidden: Boolean = false,
+    var java: Boolean = true,
+    val dependencies: MutableList<String> = mutableListOf()
 ) {
-    private constructor(json: JsonObject) : this(
-        json["name"]!!.asString(),
-        json["description"]!!.asString(),
-        json["author"]!!.asString(),
-        json["version"]!!.asString(),
-        json["main"]!!.asString(),
-        json["repo"]?.asString(),
-        json.getString("displayName", json["name"].asString()),
-        json.getString("minGameVersion", "v126.2"),
-        json.getBoolean("hidden", true),
-        json.getBoolean("java", true),
-        json["dependencies"]?.asArray()?.map { it.asString()!! } ?: emptyList()
-    )
+    companion object {
+        fun fromJson(json: String) = JsonObject
+            .readHjson(json)
+            .asObject()
+            .run {
+                ModMetadata(
+                    getString("name", ""),
+                    getString("displayName", ""),
+                    getString("description", ""),
+                    getString("author", ""),
+                    getString("version", ""),
+                    getString("main", ""),
+                    getString("repo", ""),
+                    getString("minGameVersion", ""),
+                    getBoolean("hidden", false),
+                    getBoolean("java", true),
+                    get("dependencies")?.asArray()?.map { it.asString() }?.toMutableList()
+                        ?: mutableListOf()
+                )
+            }
+    }
 
-    constructor(file: File) : this(JsonValue.readHjson(file.readText()).asObject())
+    override fun toString(): String =
+        JsonOutput.prettyPrint(JsonOutput.toJson(this))
 }

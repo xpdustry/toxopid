@@ -1,85 +1,79 @@
+/*
+ * This file is part of Toxopid, a Gradle plugin for Mindustry mods/plugins.
+ *
+ * MIT License
+ *
+ * Copyright (c) 2022 Xpdustry
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package fr.xpdustry.toxopid.task
 
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import fr.xpdustry.toxopid.extension.ModDependency
-import fr.xpdustry.toxopid.extension.ModTarget
-import fr.xpdustry.toxopid.extension.ToxopidExtension
-import fr.xpdustry.toxopid.util.downloadTo
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.Internal
+import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.TaskProvider
-import org.gradle.api.tasks.bundling.Jar
-import java.net.URL
-import javax.inject.Inject
 
-@Suppress("HasPlatformType")
-abstract class MindustryExec @Inject constructor(@get:Internal val target: ModTarget) : DefaultTask() {
-    private val artifacts = project.objects.setProperty(Jar::class.java)
+open class MindustryExec : DefaultTask() {
+
+    @get:Input
+    val runtime: RegularFileProperty = project.objects.fileProperty()
+
+    @get:Input
+    val mainClass: Property<String> = project.objects.property(String::class.java)
+
+    @get:Input
+    val modsPath: Property<String> = project.objects.property(String::class.java)
+
+    @get:InputFiles
+    val artifacts: ConfigurableFileCollection = project.objects.fileCollection()
+
+    @get:Optional
+    @get:InputDirectory
+    val workingDir: DirectoryProperty = project.objects.directoryProperty()
 
     init {
-        addArtifact(project.tasks.named("shadowJar", ShadowJar::class.java).get())
+        workingDir.convention(project.layout.dir(project.provider { temporaryDir }))
     }
-
-    fun addArtifact(jar: Jar) {
-        artifacts.add(jar)
-        dependsOn.add(jar)
-    }
-
-    fun addArtifact(task: TaskProvider<Jar>): Unit = addArtifact(task.get())
 
     @TaskAction
-    fun exec() {
-        val extension = project.extensions.getByType(ToxopidExtension::class.java)
-        val modDirectory = temporaryDir.resolve(target.modDirectory)
+    fun runMindustry() {
+        val modsDirectory = workingDir.get().asFile.resolve(modsPath.get())
 
-        val mindustryVersion = extension.mindustryRuntimeVersion.getOrElse(extension.mindustryCompileVersion.get())
-        val mindustryArtifact = extension.mindustryRepository.get().getArtifactName(target, mindustryVersion)
-        val mindustryUrl = URL("https://github.com/${extension.mindustryRepository.get().repo}/releases/download/$mindustryVersion/$mindustryArtifact")
-        val mindustryFile = temporaryDir.resolve(mindustryArtifact)
-
-        val runtimeData = ModRuntimeData(mindustryUrl.toString(), extension.modDependencies.get())
-        val runtimeDataFile = temporaryDir.resolve("runtime-data.txt")
-        val oldRuntimeData = if (runtimeDataFile.exists()) runtimeDataFile.readText() else null
-
-        if (oldRuntimeData == null || runtimeData.toString() != oldRuntimeData) {
-            project.delete(temporaryDir.listFiles { f -> f.name != "runtime-data.txt" })
-            logger.debug("Reset runtime directory")
-            mindustryUrl.downloadTo(mindustryFile)
-            logger.debug("Downloaded Mindustry: ${mindustryFile.name}")
-            modDirectory.mkdirs()
-            extension.modDependencies.get().forEach {
-                it.url.downloadTo(modDirectory.resolve(it.artifact ?: "${it.repo.replace('/', '-')}.zip"))
-                logger.debug("Downloaded mod dependency: (${it.repo}, ${it.version}, ${it.artifact})")
-            }
+        modsDirectory.mkdirs()
+        project.delete(modsDirectory.listFiles()?.filter { it.isFile })
+        artifacts.files.forEach {
+            it.copyTo(modsDirectory.resolve(it.name))
         }
-
-        project.delete {
-            val dependencies = extension.modDependencies.get().map { m -> m.artifact ?: "${m.repo.replace('/', '-')}.zip" }.toSet()
-            val files = modDirectory.listFiles { f -> f.name !in dependencies }
-            it.delete(files)
-            logger.debug("Removed mod dependencies: $files")
-        }
-
-        artifacts.get().forEach {
-            it.archiveFile.get().asFile.copyTo(modDirectory.resolve(it.archiveFileName.get()))
-            logger.debug("Copied artifact: ${it.name}")
-        }
-
-        runtimeDataFile.writeText(runtimeData.toString())
 
         project.javaexec {
-            it.mainClass.set(target.mainClass)
-            it.workingDir = temporaryDir
-            it.classpath = project.objects.fileCollection().from(mindustryFile)
+            it.mainClass.set(mainClass)
+            it.workingDir = workingDir.get().asFile
+            it.classpath = project.objects.fileCollection().from(runtime)
             it.standardInput = System.`in`
-            it.environment["MINDUSTRY_DATA_DIR"] = temporaryDir
+            it.environment["MINDUSTRY_DATA_DIR"] = workingDir.get().asFile.absolutePath
         }
     }
-
-    /** Temporary data for refreshing the files. */
-    private data class ModRuntimeData(
-        val mindustryUrl: String,
-        val dependencies: List<ModDependency>
-    )
 }

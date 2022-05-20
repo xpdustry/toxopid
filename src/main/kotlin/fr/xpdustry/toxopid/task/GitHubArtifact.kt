@@ -23,20 +23,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid
+package fr.xpdustry.toxopid.task
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPlugin
+import java.net.URL
 
-class ToxopidPlugin : Plugin<Project> {
-    override fun apply(project: Project) {
-        project.plugins.apply(ToxopidBasePlugin::class.java)
-        project.plugins.withType(JavaPlugin::class.java) {
-            project.plugins.apply(ToxopidJavaPlugin::class.java)
-        }
-        if (project.plugins.hasPlugin("com.github.johnrengelman.shadow")) {
-            project.plugins.apply(ToxopidShadowPlugin::class.java)
-        }
+class GitHubArtifact private constructor(val name: String, val url: URL) : java.io.Serializable {
+    companion object {
+        fun zip(user: String, repo: String, branch: String = "master") =
+            GitHubArtifact("$repo-$branch.zip", URL("https://github.com/$user/$repo/archive/refs/heads/$branch.zip"))
+
+        fun release(user: String, repo: String, version: String, name: String) =
+            GitHubArtifact(name, URL("https://github.com/$user/$repo/releases/download/$version/$name"))
     }
 }

@@ -23,20 +23,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid
+package fr.xpdustry.toxopid.task
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.DefaultTask
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.OutputFiles
+import org.gradle.api.tasks.TaskAction
+import java.io.File
 
-class ToxopidPlugin : Plugin<Project> {
-    override fun apply(project: Project) {
-        project.plugins.apply(ToxopidBasePlugin::class.java)
-        project.plugins.withType(JavaPlugin::class.java) {
-            project.plugins.apply(ToxopidJavaPlugin::class.java)
-        }
-        if (project.plugins.hasPlugin("com.github.johnrengelman.shadow")) {
-            project.plugins.apply(ToxopidShadowPlugin::class.java)
+@CacheableTask
+open class GitHubDownload : DefaultTask() {
+
+    @get:Input
+    val artifacts: ListProperty<GitHubArtifact> = project.objects.listProperty(GitHubArtifact::class.java)
+
+    @get:OutputFiles
+    val files: List<File>
+        get() = artifacts.get().map { temporaryDir.resolve(it.name) }
+
+    @TaskAction
+    fun downloadArtifacts() {
+        project.delete(temporaryDir.listFiles())
+        artifacts.get().forEach { artifact ->
+            val file = temporaryDir.resolve(artifact.name)
+            artifact.url.openStream().use { `in` -> file.outputStream().use { `in`.copyTo(it) } }
         }
     }
 }

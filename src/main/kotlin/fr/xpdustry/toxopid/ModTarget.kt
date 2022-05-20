@@ -25,18 +25,6 @@
  */
 package fr.xpdustry.toxopid
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPlugin
-
-class ToxopidPlugin : Plugin<Project> {
-    override fun apply(project: Project) {
-        project.plugins.apply(ToxopidBasePlugin::class.java)
-        project.plugins.withType(JavaPlugin::class.java) {
-            project.plugins.apply(ToxopidJavaPlugin::class.java)
-        }
-        if (project.plugins.hasPlugin("com.github.johnrengelman.shadow")) {
-            project.plugins.apply(ToxopidShadowPlugin::class.java)
-        }
-    }
+enum class ModTarget {
+    DESKTOP, HEADLESS, ANDROID
 }

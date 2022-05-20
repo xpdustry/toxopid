@@ -5,7 +5,7 @@
 
 ## Description
 
-Gradle plugin for deploying mindustry mods/plugins + some build utilities.
+Gradle plugin for building and testing mindustry mods/plugins.
 
 ## Usage
 
@@ -13,7 +13,7 @@ Apply the plugin in your `build.gradle` with:
 
 ```gradle
 plugins {
-    id("fr.xpdustry.toxopid") version "1.3.1"
+    id("fr.xpdustry.toxopid") version "2.0.0"
 }
 ```
 
@@ -23,7 +23,6 @@ plugins {
 
 ```gradle
 toxopid {
-    arcCompileVersion.set("your compile version")
     mindustryCompileVersion.set("your compile version")
 }
 ```
@@ -35,10 +34,5 @@ toxopid {
   set `mindustryRuntimeVersion` to the BE build number.
 
 - You can include external dependencies from GitHub by defining a list of `ModDependency` on `modDependencies`.
-
-- The plugin will look for a `./[mod|plugin].[h]json` in the root dir of the project and include it automatically in the
-  shadow jar.
-
-- Mods/Plugins are bundled with shadow, no need to use the fat jar trick.
 
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy).
