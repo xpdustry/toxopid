@@ -10,9 +10,11 @@ plugins {
 
 group = "fr.xpdustry"
 version = "2.0.0" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
+description = "Gradle plugin for building and testing mindustry mods/plugins."
 
 tasks.javadocJar {
-    from(tasks.dokkaHtml)
+    dependsOn(tasks.dokkaHtml.get())
+    from(tasks.dokkaHtml.get())
 }
 
 repositories {
@@ -22,9 +24,9 @@ repositories {
 
 dependencies {
     compileOnly(gradleApi())
+    implementation("net.kyori:mammoth:1.1.0")
     implementation("org.hjson:hjson:3.0.0")
     implementation(kotlin("stdlib"))
-    dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.6.20")
 }
 
 license {
@@ -77,8 +79,8 @@ indraPluginPublishing {
     plugin(
         "toxopid",
         "fr.xpdustry.toxopid.ToxopidPlugin",
-        "Xpdustry Mindustry Gradle plugin",
-        "Gradle plugin for building and testing mindustry mods/plugins.",
+        "Toxopid",
+        project.description,
         listOf("mindustry", "testing", "boilerplate")
     )
 }

@@ -30,6 +30,10 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.bundling.Jar
 
+/**
+ * This plugin overrides [ToxopidJavaPlugin] to set `shadowJar` task as the default artifact
+ * for every mindustry exec task.
+ */
 class ToxopidShadowPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         val shadowJar = project.tasks.named("shadowJar", Jar::class.java)

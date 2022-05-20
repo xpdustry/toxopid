@@ -25,6 +25,6 @@
  */
 package fr.xpdustry.toxopid
 
-enum class ModTarget {
+enum class ModPlatform {
     DESKTOP, HEADLESS, ANDROID
 }

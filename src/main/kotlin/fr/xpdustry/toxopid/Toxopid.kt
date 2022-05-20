@@ -25,9 +25,7 @@
  */
 package fr.xpdustry.toxopid
 
-class Toxopid {
-    companion object {
-        const val EXTENSION_NAME = "toxopid"
-        const val TASK_GROUP_NAME = "toxopid"
-    }
+object Toxopid {
+    const val EXTENSION_NAME = "toxopid"
+    const val TASK_GROUP_NAME = "toxopid"
 }

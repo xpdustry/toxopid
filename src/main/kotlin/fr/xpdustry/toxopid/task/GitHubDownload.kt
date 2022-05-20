@@ -33,6 +33,9 @@ import org.gradle.api.tasks.OutputFiles
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
+/**
+ * This task downloads a list of artifacts from GitHub.
+ */
 @CacheableTask
 open class GitHubDownload : DefaultTask() {
 

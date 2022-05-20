@@ -32,19 +32,30 @@ import org.gradle.api.provider.SetProperty
 import java.net.URI
 
 open class ToxopidExtension(private val project: Project) {
-    /** Mindustry compile version. */
+    /**
+     * Mindustry compile version for [ToxopidExtension.mindustryDependencies].
+     * The default version is v126.2.
+     */
     val compileVersion: Property<String> = project.objects.property(String::class.java)
-    /** Mindustry runtime version. */
+    /**
+     * Mindustry runtime version for [fr.xpdustry.toxopid.task.MindustryExec] tasks.
+     * If not set, fallbacks to [ToxopidExtension.compileVersion].
+     */
     val runtimeVersion: Property<String> = project.objects.property(String::class.java)
-    /** Target */
-    val targets: SetProperty<ModTarget> = project.objects.setProperty(ModTarget::class.java)
+    /**
+     * Target platforms for the mod/plugin. It can add dependencies, tasks...
+     */
+    val platforms: SetProperty<ModPlatform> = project.objects.setProperty(ModPlatform::class.java)
 
     init {
         compileVersion.convention("v126.2")
         runtimeVersion.convention(project.provider { compileVersion.get() })
-        targets.convention(setOf(ModTarget.DESKTOP))
+        platforms.convention(setOf(ModPlatform.DESKTOP))
     }
 
+    /**
+     * Adds the jitpack maven repo to the artifacts of Anuken.
+     */
     fun jitpackAnuken() {
         project.repositories.maven {
             it.name = "jitpack-anuken"
@@ -53,6 +64,14 @@ open class ToxopidExtension(private val project: Project) {
         }
     }
 
+    /**
+     * Adds mindustry artifacts as project dependencies :
+     * - It adds `arc-core` and `mindustry-core` by default.
+     * - If [ModPlatform.HEADLESS] is present in the target platforms,
+     *   `arc-backend-headless` and `mindustry-server` are added.
+     * - If [ModPlatform.DESKTOP] is present in the target platforms,
+     *   `mindustry-desktop` is added.
+     */
     fun mindustryDependencies() {
         if (!project.plugins.hasPlugin(JavaPlugin::class.java)) {
             throw IllegalArgumentException("You can't add Mindustry dependencies without applying the Java Gradle plugin.")
@@ -61,11 +80,11 @@ open class ToxopidExtension(private val project: Project) {
             val compileVersion = compileVersion.get()
             project.mindustryDependency("com.github.Anuken.Arc:arc-core:$compileVersion")
             project.mindustryDependency("com.github.Anuken.Mindustry:core:$compileVersion")
-            if (targets.get().contains(ModTarget.HEADLESS)) {
+            if (platforms.get().contains(ModPlatform.HEADLESS)) {
                 project.mindustryDependency("com.github.Anuken.Arc:backend-headless:$compileVersion")
                 project.mindustryDependency("com.github.Anuken.Mindustry:server:$compileVersion")
             }
-            if (targets.get().contains(ModTarget.DESKTOP)) {
+            if (platforms.get().contains(ModPlatform.DESKTOP)) {
                 project.mindustryDependency("com.github.Anuken.Mindustry:desktop:$compileVersion")
             }
         }

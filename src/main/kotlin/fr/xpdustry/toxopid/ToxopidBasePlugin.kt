@@ -28,15 +28,19 @@ package fr.xpdustry.toxopid
 import fr.xpdustry.toxopid.task.GitHubArtifact
 import fr.xpdustry.toxopid.task.GitHubDownload
 import fr.xpdustry.toxopid.task.MindustryExec
+import net.kyori.mammoth.Extensions
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * Base plugin that sets up the standard toxopid tasks for mod/plugin testing.
+ */
 class ToxopidBasePlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        val extension = project.extensions.create(
+        val extension = Extensions.findOrCreate(
+            project.extensions,
             Toxopid.EXTENSION_NAME,
-            ToxopidExtension::class.java,
-            project
+            ToxopidExtension::class.java
         )
 
         val downloadMindustryClient = project.tasks.create(
