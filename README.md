@@ -1,6 +1,6 @@
 # Toxopid
 
-![Xpdustry Toxopid](https://repo.xpdustry.fr/api/badge/latest/releases/fr/xpdustry/toxopid?color=00FFFF&name=Toxopid&prefix=v)
+![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/fr.xpdustry.toxopid)
 [![Commit](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml)
 
 ## Description
@@ -26,35 +26,35 @@ Gradle plugin for building and testing mindustry mods/plugins.
       platforms.add(ModPlatform.YOUR_PLATOFRM)
   }
   ```
-
-  If you do not set the extension, Toxopid will compile and run with Mindustry V6 (v126.2)
-  and target the desktop platform by default.
+  
+  > If you do not set the extension, Toxopid will compile and run with Mindustry V6 (v126.2)
+    and target the desktop platform by default.
 
 3. Enjoy the plugin. Here's what you can do :
 
-  - If you use the Gradle Kotlin DSL (aka using a `build.gradle.kts`), you can automatically
-    add Mindustry dependencies with :
-  
-    ```gradle
-    repositories {
-        mavenCentral()
-        anukenJitpack()
-    }
-    
-    dependencies {
-        mindustryDependencies()
-    }
-    ```
-    
-  - You can use your `[mod|plugin].[h]json` in your build script with `ModMetadata`. Example :
+   - If you use the Gradle Kotlin DSL (aka using a `build.gradle.kts`), you can automatically
+     add Mindustry dependencies with :
 
-    ```gradle
-    val metadata = ModMetadata.fromJson(project.file("mod.hjson"))
-    project.version = metadata.version
-    ```
-    
-  - You can run your mod/plugin in Mindustry desktop or server with the `runMindustryClient` and
-    `runMindustryServer` tasks.
+     ```gradle
+     repositories {
+         mavenCentral()
+         anukenJitpack()
+     }
+  
+     dependencies {
+         mindustryDependencies()
+     }
+     ```
+
+   - You can use your `[mod|plugin].[h]json` in your build script with `ModMetadata`. Example :
+
+     ```gradle
+     val metadata = ModMetadata.fromJson(project.file("mod.hjson"))
+     project.version = metadata.version
+     ```
+
+   - You can run your mod/plugin in Mindustry desktop or server with the `runMindustryClient` and
+     `runMindustryServer` tasks.
 
 ## Tips
 
@@ -66,7 +66,5 @@ Gradle plugin for building and testing mindustry mods/plugins.
         mods.from(tasks.compileSubMod) // Adding a task that can provide the jar
     }
     ```
-
-- in the `runMindustryClient` or `runMindustryServer` tasks.
 
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy).
