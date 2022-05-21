@@ -49,7 +49,7 @@ Gradle plugin for building and testing mindustry mods/plugins.
    - You can use your `[mod|plugin].[h]json` in your build script with `ModMetadata`. Example :
 
      ```gradle
-     val metadata = ModMetadata.fromJson(project.file("mod.hjson"))
+     var metadata = ModMetadata.fromJson(project.file("mod.hjson"))
      project.version = metadata.version
      ```
 
