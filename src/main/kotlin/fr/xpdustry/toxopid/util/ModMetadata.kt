@@ -66,6 +66,10 @@ data class ModMetadata(
         fun fromJson(file: File) = fromJson(file.readText())
     }
 
+    /**
+     * @param pretty whether the json string should be pretty printed or not.
+     * @return a json representation of this [ModMetadata]
+     */
     fun toJson(pretty: Boolean = true): String {
         val json = JsonOutput.toJson(this)
         return if (pretty) JsonOutput.prettyPrint(json) else json

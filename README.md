@@ -9,7 +9,7 @@ Gradle plugin for building and testing mindustry mods/plugins.
 
 ## Usage
 
-1. Add the plugin by applying it in your `build.gradle` with :
+1. Add the plugin in your build script :
 
   ```gradle
   plugins {
@@ -17,7 +17,7 @@ Gradle plugin for building and testing mindustry mods/plugins.
   }
   ```
 
-2. Set up the Toxopid extension to fit your needs with :
+2. Set up the Toxopid extension to fit your needs :
 
   ```gradle
   toxopid {
@@ -27,35 +27,46 @@ Gradle plugin for building and testing mindustry mods/plugins.
   }
   ```
 
-  If you do not set the extension, Toxopid will compile with mindustry V6 (v126.2)
+  If you do not set the extension, Toxopid will compile and run with Mindustry V6 (v126.2)
   and target the desktop platform by default.
 
 3. Enjoy the plugin. Here's what you can do :
 
-  - You can automatically add Mindustry dependencies in your `build.gradle` with :
+  - If you use the Gradle Kotlin DSL (aka using a `build.gradle.kts`), you can automatically
+    add Mindustry dependencies with :
   
     ```gradle
-    toxopid {
-        jitpackAnuken()
+    repositories {
+        mavenCentral()
+        anukenJitpack()
+    }
+    
+    dependencies {
         mindustryDependencies()
     }
     ```
     
-  - You can easily use your `[mod|plugin].[h]json` with `ModMetadata`. Example :
+  - You can use your `[mod|plugin].[h]json` in your build script with `ModMetadata`. Example :
 
     ```gradle
     val metadata = ModMetadata.fromJson(project.file("mod.hjson"))
     project.version = metadata.version
     ```
     
-  - You can run mindustry in desktop or server with the `runMindustryClient` and
+  - You can run your mod/plugin in Mindustry desktop or server with the `runMindustryClient` and
     `runMindustryServer` tasks.
-
-Now that you se
 
 ## Tips
 
-- If you want to create a `ModMetadata` and use it to generate your `[mod|plugin].[h]json` file,
-  you can create a pretty printed json string of it with `JsonOutput.prettyPrint(JsonOutput.toJson(metadata))`.
+- You can add other mods/plugins in a `runMindustry` task by doing :
+
+    ```gradle
+    tasks.runMindustryClient {
+        mods.from(file("SomeMod.jar")) // Adding an external jar
+        mods.from(tasks.compileSubMod) // Adding a task that can provide the jar
+    }
+    ```
+
+- in the `runMindustryClient` or `runMindustryServer` tasks.
 
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy).

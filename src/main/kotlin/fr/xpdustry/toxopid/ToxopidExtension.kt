@@ -29,7 +29,7 @@ import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty
 
-open class ToxopidExtension(private val project: Project) {
+open class ToxopidExtension(project: Project) {
     /**
      * Mindustry compile version for dependency resolution.
      * The default version is v126.2.

@@ -29,12 +29,21 @@ import java.net.URL
 
 class GitHubArtifact private constructor(val name: String, val url: URL) : java.io.Serializable {
     companion object {
+        /**
+         * This artifact is an entire GitHub repo as a zip,
+         * usually for javascript and (h)json mods.
+         */
+        @JvmOverloads
         fun zip(user: String, repo: String, branch: String = "master") =
             GitHubArtifact(
                 "$repo-$branch.zip",
                 URL("https://github.com/$user/$repo/archive/refs/heads/$branch.zip")
             )
 
+        /**
+         * This artifact is a file from a release in a GitHub repo,
+         * usually for jvm mods/plugins.
+         */
         fun release(user: String, repo: String, version: String, name: String) =
             GitHubArtifact(
                 name,
