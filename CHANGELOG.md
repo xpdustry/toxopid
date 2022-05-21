@@ -1,3 +1,11 @@
-v1.3.2
+### V2.0.0
 
-- BugFix: removed `annotations` artifact since it's no longer published in V7.
+Complete overhaul of the plugin, it now follows gradle plugin convention to allow maximum customization : 
+
+- Multiple sub-plugins.
+
+- Task pipelines. (`downloadMindustry` -> `runMindustry`)
+
+- Simpler extension settings...
+
+- Much more !!!
