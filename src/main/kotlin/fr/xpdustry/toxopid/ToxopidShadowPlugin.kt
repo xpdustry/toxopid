@@ -36,10 +36,8 @@ import org.gradle.api.tasks.bundling.Jar
  */
 class ToxopidShadowPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        val shadowJar = project.tasks.named("shadowJar", Jar::class.java)
         project.tasks.withType(MindustryExec::class.java) {
-            it.artifacts.setBuiltBy(listOf(shadowJar))
-            it.artifacts.setFrom(shadowJar)
+            it.mods.setFrom(project.tasks.named("shadowJar", Jar::class.java))
         }
     }
 }

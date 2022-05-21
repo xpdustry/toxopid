@@ -37,10 +37,8 @@ import org.gradle.api.tasks.bundling.Jar
  */
 class ToxopidJavaPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        val jar = project.tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class.java)
         project.tasks.withType(MindustryExec::class.java) {
-            it.artifacts.setBuiltBy(listOf(jar))
-            it.artifacts.setFrom(jar)
+            it.mods.setFrom(project.tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class.java))
         }
     }
 }

@@ -30,9 +30,15 @@ import java.net.URL
 class GitHubArtifact private constructor(val name: String, val url: URL) : java.io.Serializable {
     companion object {
         fun zip(user: String, repo: String, branch: String = "master") =
-            GitHubArtifact("$repo-$branch.zip", URL("https://github.com/$user/$repo/archive/refs/heads/$branch.zip"))
+            GitHubArtifact(
+                "$repo-$branch.zip",
+                URL("https://github.com/$user/$repo/archive/refs/heads/$branch.zip")
+            )
 
         fun release(user: String, repo: String, version: String, name: String) =
-            GitHubArtifact(name, URL("https://github.com/$user/$repo/releases/download/$version/$name"))
+            GitHubArtifact(
+                name,
+                URL("https://github.com/$user/$repo/releases/download/$version/$name")
+            )
     }
 }

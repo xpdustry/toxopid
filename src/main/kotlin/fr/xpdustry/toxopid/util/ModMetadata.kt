@@ -27,6 +27,7 @@ package fr.xpdustry.toxopid.util
 
 import groovy.json.JsonOutput
 import org.hjson.JsonObject
+import java.io.File
 
 data class ModMetadata(
     var name: String = "",
@@ -61,8 +62,12 @@ data class ModMetadata(
                         ?: mutableListOf()
                 )
             }
+
+        fun fromJson(file: File) = fromJson(file.readText())
     }
 
-    override fun toString(): String =
-        JsonOutput.prettyPrint(JsonOutput.toJson(this))
+    fun toJson(pretty: Boolean = true): String {
+        val json = JsonOutput.toJson(this)
+        return if (pretty) JsonOutput.prettyPrint(json) else json
+    }
 }

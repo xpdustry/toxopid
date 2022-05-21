@@ -9,30 +9,53 @@ Gradle plugin for building and testing mindustry mods/plugins.
 
 ## Usage
 
-Apply the plugin in your `build.gradle` with:
+1. Add the plugin by applying it in your `build.gradle` with :
 
-```gradle
-plugins {
-    id("fr.xpdustry.toxopid") version "2.0.0"
-}
-```
+  ```gradle
+  plugins {
+      id("fr.xpdustry.toxopid") version "2.0.0"
+  }
+  ```
+
+2. Set up the Toxopid extension to fit your needs with :
+
+  ```gradle
+  toxopid {
+      compileVersion.set("insert-version-here") 
+      runtimeVersion.set("insert-version-here") 
+      platforms.add(ModPlatform.YOUR_PLATOFRM)
+  }
+  ```
+
+  If you do not set the extension, Toxopid will compile with mindustry V6 (v126.2)
+  and target the desktop platform by default.
+
+3. Enjoy the plugin. Here's what you can do :
+
+  - You can automatically add Mindustry dependencies in your `build.gradle` with :
+  
+    ```gradle
+    toxopid {
+        jitpackAnuken()
+        mindustryDependencies()
+    }
+    ```
+    
+  - You can easily use your `[mod|plugin].[h]json` with `ModMetadata`. Example :
+
+    ```gradle
+    val metadata = ModMetadata.fromJson(project.file("mod.hjson"))
+    project.version = metadata.version
+    ```
+    
+  - You can run mindustry in desktop or server with the `runMindustryClient` and
+    `runMindustryServer` tasks.
+
+Now that you se
 
 ## Tips
 
-- For the base settings, you will need at least:
-
-```gradle
-toxopid {
-    mindustryCompileVersion.set("your compile version")
-}
-```
-
-- Toxopid automatically include mindustry dependencies, so you don't have to worry about that in your build script
-  anymore, but if you wish to disable that, set `mindustryBuildDependencies` to `false`.
-
-- If you want to run your plugin/mod on a BE server, set `mindustryRepository` to `MindustryRepository.BE` and
-  set `mindustryRuntimeVersion` to the BE build number.
-
-- You can include external dependencies from GitHub by defining a list of `ModDependency` on `modDependencies`.
+- If you want to create a `ModMetadata` and use it to generate your `[mod|plugin].[h]json` file,
+  you can create a pretty printed json string of it with `JsonOutput.prettyPrint(JsonOutput.toJson(metadata))`.
 
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy).

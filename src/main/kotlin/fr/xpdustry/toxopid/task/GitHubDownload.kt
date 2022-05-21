@@ -40,7 +40,8 @@ import java.io.File
 open class GitHubDownload : DefaultTask() {
 
     @get:Input
-    val artifacts: ListProperty<GitHubArtifact> = project.objects.listProperty(GitHubArtifact::class.java)
+    val artifacts: ListProperty<GitHubArtifact> =
+        project.objects.listProperty(GitHubArtifact::class.java)
 
     @get:OutputFiles
     val files: List<File>

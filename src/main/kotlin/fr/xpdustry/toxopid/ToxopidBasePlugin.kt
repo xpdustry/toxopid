@@ -55,7 +55,7 @@ class ToxopidBasePlugin : Plugin<Project> {
             )
         }
 
-        val downloadMindustryServer =  project.tasks.create(
+        val downloadMindustryServer = project.tasks.create(
             "downloadMindustryServer",
             GitHubDownload::class.java
         ) {
@@ -69,24 +69,16 @@ class ToxopidBasePlugin : Plugin<Project> {
 
         project.tasks.create("runMindustryClient", MindustryExec::class.java) {
             it.group = Toxopid.TASK_GROUP_NAME
-
-            it.dependsOn(downloadMindustryClient)
-            it.runtime.set(downloadMindustryClient.files.first())
-            it.runtime.finalizeValue()
-
-            it.mainClass.set("mindustry.desktop.DesktopLauncher")
-            it.modsPath.set("./mods")
+            it.classpath.setFrom(downloadMindustryClient)
+            it.mainClass.convention("mindustry.desktop.DesktopLauncher")
+            it.modsPath.convention("./mods")
         }
 
         project.tasks.create("runMindustryServer", MindustryExec::class.java) {
             it.group = Toxopid.TASK_GROUP_NAME
-
-            it.dependsOn(downloadMindustryServer)
-            it.runtime.set(downloadMindustryServer.files.first())
-            it.runtime.finalizeValue()
-
-            it.mainClass.set("mindustry.server.ServerLauncher")
-            it.modsPath.set("./config/mods")
+            it.classpath.setFrom(downloadMindustryServer)
+            it.mainClass.convention("mindustry.server.ServerLauncher")
+            it.modsPath.convention("./config/mods")
         }
     }
 }
