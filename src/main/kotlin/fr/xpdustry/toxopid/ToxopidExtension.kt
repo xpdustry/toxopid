@@ -49,7 +49,7 @@ open class ToxopidExtension(project: Project) {
 
     init {
         compileVersion.convention("v126.2")
-        runtimeVersion.convention(project.provider { compileVersion.get() })
+        runtimeVersion.convention(project.provider(compileVersion::get))
         platforms.convention(setOf(ModPlatform.DESKTOP))
     }
 }

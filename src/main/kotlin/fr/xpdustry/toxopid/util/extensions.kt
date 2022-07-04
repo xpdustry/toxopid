@@ -29,9 +29,9 @@ import fr.xpdustry.toxopid.ModPlatform
 import fr.xpdustry.toxopid.Toxopid
 import fr.xpdustry.toxopid.ToxopidExtension
 import net.kyori.mammoth.Extensions
-import org.gradle.api.Project
+import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.dsl.RepositoryHandler
-import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.ExtensionContainer
 import java.net.URI
 
 /**
@@ -51,36 +51,36 @@ fun RepositoryHandler.anukenJitpack() = maven {
  * - If [ModPlatform.DESKTOP] is present in the target platforms,
  *   `mindustry-desktop` is added.
  */
-fun Project.mindustryDependencies() {
-    if (!project.plugins.hasPlugin(JavaPlugin::class.java)) {
-        throw IllegalArgumentException(
-            "You can't add Mindustry dependencies without applying the Java Gradle plugin."
-        )
-    }
-    val extension = Extensions.findOrCreate(
-        project.extensions,
-        Toxopid.EXTENSION_NAME,
-        ToxopidExtension::class.java
-    )
-    if (extension.compileVersion.isPresent) {
-        val version = extension.compileVersion.get()
-        project.mindustryDependency("com.github.Anuken.Arc:arc-core:$version")
-        project.mindustryDependency("com.github.Anuken.Mindustry:core:$version")
-        if (extension.platforms.get().contains(ModPlatform.HEADLESS)) {
-            project.mindustryDependency("com.github.Anuken.Arc:backend-headless:$version")
-            project.mindustryDependency("com.github.Anuken.Mindustry:server:$version")
-        }
-        if (extension.platforms.get().contains(ModPlatform.DESKTOP)) {
-            project.mindustryDependency("com.github.Anuken.Mindustry:desktop:$version")
-        }
-    }
+fun DependencyHandler.mindustryDependencies() {
+    val extension = extensions.getToxopidExtension()
+    mindustryCoreDependencies()
+    if (extension.platforms.get().contains(ModPlatform.HEADLESS))
+        mindustryHeadlessDependencies()
+    if (extension.platforms.get().contains(ModPlatform.DESKTOP))
+        mindustryDesktopDependencies()
 }
 
-private fun Project.dependency(configuration: String, dependency: String) {
-    configurations.getByName(configuration).dependencies.add(dependencies.create(dependency))
+fun DependencyHandler.mindustryCoreDependencies() {
+    val version = extensions.getToxopidExtension().compileVersion.get()
+    mindustryDependency("com.github.Anuken.Arc:arc-core:$version")
+    mindustryDependency("com.github.Anuken.Mindustry:core:$version")
 }
 
-private fun Project.mindustryDependency(dependency: String) {
-    dependency("compileOnly", dependency)
-    dependency("testImplementation", dependency)
+fun DependencyHandler.mindustryHeadlessDependencies() {
+    val version = extensions.getToxopidExtension().compileVersion.get()
+    mindustryDependency("com.github.Anuken.Arc:backend-headless:$version")
+    mindustryDependency("com.github.Anuken.Mindustry:server:$version")
 }
+
+fun DependencyHandler.mindustryDesktopDependencies() {
+    val version = extensions.getToxopidExtension().compileVersion.get()
+    mindustryDependency("com.github.Anuken.Mindustry:desktop:$version")
+}
+
+private fun DependencyHandler.mindustryDependency(dependency: String) {
+    add("compileOnly", dependency)
+    add("testImplementation", dependency)
+}
+
+private fun ExtensionContainer.getToxopidExtension() = Extensions
+    .findOrCreate(this, Toxopid.EXTENSION_NAME, ToxopidExtension::class.java)

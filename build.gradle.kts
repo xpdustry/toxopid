@@ -24,8 +24,8 @@ repositories {
 
 dependencies {
     compileOnly(gradleApi())
-    implementation("net.kyori:mammoth:1.1.0")
     implementation("org.hjson:hjson:3.0.0")
+    implementation("net.kyori:mammoth:1.1.0")
     implementation(kotlin("stdlib"))
 }
 
