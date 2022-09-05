@@ -43,15 +43,24 @@ class ToxopidBasePlugin : Plugin<Project> {
             ToxopidExtension::class.java
         )
 
+        project.dependencies.extensions.add(Toxopid.EXTENSION_NAME, extension)
+
         val downloadMindustryClient = project.tasks.create(
             "downloadMindustryClient",
             GitHubDownload::class.java
         ) {
             it.group = Toxopid.TASK_GROUP_NAME
-            it.artifacts.add(
-                GitHubArtifact.release(
-                    "Anuken", "Mindustry", extension.runtimeVersion.get(), "Mindustry.jar"
-                )
+            it.artifacts.set(
+                project.provider {
+                    listOf(
+                        GitHubArtifact.release(
+                            "Anuken",
+                            "Mindustry",
+                            "Mindustry.jar",
+                            extension.runtimeVersion.get()
+                        )
+                    )
+                }
             )
         }
 
@@ -60,10 +69,17 @@ class ToxopidBasePlugin : Plugin<Project> {
             GitHubDownload::class.java
         ) {
             it.group = Toxopid.TASK_GROUP_NAME
-            it.artifacts.add(
-                GitHubArtifact.release(
-                    "Anuken", "Mindustry", extension.runtimeVersion.get(), "server-release.jar"
-                )
+            it.artifacts.set(
+                project.provider {
+                    listOf(
+                        GitHubArtifact.release(
+                            "Anuken",
+                            "Mindustry",
+                            "server-release.jar",
+                            extension.runtimeVersion.get()
+                        )
+                    )
+                }
             )
         }
 

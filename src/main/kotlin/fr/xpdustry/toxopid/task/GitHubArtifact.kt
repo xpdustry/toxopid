@@ -27,27 +27,45 @@ package fr.xpdustry.toxopid.task
 
 import java.net.URL
 
-class GitHubArtifact private constructor(val name: String, val url: URL) : java.io.Serializable {
+interface GitHubArtifact : java.io.Serializable {
+
+    val name: String
+    val user: String
+    val repo: String
+    val url: URL
+
     companion object {
         /**
          * This artifact is an entire GitHub repo as a zip,
          * usually for javascript and (h)json mods.
          */
         @JvmOverloads
-        fun zip(user: String, repo: String, branch: String = "master") =
-            GitHubArtifact(
-                "$repo-$branch.zip",
-                URL("https://github.com/$user/$repo/archive/refs/heads/$branch.zip")
-            )
+        fun zip(user: String, repo: String, branch: String = "master"): GitHubArtifact =
+            ZipGitHubArtifact(user, repo, branch)
 
         /**
          * This artifact is a file from a release in a GitHub repo,
          * usually for jvm mods/plugins.
          */
-        fun release(user: String, repo: String, version: String, name: String) =
-            GitHubArtifact(
-                name,
-                URL("https://github.com/$user/$repo/releases/download/$version/$name")
-            )
+        fun release(user: String, repo: String, version: String, name: String): GitHubArtifact =
+            ReleaseGitHubArtifact(user, repo, name, version)
+    }
+
+    private class ZipGitHubArtifact constructor(
+        override val user: String,
+        override val repo: String,
+        branch: String = "master"
+    ) : GitHubArtifact {
+        override val name = "$repo-$branch.zip"
+        override val url = URL("https://github.com/$user/$repo/archive/refs/heads/$branch.zip")
+    }
+
+    private class ReleaseGitHubArtifact constructor(
+        override val user: String,
+        override val repo: String,
+        override val name: String,
+        version: String
+    ) : GitHubArtifact {
+        override val url = URL("https://github.com/$user/$repo/releases/download/$version/$name")
     }
 }
