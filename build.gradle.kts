@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "fr.xpdustry"
-version = "2.0.0" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
+version = "2.1.0" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
 description = "Gradle plugin for building and testing mindustry mods/plugins."
 
 tasks.javadocJar {
@@ -24,8 +24,8 @@ repositories {
 
 dependencies {
     compileOnly(gradleApi())
-    implementation("net.kyori:mammoth:1.1.0")
     implementation("org.hjson:hjson:3.0.0")
+    implementation("net.kyori:mammoth:1.1.0")
     implementation(kotlin("stdlib"))
 }
 
@@ -45,8 +45,8 @@ indra {
         minimumToolchain(17)
     }
 
-    publishSnapshotsTo("xpdustry", "https://repo.xpdustry.fr/snapshots")
-    publishReleasesTo("xpdustry", "https://repo.xpdustry.fr/releases")
+    publishSnapshotsTo("xpdustry", "https://maven.xpdustry.fr/snapshots")
+    publishReleasesTo("xpdustry", "https://maven.xpdustry.fr/releases")
 
     mitLicense()
 

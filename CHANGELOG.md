@@ -1,11 +1,7 @@
-### V2.0.0
+### V2.1.0
 
-Complete overhaul of the plugin, it now follows gradle plugin convention to allow maximum customization : 
+- Fixed an issue with mindustry version in download tasks.
 
-- Multiple sub-plugins.
+- `GitHubArtifact` is now an interface that can be implemented.
 
-- Task pipelines. (`downloadMindustry` -> `runMindustry`)
-
-- Simpler extension settings...
-
-- Much more !!!
+- Misc changes.
