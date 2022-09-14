@@ -56,7 +56,7 @@ class ToxopidBasePlugin : Plugin<Project> {
                         GitHubArtifact.release(
                             "Anuken",
                             "Mindustry",
-                            extension.runtimeVersion.get()
+                            extension.runtimeVersion.get(),
                             "Mindustry.jar"
                         )
                     )
@@ -75,7 +75,7 @@ class ToxopidBasePlugin : Plugin<Project> {
                         GitHubArtifact.release(
                             "Anuken",
                             "Mindustry",
-                            extension.runtimeVersion.get()
+                            extension.runtimeVersion.get(),
                             "server-release.jar"
                         )
                     )
