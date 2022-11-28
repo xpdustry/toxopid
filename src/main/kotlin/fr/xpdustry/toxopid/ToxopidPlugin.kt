@@ -35,7 +35,7 @@ class ToxopidPlugin : Plugin<Project> {
         project.plugins.withType(JavaPlugin::class.java) {
             project.plugins.apply(ToxopidJavaPlugin::class.java)
         }
-        if (project.plugins.hasPlugin("com.github.johnrengelman.shadow")) {
+        project.plugins.withId("com.github.johnrengelman.shadow") {
             project.plugins.apply(ToxopidShadowPlugin::class.java)
         }
     }

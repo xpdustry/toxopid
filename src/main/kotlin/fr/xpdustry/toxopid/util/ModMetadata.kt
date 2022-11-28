@@ -37,7 +37,7 @@ data class ModMetadata(
     var version: String = "",
     var main: String = "",
     var repo: String = "",
-    var minGameVersion: String = "126.2",
+    var minGameVersion: String = "140",
     var hidden: Boolean = false,
     var java: Boolean = true,
     val dependencies: MutableList<String> = mutableListOf()

@@ -45,12 +45,12 @@ class ToxopidBasePlugin : Plugin<Project> {
 
         project.dependencies.extensions.add(Toxopid.EXTENSION_NAME, extension)
 
-        val downloadMindustryClient = project.tasks.create(
+        val downloadMindustryClient = project.tasks.register(
             "downloadMindustryClient",
             GitHubDownload::class.java
         ) {
             it.group = Toxopid.TASK_GROUP_NAME
-            it.artifacts.set(
+            it.artifacts.convention(
                 project.provider {
                     listOf(
                         GitHubArtifact.release(
@@ -64,12 +64,12 @@ class ToxopidBasePlugin : Plugin<Project> {
             )
         }
 
-        val downloadMindustryServer = project.tasks.create(
+        val downloadMindustryServer = project.tasks.register(
             "downloadMindustryServer",
             GitHubDownload::class.java
         ) {
             it.group = Toxopid.TASK_GROUP_NAME
-            it.artifacts.set(
+            it.artifacts.convention(
                 project.provider {
                     listOf(
                         GitHubArtifact.release(
@@ -83,14 +83,14 @@ class ToxopidBasePlugin : Plugin<Project> {
             )
         }
 
-        project.tasks.create("runMindustryClient", MindustryExec::class.java) {
+        project.tasks.register("runMindustryClient", MindustryExec::class.java) {
             it.group = Toxopid.TASK_GROUP_NAME
             it.classpath.setFrom(downloadMindustryClient)
             it.mainClass.convention("mindustry.desktop.DesktopLauncher")
             it.modsPath.convention("./mods")
         }
 
-        project.tasks.create("runMindustryServer", MindustryExec::class.java) {
+        project.tasks.register("runMindustryServer", MindustryExec::class.java) {
             it.group = Toxopid.TASK_GROUP_NAME
             it.classpath.setFrom(downloadMindustryServer)
             it.mainClass.convention("mindustry.server.ServerLauncher")

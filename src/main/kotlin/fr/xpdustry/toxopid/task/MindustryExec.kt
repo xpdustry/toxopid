@@ -29,23 +29,54 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.*
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.TaskAction
 import java.io.File
 
+/**
+ * Starts a Mindustry instance, blocks the build process until closing.
+ * Every jar and zip mods are deleted every time its run so make sure you include
+ * them in [MindustryExec.mods] and not directly in the [MindustryExec.workingDir].
+ */
 open class MindustryExec : DefaultTask() {
 
+    /**
+     * The classpath of this Mindustry instance.
+     *
+     * **Only modify if you know what you are doing.**
+     */
     @get:InputFiles
     val classpath: ConfigurableFileCollection = project.objects.fileCollection()
 
+    /**
+     * The main class of this Mindustry instance.
+     *
+     * **Only modify if you know what you are doing.**
+     */
     @get:Input
     val mainClass: Property<String> = project.objects.property(String::class.java)
 
+    /**
+     * The directory where the game loads the mods, relative to the [MindustryExec.workingDir].
+     *
+     * **Only modify if you know what you are doing.**
+     */
     @get:Input
     val modsPath: Property<String> = project.objects.property(String::class.java)
 
+    /**
+     * The mods to load.
+     */
     @get:InputFiles
     val mods: ConfigurableFileCollection = project.objects.fileCollection()
 
+    /**
+     * The working directory of this Mindustry instance. The temporary directory of this task by default
+     * (`build/tmp/task-name`).
+     */
     @get:Optional
     @get:InputDirectory
     val workingDir: DirectoryProperty = project.objects.directoryProperty()

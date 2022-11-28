@@ -48,7 +48,7 @@ open class ToxopidExtension(project: Project) {
     val platforms: SetProperty<ModPlatform> = project.objects.setProperty(ModPlatform::class.java)
 
     init {
-        compileVersion.convention("v126.2")
+        compileVersion.convention("v140")
         runtimeVersion.convention(project.provider(compileVersion::get))
         platforms.convention(setOf(ModPlatform.DESKTOP))
     }

@@ -35,12 +35,19 @@ import org.gradle.api.plugins.ExtensionContainer
 import java.net.URI
 
 /**
- * Adds the jitpack maven repo to the artifacts of Anuken.
+ * Adds the jitpack repository restricted to Anuke artifacts.
  */
-fun RepositoryHandler.anukenJitpack() = maven {
-    it.name = "anuken-jitpack"
-    it.url = URI("https://www.jitpack.io")
-    it.mavenContent { c -> c.includeGroupByRegex("^com\\.github\\.Anuken.*") }
+fun RepositoryHandler.anukenJitpack() = maven { repository ->
+    repository.name = "anuken-jitpack"
+    repository.url = URI("https://www.jitpack.io")
+    repository.mavenContent { content ->
+        content.includeGroupByRegex("^com\\.github\\.Anuken(\\.[\\w-]+)*$")
+    }
+    repository.metadataSources { metadata ->
+        metadata.gradleMetadata()
+        metadata.mavenPom()
+        metadata.artifact()
+    }
 }
 
 /**
@@ -48,16 +55,12 @@ fun RepositoryHandler.anukenJitpack() = maven {
  * - It adds `arc-core` and `mindustry-core` by default.
  * - If [ModPlatform.HEADLESS] is present in the target platforms,
  *   `arc-backend-headless` and `mindustry-server` are added.
- * - If [ModPlatform.DESKTOP] is present in the target platforms,
- *   `mindustry-desktop` is added.
  */
 fun DependencyHandler.mindustryDependencies() {
-    val extension = extensions.getToxopidExtension()
     mindustryCoreDependencies()
-    if (extension.platforms.get().contains(ModPlatform.HEADLESS))
+    if (extensions.getToxopidExtension().platforms.get().contains(ModPlatform.HEADLESS)) {
         mindustryHeadlessDependencies()
-    if (extension.platforms.get().contains(ModPlatform.DESKTOP))
-        mindustryDesktopDependencies()
+    }
 }
 
 fun DependencyHandler.mindustryCoreDependencies() {
@@ -72,6 +75,7 @@ fun DependencyHandler.mindustryHeadlessDependencies() {
     mindustryDependency("com.github.Anuken.Mindustry:server:$version")
 }
 
+@Deprecated("No longer uploaded by Anuke.")
 fun DependencyHandler.mindustryDesktopDependencies() {
     val version = extensions.getToxopidExtension().compileVersion.get()
     mindustryDependency("com.github.Anuken.Mindustry:desktop:$version")

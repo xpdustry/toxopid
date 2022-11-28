@@ -26,37 +26,59 @@
 package fr.xpdustry.toxopid.task
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.provider.ListProperty
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.OutputFiles
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import java.io.File
+import java.net.URL
 
 /**
- * This task downloads a list of artifacts from GitHub.
+ * Downloads a mod release artifact from a GitHub repository.
  */
-@Deprecated(
-    message = "This class has been replaced by a far simpler alternative.",
-    replaceWith = ReplaceWith("fr.xpdustry.toxopid.task.GithubArtifactDownload")
-)
 @CacheableTask
-open class GitHubDownload : DefaultTask() {
+open class ModArtifactDownload : DefaultTask() {
 
+    /**
+     * The repository user.
+     */
     @get:Input
-    val artifacts: ListProperty<GitHubArtifact> =
-        project.objects.listProperty(GitHubArtifact::class.java)
+    val user: Property<String> = project.objects.property(String::class.java)
 
-    @get:OutputFiles
-    val files: List<File>
-        get() = artifacts.get().map { temporaryDir.resolve(it.name) }
+    /**
+     * The repository name.
+     */
+    @get:Input
+    val repo: Property<String> = project.objects.property(String::class.java)
+
+    /**
+     * The release version.
+     */
+    @get:Input
+    val version: Property<String> = project.objects.property(String::class.java)
+
+    /**
+     * The name of the artifact, is "[ModArtifactDownload.name].jar" by default.
+     */
+    @get:Input @get:Optional
+    val name: Property<String> = project.objects.property(String::class.java)
+
+    /**
+     * The output file.
+     */
+    @get:OutputFile
+    val output: RegularFileProperty = project.objects.fileProperty()
+
+    init {
+        name.convention(project.provider { repo.get() + ".jar" })
+        output.convention { temporaryDir.resolve(name.get()) }
+    }
 
     @TaskAction
-    fun downloadArtifacts() {
-        project.delete(temporaryDir.listFiles())
-        artifacts.get().forEach { artifact ->
-            val file = temporaryDir.resolve(artifact.name)
-            artifact.url.openStream().use { `in` -> file.outputStream().use { `in`.copyTo(it) } }
-        }
+    fun download() {
+        val url = URL("https://github.com/${user.get()}/${repo.get()}/releases/download/${version.get()}/${name.get()}")
+        output.asFile.get().outputStream().use { o -> url.openStream().use { i -> i.copyTo(o) } }
     }
 }

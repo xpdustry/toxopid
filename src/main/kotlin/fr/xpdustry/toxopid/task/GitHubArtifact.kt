@@ -27,6 +27,10 @@ package fr.xpdustry.toxopid.task
 
 import java.net.URL
 
+@Deprecated(
+    message = "This class has been replaced by a far simpler alternative.",
+    replaceWith = ReplaceWith("fr.xpdustry.toxopid.task.GithubArtifactDownload")
+)
 interface GitHubArtifact : java.io.Serializable {
 
     val name: String
@@ -39,6 +43,10 @@ interface GitHubArtifact : java.io.Serializable {
          * This artifact is an entire GitHub repo as a zip,
          * usually for javascript and (h)json mods.
          */
+        @Deprecated(
+            message = "This method has been replaced by a far simpler alternative.",
+            replaceWith = ReplaceWith("fr.xpdustry.toxopid.task.GithubArtifactDownload")
+        )
         @JvmOverloads
         fun zip(user: String, repo: String, branch: String = "master"): GitHubArtifact =
             ZipGitHubArtifact(user, repo, branch)
@@ -47,10 +55,18 @@ interface GitHubArtifact : java.io.Serializable {
          * This artifact is a file from a release in a GitHub repo,
          * usually for jvm mods/plugins.
          */
+        @Deprecated(
+            message = "This method has been replaced by a far simpler alternative.",
+            replaceWith = ReplaceWith("fr.xpdustry.toxopid.task.GithubArtifactDownload")
+        )
         fun release(user: String, repo: String, version: String, name: String): GitHubArtifact =
             ReleaseGitHubArtifact(user, repo, name, version)
     }
 
+    @Deprecated(
+        message = "This class has been replaced by a far simpler alternative.",
+        replaceWith = ReplaceWith("fr.xpdustry.toxopid.task.GithubArtifactDownload")
+    )
     private class ZipGitHubArtifact constructor(
         override val user: String,
         override val repo: String,
@@ -60,6 +76,10 @@ interface GitHubArtifact : java.io.Serializable {
         override val url = URL("https://github.com/$user/$repo/archive/refs/heads/$branch.zip")
     }
 
+    @Deprecated(
+        message = "This class has been replaced by a far simpler alternative.",
+        replaceWith = ReplaceWith("fr.xpdustry.toxopid.task.GithubArtifactDownload")
+    )
     private class ReleaseGitHubArtifact constructor(
         override val user: String,
         override val repo: String,
