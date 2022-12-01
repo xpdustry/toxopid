@@ -38,7 +38,7 @@ import java.io.File
  */
 @Deprecated(
     message = "This class has been replaced by a far simpler alternative.",
-    replaceWith = ReplaceWith("fr.xpdustry.toxopid.task.GithubArtifactDownload")
+    replaceWith = ReplaceWith("fr.xpdustry.toxopid.task.ModArtifactDownload")
 )
 @CacheableTask
 open class GitHubDownload : DefaultTask() {
