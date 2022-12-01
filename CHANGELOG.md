@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v2.2.0 - 2022-12-01
+
+### Changes
+
+- The default mmindustry version is now `v140`.
+- 
+- Deprecated `GithubArtifact` and `GithubDownload` in favor of a simpler API `ModArtifactDownload`.
+- 
+- Random optimizations.
+- 
+
+### Chores
+
+- Changed the internals to comply with the "configuration driven plugins".
+
 ## v2.1.1
 
 ### Fixes
@@ -16,8 +31,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changes
 
 - `GitHubArtifact` is now an interface that can be implemented.
-
+- 
 - Misc changes.
+- 
 
 ### Fixes
 
@@ -30,12 +46,13 @@ Complete overhaul of the plugin, it now follows gradle plugin convention to allo
 ### Changes
 
 - Multiple sub-plugins.
-
+- 
 - Task pipelines. (`downloadMindustry` -> `runMindustry`)
-
+- 
 - Simpler extension settings...
-
+- 
 - Much more !!!
+- 
 
 ## v1.3.2
 
@@ -56,13 +73,14 @@ Complete overhaul of the plugin, it now follows gradle plugin convention to allo
 ### Changes
 
 - Renamed `MindustryDependency` to `ModDependency`.
-
+- 
 - Renamed `MindustryTarget` to `ModTarget`.
-
+- 
 - Renamed `ToxopidExtension` attributes accordingly.
-
+- 
 - Removed `modFile`.
-
+- 
 - Bug fixes related to `MindustryExec` tasks
-
+- 
 - Addition of `addArtifact` method to `MindustryExec` for gradle multi-projects.
+- 
