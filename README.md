@@ -61,7 +61,7 @@ The following examples assume you are using a kotlin build script ([which are mu
   }
   ```
 
-- You can use your `[mod|plugin].[h]json` in your build script with `ModMetadata` :
+- You can load your `[mod|plugin].[h]json` in your build script with `ModMetadata` :
 
   ```kotlin
   import fr.xpdustry.toxopid.util.ModMetadata
@@ -116,4 +116,9 @@ The following examples assume you are using a kotlin build script ([which are mu
   }
   ```
   
+## Support
+
+If you need help, you can talk to the maintainers on the [Xpdustry Discord](https://discord.xpdustry.fr) in the `#support` channel.
+  
+
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy), or [mgpp](https://github.com/PlumyGame/mgpp).
