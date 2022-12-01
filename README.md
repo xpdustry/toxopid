@@ -1,6 +1,6 @@
 # Toxopid
 
-![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/fr.xpdustry.toxopid)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/fr.xpdustry.toxopid)](https://plugins.gradle.org/plugin/fr.xpdustry.toxopid)
 [![Commit](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml)
 [![Javadoc](https://img.shields.io/badge/Javadoc-latest-ffff00)](https://maven.xpdustry.fr/javadoc/releases/fr/xpdustry/toxopid/latest/)
 [![Mindustry 6.0 | 7.0 ](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0-ffd37f)](https://github.com/Anuken/Mindustry/releases)
