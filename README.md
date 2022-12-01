@@ -82,6 +82,7 @@ The following examples assume you are using a kotlin build script ([which are mu
       description = "A very nice mod :)",
       main = "com.example.mod.ModMain"
   )
+
   tasks.jar {
       // Doing it in doFirst makes sure it's only executed when this task runs
       doFirst {
