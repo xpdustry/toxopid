@@ -121,8 +121,8 @@ open class MindustryExec : DefaultTask() {
             it.classpath = classpath
             it.standardInput = System.`in`
             it.environment["MINDUSTRY_DATA_DIR"] = workingDir.get().asFile.absolutePath
-            it.args(args)
-            it.jvmArgs(jvmArgs)
+            it.args(args.get())
+            it.jvmArgs(jvmArgs.get())
         }
     }
 
