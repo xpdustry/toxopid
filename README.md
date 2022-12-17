@@ -17,7 +17,7 @@ The following examples assume you are using a kotlin build script ([which are mu
 
 ### Getting started
 
-1. Add the plugin in your build script :
+1. Add the plugin to your build script :
 
     ```kotlin
     plugins {
@@ -25,11 +25,11 @@ The following examples assume you are using a kotlin build script ([which are mu
     }
     ```
 
-2. Set up the Toxopid extension to fit your needs :
+2. Set up Toxopid to fit your needs :
 
     ```kotlin
     import fr.xpdustry.toxopid.ModPlatform
-   
+
     toxopid {
         // The version with which your mod/plugin is compiled.
         // If not set, will compile with v140 by default.
@@ -43,55 +43,54 @@ The following examples assume you are using a kotlin build script ([which are mu
     }
     ```
 
+3. Automatically add Mindustry dependencies with :
+
+    ```kotlin
+    import fr.xpdustry.toxopid.util.anukenJitpack
+    import fr.xpdustry.toxopid.util.mindustryDependencies
+
+    repositories {
+        mavenCentral()
+        anukenJitpack()
+    }
+
+    dependencies {
+        mindustryDependencies()
+    }
+    ```
+
+4.  Load the info of your `[mod|plugin].[h]json` in your build script with `ModMetadata` :
+    ```kotlin
+    import fr.xpdustry.toxopid.util.ModMetadata
+
+    val metadata = ModMetadata.fromJson(project.file("mod.hjson"))
+    // Setting the project version from the one located in "mod.json"
+    project.version = metadata.version
+    ```
+    or directly generate your `[mod|plugin].[h]json` from your build script :
+
+    ```kotlin
+    import fr.xpdustry.toxopid.util.ModMetadata
+
+    val metadata = ModMetadata(
+        name = "example",
+        displayName = "Example",
+        description = "A very nice mod :)",
+        main = "com.example.mod.ModMain"
+    )
+    ```
+5. Include your `[mod|plugin].[h]json` into the build jar
+    ```kotlin
+    tasks.jar {
+        // Doing it in doFirst makes sure it's only executed when this task runs
+        doFirst {
+            val temp = temporaryDir.resolve("mod.json")
+            temp.writeText(metadata.toJson(true))
+            from(temp)
+        }
+    }
+    ```
 ### Features
-
-- You can automatically add Mindustry dependencies with :
-
-  ```kotlin
-  import fr.xpdustry.toxopid.util.anukenJitpack
-  import fr.xpdustry.toxopid.util.mindustryDependencies
-
-  repositories {
-      mavenCentral()
-      anukenJitpack()
-  }
-
-  dependencies {
-      mindustryDependencies()
-  }
-  ```
-
-- You can use the info of your `[mod|plugin].[h]json` in your build script with `ModMetadata` :
-
-  ```kotlin
-  import fr.xpdustry.toxopid.util.ModMetadata
-  
-  val metadata = ModMetadata.fromJson(project.file("mod.hjson"))
-  // Setting the project version from the one located in "mod.json"
-  project.version = metadata.version
-  ```
-
-  or directly generating your `[mod|plugin].[h]json` inside the build script and include it in the jar :
-
-  ```kotlin
-  import fr.xpdustry.toxopid.util.ModMetadata
-  
-  val metadata = ModMetadata(
-      name = "example",
-      displayName = "Example",
-      description = "A very nice mod :)",
-      main = "com.example.mod.ModMain"
-  )
-
-  tasks.jar {
-      // Doing it in doFirst makes sure it's only executed when this task runs
-      doFirst {
-          val temp = temporaryDir.resolve("mod.json")
-          temp.writeText(metadata.toJson(true))
-          from(temp)
-     }
-  }
-  ```
 
 - You can run your mod/plugin in a Mindustry client or server locally with the `runMindustryClient` and
   `runMindustryServer` tasks.
