@@ -63,7 +63,7 @@ The following examples assume you are using a kotlin build script ([which are mu
     ```kotlin
     import fr.xpdustry.toxopid.util.ModMetadata
 
-    val metadata = ModMetadata.fromJson(project.file("mod.hjson"))
+    val metadata = ModMetadata.fromJson(project.file("mod.json"))
     // Setting the project version from the one located in "mod.json"
     project.version = metadata.version
     ```
