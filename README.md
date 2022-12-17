@@ -13,7 +13,8 @@ It follows the gradle good practices as closely as possible for maximum efficien
 
 ## Usage
 
-The following examples assume you are using a kotlin build script ([which are much better than regular groovy scripts](https://docs.gradle.org/current/userguide/kotlin_dsl.html)).
+The following examples assume you are using a kotlin build
+script ([which are much better than regular groovy scripts](https://docs.gradle.org/current/userguide/kotlin_dsl.html)).
 
 ### Getting started
 
@@ -59,49 +60,54 @@ The following examples assume you are using a kotlin build script ([which are mu
     }
     ```
 
-4.  Load the info of your `[mod|plugin].[h]json` in your build script with `ModMetadata` and include it in the final Jar:
-    ```kotlin
-    import fr.xpdustry.toxopid.util.ModMetadata
+4. Load the info of your `[mod|plugin].[h]json` in your build script with `ModMetadata` and include it in the final
+   Jar :
 
-    val metadata = ModMetadata.fromJson(project.file("mod.json"))
-    // Setting the project version from the one located in "mod.json"
-    project.version = metadata.version
-    
-    tasks.jar {
-        // Doing it in doFirst makes sure it's only executed when this task runs
-        doFirst {
-            from(file("mod.json"))
-        }
-    }
-    ```
-    or directly generate your `[mod|plugin].[h]json` from your build script and write it to the final Jar :
+   ```kotlin
+   import fr.xpdustry.toxopid.util.ModMetadata
 
-    ```kotlin
-    import fr.xpdustry.toxopid.util.ModMetadata
+   val metadata = ModMetadata.fromJson(project.file("mod.json"))
+   // Setting the project version from the one located in "mod.json"
+   project.version = metadata.version
+   
+   tasks.jar {
+       // Doing it in doFirst makes sure it's only executed when this task runs
+       doFirst {
+           from(file("mod.json"))
+       }
+   }
+   ```
 
-    val metadata = ModMetadata(
-        name = "example",
-        displayName = "Example",
-        description = "A very nice mod :)",
-        main = "com.example.mod.ModMain"
-    )
-    
-    tasks.jar {
-        // Doing it in doFirst makes sure it's only executed when this task runs
-        doFirst {
-            val temp = temporaryDir.resolve("mod.json")
-            temp.writeText(metadata.toJson(true))
-            from(temp)
-        }
-    }
-    ```
+   or directly generate your `[mod|plugin].[h]json` from your build script and write it to the final Jar :
+
+   ```kotlin
+   import fr.xpdustry.toxopid.util.ModMetadata
+
+   val metadata = ModMetadata(
+       name = "example",
+       displayName = "Example",
+       description = "A very nice mod :)",
+       main = "com.example.mod.ModMain"
+   )
+   
+   tasks.jar {
+       // Doing it in doFirst makes sure it's only executed when this task runs
+       doFirst {
+           val temp = temporaryDir.resolve("mod.json")
+           temp.writeText(metadata.toJson(true))
+           from(temp)
+       }
+   }
+   ```
 
 ### Features
 
 - You can run your mod/plugin in a Mindustry client or server locally with the `runMindustryClient` and
   `runMindustryServer` tasks.
 
-- If your mod relies on another, you can download the dependency jar from GitHub with the `ModArtifactDownload` task, or include it locally :
+- If your mod/plugin relies on another, you can download the dependency jar from GitHub with the `ModArtifactDownload`
+  task, or
+  include it locally :
 
   ```kotlin
   import fr.xpdustry.toxopid.task.ModArtifactDownload
@@ -117,12 +123,14 @@ The following examples assume you are using a kotlin build script ([which are mu
   val localMod = project.file("./libs/LocalMod.jar")
   
   tasks.runMindustryClient {
+      // Don't forget to add your mod/plugin jar to the mods list
       mods.setFrom(setOf(tasks.jar, downloadMod, localMod))
   }
   ```
-  
+
 ## Support
 
-If you need help, you can talk to the maintainers on the [Xpdustry Discord](https://discord.xpdustry.fr) in the `#support` channel.
+If you need help, you can talk to the maintainers on the [Xpdustry Discord](https://discord.xpdustry.fr) in
+the `#support` channel.
 
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy), or [mgpp](https://github.com/PlumyGame/mgpp).
