@@ -79,7 +79,7 @@ The following examples assume you are using a kotlin build script ([which are mu
         main = "com.example.mod.ModMain"
     )
     ```
-5. Include your `[mod|plugin].[h]json` into the build jar
+5. Include the generated `ModMetadata` into the build jar of your mod/plugin 
     ```kotlin
     tasks.jar {
         // Doing it in doFirst makes sure it's only executed when this task runs
@@ -90,6 +90,8 @@ The following examples assume you are using a kotlin build script ([which are mu
         }
     }
     ```
+    
+    > If you did not generated or modified the mod metadata in your build script, simply include the local `[mod|plugin].[h]json` with `from(file("mod.json"))`.
 ### Features
 
 - You can run your mod/plugin in a Mindustry client or server locally with the `runMindustryClient` and
