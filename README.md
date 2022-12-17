@@ -61,7 +61,7 @@ The following examples assume you are using a kotlin build script ([which are mu
   }
   ```
 
-- You can use your `[mod|plugin].[h]json` in your build script with `ModMetadata` :
+- You can use the info of your `[mod|plugin].[h]json` in your build script with `ModMetadata` :
 
   ```kotlin
   import fr.xpdustry.toxopid.util.ModMetadata
@@ -71,7 +71,7 @@ The following examples assume you are using a kotlin build script ([which are mu
   project.version = metadata.version
   ```
 
-  or generate one from a `ModMetadata` :
+  or directly generating your `[mod|plugin].[h]json` inside the build script and include it in the jar :
 
   ```kotlin
   import fr.xpdustry.toxopid.util.ModMetadata

@@ -28,6 +28,7 @@ package fr.xpdustry.toxopid.task
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
@@ -74,6 +75,22 @@ open class MindustryExec : DefaultTask() {
     val mods: ConfigurableFileCollection = project.objects.fileCollection()
 
     /**
+     * The arguments to pass to the Mindustry instance for startup commands.
+     */
+    @get:Optional
+    @get:Input
+    val args: ListProperty<String> = project.objects.listProperty(String::class.java)
+
+    /**
+     * The JVM arguments to pass to the Mindustry instance.
+     *
+     * *Use it to attach a debugger.*
+     */
+    @get:Optional
+    @get:Input
+    val jvmArgs: ListProperty<String> = project.objects.listProperty(String::class.java)
+
+    /**
      * The working directory of this Mindustry instance. The temporary directory of this task by default
      * (`build/tmp/task-name`).
      */
@@ -83,6 +100,8 @@ open class MindustryExec : DefaultTask() {
 
     init {
         workingDir.convention(project.layout.dir(project.provider { temporaryDir }))
+        args.convention(listOf())
+        jvmArgs.convention(listOf())
     }
 
     @TaskAction
@@ -102,6 +121,8 @@ open class MindustryExec : DefaultTask() {
             it.classpath = classpath
             it.standardInput = System.`in`
             it.environment["MINDUSTRY_DATA_DIR"] = workingDir.get().asFile.absolutePath
+            it.args(args)
+            it.jvmArgs(jvmArgs)
         }
     }
 
