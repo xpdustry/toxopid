@@ -59,15 +59,22 @@ The following examples assume you are using a kotlin build script ([which are mu
     }
     ```
 
-4.  Load the info of your `[mod|plugin].[h]json` in your build script with `ModMetadata` :
+4.  Load the info of your `[mod|plugin].[h]json` in your build script with `ModMetadata` and include it in the final Jar:
     ```kotlin
     import fr.xpdustry.toxopid.util.ModMetadata
 
     val metadata = ModMetadata.fromJson(project.file("mod.json"))
     // Setting the project version from the one located in "mod.json"
     project.version = metadata.version
+    
+    tasks.jar {
+        // Doing it in doFirst makes sure it's only executed when this task runs
+        doFirst {
+            from(file("mod.json"))
+        }
+    }
     ```
-    or directly generate your `[mod|plugin].[h]json` from your build script :
+    or directly generate your `[mod|plugin].[h]json` from your build script and write it to the final Jar :
 
     ```kotlin
     import fr.xpdustry.toxopid.util.ModMetadata
@@ -78,9 +85,7 @@ The following examples assume you are using a kotlin build script ([which are mu
         description = "A very nice mod :)",
         main = "com.example.mod.ModMain"
     )
-    ```
-5. Include the generated `ModMetadata` into the build jar of your mod/plugin 
-    ```kotlin
+    
     tasks.jar {
         // Doing it in doFirst makes sure it's only executed when this task runs
         doFirst {
@@ -90,8 +95,7 @@ The following examples assume you are using a kotlin build script ([which are mu
         }
     }
     ```
-    
-    > If you did not generated or modified the mod metadata in your build script, simply include the local `[mod|plugin].[h]json` with `from(file("mod.json"))`.
+
 ### Features
 
 - You can run your mod/plugin in a Mindustry client or server locally with the `runMindustryClient` and
