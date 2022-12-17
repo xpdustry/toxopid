@@ -1,6 +1,6 @@
 # Toxopid
 
-![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/fr.xpdustry.toxopid)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/fr.xpdustry.toxopid)](https://plugins.gradle.org/plugin/fr.xpdustry.toxopid)
 [![Commit](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml)
 [![Javadoc](https://img.shields.io/badge/Javadoc-latest-ffff00)](https://maven.xpdustry.fr/javadoc/releases/fr/xpdustry/toxopid/latest/)
 [![Mindustry 6.0 | 7.0 ](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0-ffd37f)](https://github.com/Anuken/Mindustry/releases)
@@ -116,4 +116,8 @@ The following examples assume you are using a kotlin build script ([which are mu
   }
   ```
   
+## Support
+
+If you need help, you can talk to the maintainers on the [Xpdustry Discord](https://discord.xpdustry.fr) in the `#support` channel.
+
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy), or [mgpp](https://github.com/PlumyGame/mgpp).
