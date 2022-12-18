@@ -60,8 +60,8 @@ script ([which are much better than regular groovy scripts](https://docs.gradle.
     }
     ```
 
-4. Load the info of your `[mod|plugin].[h]json` in your build script with `ModMetadata` and include it in the final
-   Jar :
+4. Load the info of your `[mod|plugin].[h]json` (placed next to your `build.gradle.kts`) in your build script with `ModMetadata` and include it in the final
+   Jar (placed next to your `build.gradle.kts`):
 
    ```kotlin
    import fr.xpdustry.toxopid.util.ModMetadata
@@ -104,7 +104,6 @@ script ([which are much better than regular groovy scripts](https://docs.gradle.
 
 - You can run your mod/plugin in a Mindustry client or server locally with the `runMindustryClient` and
   `runMindustryServer` tasks.
-
 - If your mod/plugin relies on another, you can download the dependency jar from GitHub with the `ModArtifactDownload`
   task, or
   include it locally :
@@ -125,6 +124,12 @@ script ([which are much better than regular groovy scripts](https://docs.gradle.
   tasks.runMindustryClient {
       // Don't forget to add your mod/plugin jar to the mods list
       mods.setFrom(setOf(tasks.jar, downloadMod, localMod))
+  }
+  ```
+- Pass additional launch arguments to mindustry :
+  ```kotlin
+  tasks.runMindustryClient {
+    jvmArgs.set(listOf("-argumentstopass"))
   }
   ```
 
