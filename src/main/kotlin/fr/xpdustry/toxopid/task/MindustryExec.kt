@@ -25,16 +25,10 @@
  */
 package fr.xpdustry.toxopid.task
 
-import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputDirectory
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 import java.io.File
 
 /**
@@ -51,14 +45,6 @@ open class MindustryExec : JavaExec() {
      */
     @get:InputFiles
     val classpath: ConfigurableFileCollection = project.objects.fileCollection()
-
-    /**
-     * The main class of this Mindustry instance.
-     *
-     * **Only modify if you know what you are doing.**
-     */
-    @get:Input
-    val mainClass: Property<String> = project.objects.property(String::class.java)
 
     /**
      * The directory where the game loads the mods, relative to the [MindustryExec.workingDir].
@@ -90,23 +76,15 @@ open class MindustryExec : JavaExec() {
     @get:Input
     val jvmArgs: ListProperty<String> = project.objects.listProperty(String::class.java)
 
-    /**
-     * The working directory of this Mindustry instance. The temporary directory of this task by default
-     * (`build/tmp/task-name`).
-     */
-    @get:Optional
-    @get:InputDirectory
-    val workingDir: DirectoryProperty = project.objects.directoryProperty()
-
     init {
-        workingDir.convention(project.layout.dir(project.provider { temporaryDir }))
+        workingDir = project.layout.dir(project.provider { temporaryDir }).get().asFile
         args.convention(listOf())
         jvmArgs.convention(listOf())
     }
 
     @TaskAction
     fun runMindustry() {
-        val modsDirectory = workingDir.get().asFile.resolve(modsPath.get())
+        val modsDirectory = workingDir.resolve(modsPath.get())
 
         modsDirectory.mkdirs()
         project.delete(modsDirectory.listFiles()?.filter(::isValidMod))
@@ -115,15 +93,14 @@ open class MindustryExec : JavaExec() {
             it.copyTo(modsDirectory.resolve(it.name))
         }
 
-        it.mainClass.set(mainClass)
-        it.workingDir = workingDir.get().asFile
-        it.classpath = classpath
-        it.standardInput = System.`in`
-        it.environment["MINDUSTRY_DATA_DIR"] = workingDir.get().asFile.absolutePath
-        it.args(args.get())
-        it.jvmArgs(jvmArgs.get())
+        mainClass.set(project.objects.property(String::class.java))
+
+        standardInput = System.`in`
+        environment["MINDUSTRY_DATA_DIR"] = workingDir.absolutePath
+        args(args.get())
+        jvmArgs(jvmArgs.get())
     }
 
     private fun isValidMod(file: File) =
-        file.isFile && (file.extension == "jar" || file.extension == "zip")
+            file.isFile && (file.extension == "jar" || file.extension == "zip")
 }
