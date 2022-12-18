@@ -42,7 +42,7 @@ import java.io.File
  * Every jar and zip mods are deleted every time its run so make sure you include
  * them in [MindustryExec.mods] and not directly in the [MindustryExec.workingDir].
  */
-open class MindustryExec : DefaultTask() {
+open class MindustryExec : JavaExec() {
 
     /**
      * The classpath of this Mindustry instance.
@@ -115,15 +115,13 @@ open class MindustryExec : DefaultTask() {
             it.copyTo(modsDirectory.resolve(it.name))
         }
 
-        project.javaexec {
-            it.mainClass.set(mainClass)
-            it.workingDir = workingDir.get().asFile
-            it.classpath = classpath
-            it.standardInput = System.`in`
-            it.environment["MINDUSTRY_DATA_DIR"] = workingDir.get().asFile.absolutePath
-            it.args(args.get())
-            it.jvmArgs(jvmArgs.get())
-        }
+        it.mainClass.set(mainClass)
+        it.workingDir = workingDir.get().asFile
+        it.classpath = classpath
+        it.standardInput = System.`in`
+        it.environment["MINDUSTRY_DATA_DIR"] = workingDir.get().asFile.absolutePath
+        it.args(args.get())
+        it.jvmArgs(jvmArgs.get())
     }
 
     private fun isValidMod(file: File) =
