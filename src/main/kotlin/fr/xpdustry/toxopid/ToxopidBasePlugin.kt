@@ -45,7 +45,8 @@ class ToxopidBasePlugin : Plugin<Project> {
         project.dependencies.extensions.add(Toxopid.EXTENSION_NAME, extension)
 
         val downloadMindustryClient = project.tasks.register(
-            "downloadMindustryClient", JarArtifactDownload::class.java
+            "downloadMindustryClient",
+            JarArtifactDownload::class.java
         ) {
             it.group = Toxopid.TASK_GROUP_NAME
             it.user.set("Anuken")
