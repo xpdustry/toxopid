@@ -72,19 +72,19 @@ open class MindustryExec : JavaExec() {
 
         for (file in modsDirectory.listFiles()!!) {
             if (isValidModArchive(file) || isValidModDirectory(file)) {
-                logger.trace("Deleting mod: $file")
+                logger.debug("Deleting mod: $file")
                 project.delete(file)
             }
         }
         for (file in mods.files) {
             if (isValidModArchive(file) || isValidModDirectory(file)) {
-                logger.trace("Copying mod: $file")
+                logger.debug("Copying mod: $file")
                 project.copy {
                     it.from(file)
                     it.into(modsDirectory)
                 }
             } else {
-                logger.warn("Invalid mod file: $file")
+                logger.warn("Invalid mod file detected: $file")
             }
         }
 

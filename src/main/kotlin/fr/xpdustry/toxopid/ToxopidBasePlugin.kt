@@ -25,7 +25,7 @@
  */
 package fr.xpdustry.toxopid
 
-import fr.xpdustry.toxopid.task.JarArtifactDownload
+import fr.xpdustry.toxopid.task.GithubArtifactDownload
 import fr.xpdustry.toxopid.task.MindustryExec
 import net.kyori.mammoth.Extensions
 import org.gradle.api.Plugin
@@ -46,23 +46,24 @@ class ToxopidBasePlugin : Plugin<Project> {
 
         val downloadMindustryClient = project.tasks.register(
             "downloadMindustryClient",
-            JarArtifactDownload::class.java
+            GithubArtifactDownload::class.java
         ) {
             it.group = Toxopid.TASK_GROUP_NAME
             it.user.set("Anuken")
             it.repo.set("Mindustry")
+            it.name.set("Mindustry.jar")
             it.version.set(extension.runtimeVersion)
         }
 
         val downloadMindustryServer = project.tasks.register(
             "downloadMindustryServer",
-            JarArtifactDownload::class.java
+            GithubArtifactDownload::class.java
         ) {
             it.group = Toxopid.TASK_GROUP_NAME
             it.user.set("Anuken")
             it.repo.set("Mindustry")
+            it.name.set("server-release.jar")
             it.version.set(extension.runtimeVersion)
-            it.name.set("server-release")
         }
 
         project.tasks.register("runMindustryClient", MindustryExec::class.java) {

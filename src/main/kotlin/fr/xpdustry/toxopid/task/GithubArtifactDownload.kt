@@ -30,18 +30,17 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import java.net.URL
 
 /**
- * Downloads a mod release artifact from a GitHub repository.
+ * Downloads a release artifact from a GitHub repository.
  *
- * *The default work directory is the temporary directory of the task (eg: `build/tmp/<task-name>`)*
+ * *The default output file is in the temporary directory of the task (eg: `build/tmp/<task-name>/<artifact-name>`)*
  */
 @CacheableTask
-open class JarArtifactDownload : DefaultTask() {
+open class GithubArtifactDownload : DefaultTask() {
 
     /**
      * The repository user.
@@ -56,17 +55,16 @@ open class JarArtifactDownload : DefaultTask() {
     val repo: Property<String> = project.objects.property(String::class.java)
 
     /**
+     * The name of the artifact.
+     */
+    @get:Input
+    val name: Property<String> = project.objects.property(String::class.java)
+
+    /**
      * The release version.
      */
     @get:Input
     val version: Property<String> = project.objects.property(String::class.java)
-
-    /**
-     * The name of the artifact, is "[JarArtifactDownload.name].jar" by default.
-     */
-    @get:Input
-    @get:Optional
-    val name: Property<String> = project.objects.property(String::class.java)
 
     /**
      * The output file.
@@ -75,14 +73,13 @@ open class JarArtifactDownload : DefaultTask() {
     val output: RegularFileProperty = project.objects.fileProperty()
 
     init {
-        name.convention(repo)
-        output.convention { temporaryDir.resolve(name.get() + ".jar") }
+        output.convention { temporaryDir.resolve(name.get()) }
     }
 
     @TaskAction
     fun download() {
         val url =
-            URL("https://github.com/${user.get()}/${repo.get()}/releases/download/${version.get()}/${name.get() + ".jar"}")
+            URL("https://github.com/${user.get()}/${repo.get()}/releases/download/${version.get()}/${name.get()}")
         output.asFile.get().outputStream().use { o -> url.openStream().use { i -> i.copyTo(o) } }
     }
 }
