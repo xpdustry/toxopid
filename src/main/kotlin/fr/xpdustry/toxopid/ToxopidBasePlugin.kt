@@ -25,8 +25,7 @@
  */
 package fr.xpdustry.toxopid
 
-import fr.xpdustry.toxopid.task.GitHubArtifact
-import fr.xpdustry.toxopid.task.GitHubDownload
+import fr.xpdustry.toxopid.task.JarArtifactDownload
 import fr.xpdustry.toxopid.task.MindustryExec
 import net.kyori.mammoth.Extensions
 import org.gradle.api.Plugin
@@ -46,55 +45,39 @@ class ToxopidBasePlugin : Plugin<Project> {
         project.dependencies.extensions.add(Toxopid.EXTENSION_NAME, extension)
 
         val downloadMindustryClient = project.tasks.register(
-            "downloadMindustryClient",
-            GitHubDownload::class.java
+            "downloadMindustryClient", JarArtifactDownload::class.java
         ) {
             it.group = Toxopid.TASK_GROUP_NAME
-            it.artifacts.convention(
-                project.provider {
-                    listOf(
-                        GitHubArtifact.release(
-                            "Anuken",
-                            "Mindustry",
-                            extension.runtimeVersion.get(),
-                            "Mindustry.jar"
-                        )
-                    )
-                }
-            )
+            it.user.set("Anuken")
+            it.repo.set("Mindustry")
+            it.version.set(extension.runtimeVersion.map { version -> "v$version" })
         }
 
         val downloadMindustryServer = project.tasks.register(
             "downloadMindustryServer",
-            GitHubDownload::class.java
+            JarArtifactDownload::class.java
         ) {
             it.group = Toxopid.TASK_GROUP_NAME
-            it.artifacts.convention(
-                project.provider {
-                    listOf(
-                        GitHubArtifact.release(
-                            "Anuken",
-                            "Mindustry",
-                            extension.runtimeVersion.get(),
-                            "server-release.jar"
-                        )
-                    )
-                }
-            )
+            it.user.set("Anuken")
+            it.repo.set("Mindustry")
+            it.version.set(extension.runtimeVersion.map { version -> "v$version" })
+            it.name.set("server-release")
         }
 
         project.tasks.register("runMindustryClient", MindustryExec::class.java) {
             it.group = Toxopid.TASK_GROUP_NAME
-            it.classpath.setFrom(downloadMindustryClient)
+            it.classpath(downloadMindustryClient)
             it.mainClass.convention("mindustry.desktop.DesktopLauncher")
             it.modsPath.convention("./mods")
+            it.standardInput = System.`in`
         }
 
         project.tasks.register("runMindustryServer", MindustryExec::class.java) {
             it.group = Toxopid.TASK_GROUP_NAME
-            it.classpath.setFrom(downloadMindustryServer)
+            it.classpath(downloadMindustryServer)
             it.mainClass.convention("mindustry.server.ServerLauncher")
             it.modsPath.convention("./config/mods")
+            it.standardInput = System.`in`
         }
     }
 }

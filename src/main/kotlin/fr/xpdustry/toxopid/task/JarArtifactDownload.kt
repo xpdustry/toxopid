@@ -28,18 +28,16 @@ package fr.xpdustry.toxopid.task
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.CacheableTask
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 import java.net.URL
 
 /**
  * Downloads a mod release artifact from a GitHub repository.
+ *
+ * *The default work directory is the temporary directory of the task (eg: `build/tmp/<task-name>`)*
  */
 @CacheableTask
-open class ModArtifactDownload : DefaultTask() {
+open class JarArtifactDownload : DefaultTask() {
 
     /**
      * The repository user.
@@ -60,9 +58,10 @@ open class ModArtifactDownload : DefaultTask() {
     val version: Property<String> = project.objects.property(String::class.java)
 
     /**
-     * The name of the artifact, is "[ModArtifactDownload.name].jar" by default.
+     * The name of the artifact, is "[JarArtifactDownload.name].jar" by default.
      */
-    @get:Input @get:Optional
+    @get:Input
+    @get:Optional
     val name: Property<String> = project.objects.property(String::class.java)
 
     /**
@@ -72,13 +71,14 @@ open class ModArtifactDownload : DefaultTask() {
     val output: RegularFileProperty = project.objects.fileProperty()
 
     init {
-        name.convention(project.provider { repo.get() + ".jar" })
-        output.convention { temporaryDir.resolve(name.get()) }
+        name.convention(repo)
+        output.convention { temporaryDir.resolve(name.get() + ".jar") }
     }
 
     @TaskAction
     fun download() {
-        val url = URL("https://github.com/${user.get()}/${repo.get()}/releases/download/${version.get()}/${name.get()}")
+        val url =
+            URL("https://github.com/${user.get()}/${repo.get()}/releases/download/${version.get()}/${name.get() + ".jar"}")
         output.asFile.get().outputStream().use { o -> url.openStream().use { i -> i.copyTo(o) } }
     }
 }

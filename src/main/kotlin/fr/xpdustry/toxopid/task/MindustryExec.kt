@@ -25,43 +25,28 @@
  */
 package fr.xpdustry.toxopid.task
 
-import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.JavaExec
 import java.io.File
+import java.nio.file.Files
+import java.util.zip.ZipFile
 
 /**
  * Starts a Mindustry instance, blocks the build process until closing.
  * Every jar and zip mods are deleted every time its run so make sure you include
  * them in [MindustryExec.mods] and not directly in the [MindustryExec.workingDir].
  */
-open class MindustryExec : DefaultTask() {
+class MindustryExec : JavaExec() {
+
+    companion object {
+        val MOD_METADATA_FILE = Regex("(mod|plugin)\\.h?json")
+    }
 
     /**
-     * The classpath of this Mindustry instance.
-     *
-     * **Only modify if you know what you are doing.**
-     */
-    @get:InputFiles
-    val classpath: ConfigurableFileCollection = project.objects.fileCollection()
-
-    /**
-     * The main class of this Mindustry instance.
-     *
-     * **Only modify if you know what you are doing.**
-     */
-    @get:Input
-    val mainClass: Property<String> = project.objects.property(String::class.java)
-
-    /**
-     * The directory where the game loads the mods, relative to the [MindustryExec.workingDir].
+     * The directory where the game loads the mods, relative to the [MindustryExec.getWorkingDir].
      *
      * **Only modify if you know what you are doing.**
      */
@@ -74,58 +59,43 @@ open class MindustryExec : DefaultTask() {
     @get:InputFiles
     val mods: ConfigurableFileCollection = project.objects.fileCollection()
 
-    /**
-     * The arguments to pass to the Mindustry instance for startup commands.
-     */
-    @get:Optional
-    @get:Input
-    val args: ListProperty<String> = project.objects.listProperty(String::class.java)
-
-    /**
-     * The JVM arguments to pass to the Mindustry instance.
-     *
-     * *Use it to attach a debugger.*
-     */
-    @get:Optional
-    @get:Input
-    val jvmArgs: ListProperty<String> = project.objects.listProperty(String::class.java)
-
-    /**
-     * The working directory of this Mindustry instance. The temporary directory of this task by default
-     * (`build/tmp/task-name`).
-     */
-    @get:Optional
-    @get:InputDirectory
-    val workingDir: DirectoryProperty = project.objects.directoryProperty()
-
     init {
-        workingDir.convention(project.layout.dir(project.provider { temporaryDir }))
-        args.convention(listOf())
-        jvmArgs.convention(listOf())
+        workingDir = temporaryDir
     }
 
-    @TaskAction
-    fun runMindustry() {
-        val modsDirectory = workingDir.get().asFile.resolve(modsPath.get())
+    override fun exec() {
+        environment("MINDUSTRY_DATA_DIR", workingDir)
+        logger.debug("MINDUSTRY_DATA_DIR: $workingDir")
 
+        val modsDirectory = workingDir.resolve(modsPath.get())
         modsDirectory.mkdirs()
-        project.delete(modsDirectory.listFiles()?.filter(::isValidMod))
-        mods.files.forEach {
-            if (!isValidMod(it)) throw IllegalArgumentException("MindustryExec mods only support jar and zip files.")
-            it.copyTo(modsDirectory.resolve(it.name))
+
+        for (file in modsDirectory.listFiles()!!) {
+            if (isValidModArchive(file) || isValidModDirectory(file)) {
+                logger.trace("Deleting mod: $file")
+                project.delete(file)
+            }
+        }
+        for (file in mods.files) {
+            if (isValidModArchive(file) || isValidModDirectory(file)) {
+                logger.trace("Copying mod: $file")
+                project.copy {
+                    it.from(file)
+                    it.into(modsDirectory)
+                }
+            } else {
+                logger.warn("Invalid mod file: $file")
+            }
         }
 
-        project.javaexec {
-            it.mainClass.set(mainClass)
-            it.workingDir = workingDir.get().asFile
-            it.classpath = classpath
-            it.standardInput = System.`in`
-            it.environment["MINDUSTRY_DATA_DIR"] = workingDir.get().asFile.absolutePath
-            it.args(args.get())
-            it.jvmArgs(jvmArgs.get())
-        }
+        super.exec()
     }
 
-    private fun isValidMod(file: File) =
-        file.isFile && (file.extension == "jar" || file.extension == "zip")
+    private fun isValidModDirectory(file: File) =
+        file.isDirectory && Files.walk(file.toPath()).anyMatch { MOD_METADATA_FILE.matches(it.fileName.toString()) }
+
+    private fun isValidModArchive(file: File) =
+        file.isFile && (file.extension == "jar" || file.extension == "zip") && ZipFile(file).use { zip ->
+            zip.entries().asSequence().any { MOD_METADATA_FILE.matches(it.name) }
+        }
 }
