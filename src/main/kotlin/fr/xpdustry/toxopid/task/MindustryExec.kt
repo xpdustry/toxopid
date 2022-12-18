@@ -39,7 +39,7 @@ import java.util.zip.ZipFile
  * Every jar and zip mods are deleted every time its run so make sure you include
  * them in [MindustryExec.mods] and not directly in the [MindustryExec.workingDir].
  */
-class MindustryExec : JavaExec() {
+open class MindustryExec : JavaExec() {
 
     companion object {
         val MOD_METADATA_FILE = Regex("(mod|plugin)\\.h?json")

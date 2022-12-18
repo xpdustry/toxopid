@@ -51,7 +51,7 @@ class ToxopidBasePlugin : Plugin<Project> {
             it.group = Toxopid.TASK_GROUP_NAME
             it.user.set("Anuken")
             it.repo.set("Mindustry")
-            it.version.set(extension.runtimeVersion.map { version -> "v$version" })
+            it.version.set(extension.runtimeVersion)
         }
 
         val downloadMindustryServer = project.tasks.register(
@@ -61,7 +61,7 @@ class ToxopidBasePlugin : Plugin<Project> {
             it.group = Toxopid.TASK_GROUP_NAME
             it.user.set("Anuken")
             it.repo.set("Mindustry")
-            it.version.set(extension.runtimeVersion.map { version -> "v$version" })
+            it.version.set(extension.runtimeVersion)
             it.name.set("server-release")
         }
 
