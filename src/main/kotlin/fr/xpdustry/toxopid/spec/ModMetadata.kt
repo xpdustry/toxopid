@@ -45,7 +45,7 @@ data class ModMetadata(
     var keepOutlines: Boolean = false,
     var texturescale: Float = 1f,
     var pregenerated: Boolean = false,
-    val dependencies: MutableList<String> = mutableListOf(),
+    val dependencies: MutableList<String> = mutableListOf()
 ) {
     companion object {
         fun fromJson(json: String) = JsonObject

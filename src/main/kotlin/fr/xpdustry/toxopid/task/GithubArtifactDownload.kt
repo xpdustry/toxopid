@@ -36,8 +36,6 @@ import java.net.URL
 
 /**
  * Downloads a release artifact from a GitHub repository.
- *
- * *The default output file is in the temporary directory of the task (eg: `build/tmp/<task-name>/<artifact-name>`)*
  */
 @CacheableTask
 open class GithubArtifactDownload : DefaultTask() {
@@ -68,12 +66,14 @@ open class GithubArtifactDownload : DefaultTask() {
 
     /**
      * The output file.
+     *
+     * *Default location is `{gradle-user-home}/caches/toxopid/github-artifacts/{user}/{repo}/{version}/{name}`.*
      */
     @get:OutputFile
     val output: RegularFileProperty = project.objects.fileProperty()
 
     init {
-        output.convention { temporaryDir.resolve(name.get()) }
+        output.convention { project.gradle.gradleUserHomeDir.resolve("caches/toxopid/github-artifacts/${user.get()}/${repo.get()}/${version.get()}/${name.get()}") }
     }
 
     @TaskAction
