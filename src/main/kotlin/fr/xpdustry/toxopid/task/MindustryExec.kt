@@ -64,8 +64,8 @@ open class MindustryExec : JavaExec() {
     }
 
     override fun exec() {
+        logger.info("Starting Mindustry instance in $workingDir")
         environment("MINDUSTRY_DATA_DIR", workingDir)
-        logger.debug("MINDUSTRY_DATA_DIR: $workingDir")
 
         val modsDirectory = workingDir.resolve(modsPath.get())
         modsDirectory.mkdirs()

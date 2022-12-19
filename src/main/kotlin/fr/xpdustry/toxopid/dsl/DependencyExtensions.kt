@@ -23,11 +23,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid.util
+@file:JvmName("DependencyExtensions")
 
-import fr.xpdustry.toxopid.ModPlatform
+package fr.xpdustry.toxopid.dsl
+
 import fr.xpdustry.toxopid.Toxopid
 import fr.xpdustry.toxopid.ToxopidExtension
+import fr.xpdustry.toxopid.spec.ModPlatform
 import net.kyori.mammoth.Extensions
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.dsl.RepositoryHandler
@@ -58,27 +60,21 @@ fun RepositoryHandler.anukenJitpack() = maven { repository ->
  */
 fun DependencyHandler.mindustryDependencies() {
     mindustryCoreDependencies()
-    if (extensions.getToxopidExtension().platforms.get().contains(ModPlatform.HEADLESS)) {
+    if (extensions.toxopid.platforms.get().contains(ModPlatform.HEADLESS)) {
         mindustryHeadlessDependencies()
     }
 }
 
 fun DependencyHandler.mindustryCoreDependencies() {
-    val version = extensions.getToxopidExtension().compileVersion.get()
+    val version = extensions.toxopid.compileVersion.get()
     mindustryDependency("com.github.Anuken.Arc:arc-core:$version")
     mindustryDependency("com.github.Anuken.Mindustry:core:$version")
 }
 
 fun DependencyHandler.mindustryHeadlessDependencies() {
-    val version = extensions.getToxopidExtension().compileVersion.get()
+    val version = extensions.toxopid.compileVersion.get()
     mindustryDependency("com.github.Anuken.Arc:backend-headless:$version")
     mindustryDependency("com.github.Anuken.Mindustry:server:$version")
-}
-
-@Deprecated("No longer uploaded by Anuke.")
-fun DependencyHandler.mindustryDesktopDependencies() {
-    val version = extensions.getToxopidExtension().compileVersion.get()
-    mindustryDependency("com.github.Anuken.Mindustry:desktop:$version")
 }
 
 private fun DependencyHandler.mindustryDependency(dependency: String) {
@@ -86,5 +82,5 @@ private fun DependencyHandler.mindustryDependency(dependency: String) {
     add("testImplementation", dependency)
 }
 
-private fun ExtensionContainer.getToxopidExtension() = Extensions
-    .findOrCreate(this, Toxopid.EXTENSION_NAME, ToxopidExtension::class.java)
+private val ExtensionContainer.toxopid: ToxopidExtension
+    get() = Extensions.findOrCreate(this, Toxopid.EXTENSION_NAME, ToxopidExtension::class.java)

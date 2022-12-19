@@ -25,6 +25,7 @@
  */
 package fr.xpdustry.toxopid
 
+import fr.xpdustry.toxopid.spec.ModPlatform
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty
@@ -48,7 +49,7 @@ open class ToxopidExtension(project: Project) {
     val platforms: SetProperty<ModPlatform> = project.objects.setProperty(ModPlatform::class.java)
 
     init {
-        compileVersion.convention("v140")
+        compileVersion.convention("v${Toxopid.DEFAULT_MINDUSTRY_VERSION}")
         runtimeVersion.convention(project.provider(compileVersion::get))
         platforms.convention(setOf(ModPlatform.DESKTOP))
     }

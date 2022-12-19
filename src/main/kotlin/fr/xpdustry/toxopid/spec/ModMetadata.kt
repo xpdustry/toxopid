@@ -23,8 +23,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid.util
+package fr.xpdustry.toxopid.spec
 
+import fr.xpdustry.toxopid.Toxopid
 import groovy.json.JsonOutput
 import org.hjson.JsonObject
 import java.io.File
@@ -33,14 +34,18 @@ data class ModMetadata(
     var name: String = "",
     var displayName: String = "",
     var description: String = "",
+    var subtitle: String = "",
     var author: String = "",
     var version: String = "",
     var main: String = "",
     var repo: String = "",
-    var minGameVersion: String = "140",
+    var minGameVersion: String = Toxopid.DEFAULT_MINDUSTRY_VERSION,
     var hidden: Boolean = false,
     var java: Boolean = true,
-    val dependencies: MutableList<String> = mutableListOf()
+    var keepOutlines: Boolean = false,
+    var texturescale: Float = 1f,
+    var pregenerated: Boolean = false,
+    val dependencies: MutableList<String> = mutableListOf(),
 ) {
     companion object {
         fun fromJson(json: String) = JsonObject
@@ -51,6 +56,7 @@ data class ModMetadata(
                     getString("name", ""),
                     getString("displayName", ""),
                     getString("description", ""),
+                    getString("subtitle", ""),
                     getString("author", ""),
                     getString("version", ""),
                     getString("main", ""),
@@ -58,6 +64,9 @@ data class ModMetadata(
                     getString("minGameVersion", ""),
                     getBoolean("hidden", false),
                     getBoolean("java", true),
+                    getBoolean("keepOutlines", false),
+                    getFloat("texturescale", 1f),
+                    getBoolean("pregenerated", false),
                     get("dependencies")?.asArray()?.map { it.asString() }?.toMutableList()
                         ?: mutableListOf()
                 )

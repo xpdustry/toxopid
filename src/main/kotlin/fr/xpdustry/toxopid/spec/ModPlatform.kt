@@ -23,7 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid
+package fr.xpdustry.toxopid.spec
 
 enum class ModPlatform {
     DESKTOP, HEADLESS, ANDROID

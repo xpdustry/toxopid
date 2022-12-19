@@ -13,23 +13,22 @@ It follows the gradle good practices as closely as possible for maximum efficien
 
 ## Usage
 
-The following examples assume you are using a kotlin build
-script ([which are much better than regular groovy scripts](https://docs.gradle.org/current/userguide/kotlin_dsl.html)).
+The following examples assume you are using a kotlin build script.
 
 ### Getting started
 
 1. Add the plugin to your build script :
 
-    ```kotlin
+    ```gradle.kts
     plugins {
-        id("fr.xpdustry.toxopid") version "2.2.0"
+        id("fr.xpdustry.toxopid") version "3.0.0"
     }
     ```
 
 2. Set up Toxopid to fit your needs :
 
-    ```kotlin
-    import fr.xpdustry.toxopid.ModPlatform
+    ```gradle.kts
+    import fr.xpdustry.toxopid.spec.ModPlatform
 
     toxopid {
         // The version with which your mod/plugin is compiled.
@@ -46,9 +45,9 @@ script ([which are much better than regular groovy scripts](https://docs.gradle.
 
 3. Automatically add Mindustry dependencies with :
 
-    ```kotlin
-    import fr.xpdustry.toxopid.util.anukenJitpack
-    import fr.xpdustry.toxopid.util.mindustryDependencies
+    ```gradle.kts
+    import fr.xpdustry.toxopid.dsl.anukenJitpack
+    import fr.xpdustry.toxopid.dsl.mindustryDependencies
 
     repositories {
         mavenCentral()
@@ -63,8 +62,8 @@ script ([which are much better than regular groovy scripts](https://docs.gradle.
 4. Load the info of your `[mod|plugin].[h]json` in your build script with `ModMetadata` and include it in the final
    Jar :
 
-   ```kotlin
-   import fr.xpdustry.toxopid.util.ModMetadata
+   ```gradle.kts
+   import fr.xpdustry.toxopid.spec.ModMetadata
 
    val metadata = ModMetadata.fromJson(project.file("mod.json"))
    // Setting the project version from the one located in "mod.json"
@@ -80,14 +79,17 @@ script ([which are much better than regular groovy scripts](https://docs.gradle.
 
    or directly generate your `[mod|plugin].[h]json` from your build script and write it to the final Jar :
 
-   ```kotlin
-   import fr.xpdustry.toxopid.util.ModMetadata
+   ```gradle.kts
+   import fr.xpdustry.toxopid.spec.ModMetadata
 
+   project.version  = "1.0.0"
+   
    val metadata = ModMetadata(
        name = "example",
+       version = project.version.toString(),
        displayName = "Example",
        description = "A very nice mod :)",
-       main = "com.example.mod.ModMain"
+       main = "org.example.mod.ModMain"
    )
    
    tasks.jar {
@@ -109,15 +111,14 @@ script ([which are much better than regular groovy scripts](https://docs.gradle.
   task, or
   include it locally :
 
-  ```kotlin
-  import fr.xpdustry.toxopid.task.ModArtifactDownload
+  ```gradle.kts
+  import fr.xpdustry.toxopid.task.GithubArtifactDownload
 
-  val downloadMod = tasks.register<ModArtifactDownload>("downloadMod") {
-      it.user.set("Xpdustry")
+  val downloadMod = tasks.register<GithubArtifactDownload>("downloadMod") {
+      it.user.set("ExampleUser")
       it.repo.set("ExampleMod")
+      it.name.set("ExampleMod.jar")
       it.version.set("v1.0.0")
-      // Set the name if the artifact name isn't "(repo-name).jar" such as "ExampleMod.jar"
-      // it.name.set("Mod.jar")
   }
   
   val localMod = project.file("./libs/LocalMod.jar")
@@ -127,6 +128,20 @@ script ([which are much better than regular groovy scripts](https://docs.gradle.
       mods.setFrom(setOf(tasks.jar, downloadMod, localMod))
   }
   ```
+  
+## About migrating from Toxopid 2.x.x to 3.x.x
+
+- If you are using the `ModArtifactDownload`, rename it to `GithubDownloadArtifact` and add an explicit `name` as the name of the downloaded artifact.
+
+- The `GithubArtifact` and `GithubDownload` classes have been removed. You won't have a problem if you followed the depreciation warnings.
+
+- `MindustryExec` now extends `JavaExec` instead of extending `DefaultTask`. This means that you can now use the `JavaExec` API to configure the task.
+
+- The internal tasks of Toxopid have been changed to use the new task classes. If you were using them, you will have to update your code.
+
+- `ModPlatform` and `ModMetadata` have been moved to the `fr.xpdustry.toxopid.spec` package.
+
+- The extension methods have been moved to the `fr.xpdustry.toxopid.dsl` package.
 
 ## Support
 
