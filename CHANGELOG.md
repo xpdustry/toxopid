@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v3.0.0 - 2022-12-25
+
+Major release for y'all :)
+
+### Changes
+
+- `MindustryExec` now extends `JavaExec`, it enabled a better debugging experience and more control over the Mindustry instance runtime.
+- Renamed `JarArtifactDownload` to `GithubArtifactDownload`.
+- Added new data fields for `ModMetadata` (subtitle, keepOutlines, texturescale, pregenerated).
+- Moved some classes into dedicated packages (see migration guide at the bottom of the `README`).
+- Github artifacts are now cached in a shared directory in the gradle user home (see `GithubArtifactDownload.java`). Which means download once, use everywhere.
+
+### Added
+
+- Suport for non compressed mods in `MindustryExec`.
+
 ## v2.2.0 - 2022-12-01
 
 ### Changes
