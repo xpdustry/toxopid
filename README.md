@@ -135,9 +135,9 @@ The following examples assume you are using a kotlin build script.
 
 - The `GithubArtifact` and `GithubDownload` classes have been removed. You won't have a problem if you followed the depreciation warnings.
 
-- `MindustryExec` now extends `JavaExec` instead of extending `DefaultTask`. This means that you can now use the `JavaExec` API to configure the task.
+- `MindustryExec` now extends `JavaExec` instead of extending `DefaultTask`. The API is mostly the same but now with more control over the execution.
 
-- The internal tasks of Toxopid have been changed to use the new task classes. If you were using them, you will have to update your code.
+- The internal tasks of Toxopid have been changed to use the new task classes. Change your build scripts accordingly if you happen to configure them.
 
 - `ModPlatform` and `ModMetadata` have been moved to the `fr.xpdustry.toxopid.spec` package.
 
