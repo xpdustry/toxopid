@@ -107,9 +107,8 @@ The following examples assume you are using a kotlin build script.
 - You can run your mod/plugin in a Mindustry client or server locally with the `runMindustryClient` and
   `runMindustryServer` tasks.
 
-- If your mod/plugin relies on another, you can download the dependency jar from GitHub with the `ModArtifactDownload`
-  task, or
-  include it locally :
+- If your mod/plugin relies on another, you can download the dependency jar from GitHub with
+  the `GithubArtifactDownload` task, or include it locally :
 
   ```gradle.kts
   import fr.xpdustry.toxopid.task.GithubArtifactDownload
@@ -128,16 +127,20 @@ The following examples assume you are using a kotlin build script.
       mods.setFrom(setOf(tasks.jar, downloadMod, localMod))
   }
   ```
-  
+
 ## About migrating from Toxopid 2.x.x to 3.x.x
 
-- If you are using the `ModArtifactDownload`, rename it to `GithubDownloadArtifact` and add an explicit `name` as the name of the downloaded artifact.
+- If you are using the `ModArtifactDownload`, rename it to `GithubDownloadArtifact` and add an explicit `name` as the
+  name of the downloaded artifact.
 
-- The `GithubArtifact` and `GithubDownload` classes have been removed. You won't have a problem if you followed the depreciation warnings.
+- The `GithubArtifact` and `GithubDownload` classes have been removed. You won't have a problem if you followed the
+  depreciation warnings.
 
-- `MindustryExec` now extends `JavaExec` instead of extending `DefaultTask`. The API is mostly the same but now with more control over the execution.
+- `MindustryExec` now extends `JavaExec` instead of extending `DefaultTask`. The API is mostly the same but now with
+  more control over the execution.
 
-- The internal tasks of Toxopid have been changed to use the new task classes. Change your build scripts accordingly if you happen to configure them.
+- The internal tasks of Toxopid have been changed to use the new task classes. Change your build scripts accordingly if
+  you happen to configure them.
 
 - `ModPlatform` and `ModMetadata` have been moved to the `fr.xpdustry.toxopid.spec` package.
 
