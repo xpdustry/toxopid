@@ -11,7 +11,7 @@ Major release for y'all :)
 
 ### Changes
 
-- `MindustryExec` now extends `JavaExec`, it enabled a better debugging experience and more control over the Mindustry instance runtime.
+- `MindustryExec` now extends `JavaExec`, it enables a better debugging experience and more control over the Mindustry instance runtime.
 - Renamed `JarArtifactDownload` to `GithubArtifactDownload`.
 - Added new data fields for `ModMetadata` (subtitle, keepOutlines, texturescale, pregenerated).
 - Moved some classes into dedicated packages (see migration guide at the bottom of the `README`).
