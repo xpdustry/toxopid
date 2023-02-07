@@ -83,8 +83,6 @@ open class MindustryExec : JavaExec() {
                     it.from(file)
                     it.into(modsDirectory)
                 }
-            } else {
-                logger.warn("Invalid mod file detected: $file")
             }
         }
 
