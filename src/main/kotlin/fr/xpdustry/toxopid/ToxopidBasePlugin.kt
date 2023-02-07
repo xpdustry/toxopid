@@ -81,5 +81,15 @@ class ToxopidBasePlugin : Plugin<Project> {
             it.modsPath.convention("./config/mods")
             it.standardInput = System.`in`
         }
+
+        project.afterEvaluate {
+            project.configurations.all {
+                it.resolutionStrategy.eachDependency { details ->
+                    if (details.requested.group == "com.github.Anuken.Arc") {
+                        details.useVersion(extension.compileVersion.get())
+                    }
+                }
+            }
+        }
     }
 }
