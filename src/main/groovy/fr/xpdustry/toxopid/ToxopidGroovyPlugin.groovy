@@ -27,20 +27,24 @@ package fr.xpdustry.toxopid
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPlugin
 
-class ToxopidPlugin : Plugin<Project> {
-    override fun apply(project: Project) {
-        project.plugins.apply(ToxopidBasePlugin::class.java)
-        @Suppress("UNCHECKED_CAST")
-        project.plugins.apply(
-            Class.forName("fr.xpdustry.toxopid.ToxopidGroovyPlugin") as Class<Plugin<Project>>
-        )
-        project.plugins.withType(JavaPlugin::class.java) {
-            project.plugins.apply(ToxopidJavaPlugin::class.java)
-        }
-        project.plugins.withId("com.github.johnrengelman.shadow") {
-            project.plugins.apply(ToxopidShadowPlugin::class.java)
-        }
-    }
+class ToxopidGroovyPlugin implements Plugin<Project> {
+
+	@Override
+	void apply(final Project project) {
+        // I hate groovy
+		final def extensionClass = Class.forName("fr.xpdustry.toxopid.dsl.DependencyExtensions")
+		project.repositories.metaClass.anukenJitpack = {
+			extensionClass.anukenJitpack(project.repositories)
+		}
+		project.dependencies.metaClass.mindustryDependencies = {
+			extensionClass.mindustryDependencies(project.dependencies)
+		}
+		project.dependencies.metaClass.mindustryCoreDependencies = {
+			extensionClass.mindustryCoreDependencies(project.dependencies)
+		}
+		project.dependencies.metaClass.mindustryHeadlessDependencies = {
+			extensionClass.mindustryHeadlessDependencies(project.dependencies)
+		}
+	}
 }

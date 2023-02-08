@@ -8,6 +8,7 @@ plugins {
     id("net.kyori.indra.git") version "3.0.1"
     id("net.kyori.indra.publishing.gradle-plugin") version "3.0.1"
     id("net.kyori.indra.licenser.spotless") version "3.0.1"
+    groovy
 }
 
 group = "fr.xpdustry"
@@ -42,8 +43,10 @@ spotless {
         ktlint()
     }
     kotlinGradle {
-        target("*.gradle.kts")
         ktlint()
+    }
+    groovy {
+        greclipse()
     }
 }
 
