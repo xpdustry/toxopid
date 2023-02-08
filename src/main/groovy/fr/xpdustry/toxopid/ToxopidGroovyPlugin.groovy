@@ -32,7 +32,7 @@ class ToxopidGroovyPlugin implements Plugin<Project> {
 
 	@Override
 	void apply(final Project project) {
-        // I hate groovy
+		// I hate groovy
 		final def extensionClass = Class.forName("fr.xpdustry.toxopid.dsl.DependencyExtensions")
 		project.repositories.metaClass.anukenJitpack = {
 			extensionClass.anukenJitpack(project.repositories)
