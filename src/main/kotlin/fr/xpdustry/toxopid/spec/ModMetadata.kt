@@ -45,7 +45,8 @@ data class ModMetadata(
     var keepOutlines: Boolean = false,
     var texturescale: Float = 1f,
     var pregenerated: Boolean = false,
-    val dependencies: MutableList<String> = mutableListOf()
+    val dependencies: MutableList<String> = mutableListOf(),
+    val softDependencies: MutableList<String> = mutableListOf()
 ) {
     companion object {
         fun fromJson(json: String) = JsonObject
@@ -68,6 +69,8 @@ data class ModMetadata(
                     getFloat("texturescale", 1f),
                     getBoolean("pregenerated", false),
                     get("dependencies")?.asArray()?.map { it.asString() }?.toMutableList()
+                        ?: mutableListOf(),
+                    get("softDependencies")?.asArray()?.map { it.asString() }?.toMutableList()
                         ?: mutableListOf()
                 )
             }
