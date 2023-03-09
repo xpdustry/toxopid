@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v3.1.0 - 2023-03-09
+
+### Features
+
+- Added extension methods for groovy builds.
+
+### Changes
+
+- Force Arc version to be the same as Mindustry.
+
 ## v3.0.0 - 2022-12-25
 
 Major release for y'all :)
