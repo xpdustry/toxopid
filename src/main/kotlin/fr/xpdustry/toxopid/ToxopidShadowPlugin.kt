@@ -28,6 +28,7 @@ package fr.xpdustry.toxopid
 import fr.xpdustry.toxopid.task.MindustryExec
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.bundling.Jar
 
 /**
@@ -36,8 +37,10 @@ import org.gradle.api.tasks.bundling.Jar
  */
 class ToxopidShadowPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.tasks.withType(MindustryExec::class.java) {
-            it.mods.setFrom(project.tasks.named("shadowJar", Jar::class.java))
+        project.plugins.withType(JavaPlugin::class.java) {
+            project.tasks.withType(MindustryExec::class.java) {
+                it.mods.setFrom(project.tasks.named("shadowJar", Jar::class.java))
+            }
         }
     }
 }

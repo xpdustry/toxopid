@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "fr.xpdustry"
-version = "3.1.0" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
+version = "3.1.1" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
 description = "Gradle plugin for building and testing mindustry mods/plugins."
 
 tasks.javadocJar {
