@@ -33,7 +33,7 @@ import org.gradle.api.provider.SetProperty
 open class ToxopidExtension(project: Project) {
     /**
      * Mindustry compile version for dependency resolution.
-     * The default version is v126.2.
+     * The default version is v143.
      */
     val compileVersion: Property<String> = project.objects.property(String::class.java)
 
