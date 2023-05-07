@@ -1,15 +1,19 @@
 # Toxopid
 
-[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/fr.xpdustry.toxopid)](https://plugins.gradle.org/plugin/fr.xpdustry.toxopid)
-[![Commit](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml)
-[![Javadoc](https://img.shields.io/badge/Javadoc-latest-ffff00)](https://maven.xpdustry.fr/javadoc/releases/fr/xpdustry/toxopid/latest/)
-[![Mindustry 6.0 | 7.0 ](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0-ffd37f)](https://github.com/Anuken/Mindustry/releases)
+[![Mindustry 6.0 | 7.0 ](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0-00b0b3)](https://github.com/Anuken/Mindustry/releases)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/fr.xpdustry.toxopid?color=00b0b3&logoColor=00b0b3&label=Gradle)](https://plugins.gradle.org/plugin/fr.xpdustry.toxopid)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Xpdustry/Toxopid/build.yml?color=00b0b3&label=Build)](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml)
+[![Discord](https://img.shields.io/discord/653979433312452609?color=00b0b3&label=Discord)](https://discord.xpdustry.fr)
 
 ## Description
 
 A gradle plugin for building and testing mindustry mods/plugins.
 
 It follows the gradle good practices as closely as possible for maximum efficiency, control and ease of use.
+
+## Links
+
+- [Javadoc](https://maven.xpdustry.fr/javadoc/releases/fr/xpdustry/toxopid/latest/)
 
 ## Usage
 
