@@ -24,7 +24,7 @@ dependencies {
     compileOnly(gradleApi())
     implementation("org.hjson:hjson:3.0.0")
     implementation("net.kyori:mammoth:1.3.0")
-    implementation(kotlin("stdlib"))
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 signing {
@@ -102,4 +102,10 @@ indraSpotlessLicenser {
 tasks.javadocJar {
     dependsOn(tasks.dokkaHtml)
     from(tasks.dokkaHtml)
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
