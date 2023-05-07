@@ -132,7 +132,7 @@ The following examples assume you are using a kotlin build script.
   }
   ```
 
-## About migrating from Toxopid 2.x.x to 3.x.x
+### About migrating from Toxopid 2.x.x to 3.x.x
 
 - If you are using the `ModArtifactDownload`, rename it to `GithubDownloadArtifact` and add an explicit `name` as the
   name of the downloaded artifact.
