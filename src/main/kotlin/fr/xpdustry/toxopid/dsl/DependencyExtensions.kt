@@ -68,13 +68,13 @@ fun DependencyHandler.mindustryDependencies() {
 fun DependencyHandler.mindustryCoreDependencies() {
     val version = extensions.toxopid.compileVersion.get()
     mindustryDependency("com.github.Anuken.Arc:arc-core:$version")
-    mindustryDependency("com.github.Anuken.Mindustry:core:$version")
+    mindustryDependency("com.github.Anuken.$mindustryRepository:core:$version")
 }
 
 fun DependencyHandler.mindustryHeadlessDependencies() {
     val version = extensions.toxopid.compileVersion.get()
     mindustryDependency("com.github.Anuken.Arc:backend-headless:$version")
-    mindustryDependency("com.github.Anuken.Mindustry:server:$version")
+    mindustryDependency("com.github.Anuken.$mindustryRepository:server:$version")
 }
 
 private fun DependencyHandler.mindustryDependency(dependency: String) {
@@ -82,5 +82,8 @@ private fun DependencyHandler.mindustryDependency(dependency: String) {
     add("testImplementation", dependency)
 }
 
-private val ExtensionContainer.toxopid: ToxopidExtension
+private inline val DependencyHandler.mindustryRepository: String
+    get() = if (extensions.toxopid.useMirrorArtifacts.get()) "MindustryJitpack" else "Mindustry"
+
+private inline val ExtensionContainer.toxopid: ToxopidExtension
     get() = Extensions.findOrCreate(this, Toxopid.EXTENSION_NAME, ToxopidExtension::class.java)
