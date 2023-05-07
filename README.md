@@ -14,6 +14,7 @@ It follows the gradle good practices as closely as possible for maximum efficien
 ## Links
 
 - [Javadoc](https://maven.xpdustry.fr/javadoc/releases/fr/xpdustry/toxopid/latest/)
+- [Snapshots](https://maven.xpdustry.fr/#/snapshots/fr/xpdustry/toxopid/)
 
 ## Usage
 
