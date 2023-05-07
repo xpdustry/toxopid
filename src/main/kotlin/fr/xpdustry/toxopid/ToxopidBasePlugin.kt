@@ -34,7 +34,7 @@ import org.gradle.api.Project
 /**
  * Base plugin that sets up the standard toxopid tasks for mod/plugin testing.
  */
-class ToxopidBasePlugin : Plugin<Project> {
+public class ToxopidBasePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         val extension = Extensions.findOrCreate(
             project.extensions,

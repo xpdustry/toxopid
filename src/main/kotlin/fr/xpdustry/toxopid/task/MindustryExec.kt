@@ -39,10 +39,10 @@ import java.util.zip.ZipFile
  * Every jar and zip mods are deleted every time its run so make sure you include
  * them in [MindustryExec.mods] and not directly in the [MindustryExec.workingDir].
  */
-open class MindustryExec : JavaExec() {
+public open class MindustryExec : JavaExec() {
 
-    companion object {
-        val MOD_METADATA_FILE = Regex("(mod|plugin)\\.h?json")
+    public companion object {
+        public val MOD_METADATA_FILE: Regex = Regex("(mod|plugin)\\.h?json")
     }
 
     /**
@@ -51,13 +51,13 @@ open class MindustryExec : JavaExec() {
      * **Only modify if you know what you are doing.**
      */
     @get:Input
-    val modsPath: Property<String> = project.objects.property(String::class.java)
+    public val modsPath: Property<String> = project.objects.property(String::class.java)
 
     /**
      * The mods to load.
      */
     @get:InputFiles
-    val mods: ConfigurableFileCollection = project.objects.fileCollection()
+    public val mods: ConfigurableFileCollection = project.objects.fileCollection()
 
     init {
         workingDir = temporaryDir

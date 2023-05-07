@@ -15,11 +15,6 @@ group = "fr.xpdustry"
 version = "3.2.0" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
 description = "Gradle plugin for building and testing mindustry mods/plugins."
 
-tasks.javadocJar {
-    dependsOn(tasks.dokkaHtml)
-    from(tasks.dokkaHtml)
-}
-
 repositories {
     mavenCentral()
     gradlePluginPortal()
@@ -84,6 +79,10 @@ indra {
     }
 }
 
+kotlin {
+    explicitApi()
+}
+
 indraPluginPublishing {
     website("https://github.com/Xpdustry/Toxopid")
 
@@ -98,4 +97,9 @@ indraPluginPublishing {
 
 indraSpotlessLicenser {
     licenseHeaderFile(rootProject.file("LICENSE_HEADER.md"))
+}
+
+tasks.javadocJar {
+    dependsOn(tasks.dokkaHtml)
+    from(tasks.dokkaHtml)
 }

@@ -30,31 +30,31 @@ import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty
 
-open class ToxopidExtension(project: Project) {
+public open class ToxopidExtension(project: Project) {
     /**
      * Mindustry compile version for dependency resolution.
      * If not set, the default version is v143.
      */
-    val compileVersion: Property<String> = project.objects.property(String::class.java)
+    public val compileVersion: Property<String> = project.objects.property(String::class.java)
 
     /**
      * Mindustry runtime version for [fr.xpdustry.toxopid.task.MindustryExec] tasks.
      * If not set, fallbacks to [ToxopidExtension.compileVersion].
      */
-    val runtimeVersion: Property<String> = project.objects.property(String::class.java)
+    public val runtimeVersion: Property<String> = project.objects.property(String::class.java)
 
     /**
      * Target platforms for the mod/plugin. It can add dependencies, tasks...
      * If not set, the default platform is [ModPlatform.DESKTOP].
      */
-    val platforms: SetProperty<ModPlatform> = project.objects.setProperty(ModPlatform::class.java)
+    public val platforms: SetProperty<ModPlatform> = project.objects.setProperty(ModPlatform::class.java)
 
     /**
      * Whether Toxopid should resolve the Mindustry compile artifact from the [Main repository](https://github.com/Anuken/Mindustry)
      * or the []Jitpack specific mirror](https://github.com/Anuken/MindustryJitpack).
      * Is not set, the default value is false.
      */
-    val useMirrorArtifacts: Property<Boolean> = project.objects.property(Boolean::class.java)
+    public val useMirrorArtifacts: Property<Boolean> = project.objects.property(Boolean::class.java)
 
     init {
         compileVersion.convention("v${Toxopid.DEFAULT_MINDUSTRY_VERSION}")

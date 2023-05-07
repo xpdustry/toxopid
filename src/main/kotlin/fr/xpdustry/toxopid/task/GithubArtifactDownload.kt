@@ -38,31 +38,31 @@ import java.net.URL
  * Downloads a release artifact from a GitHub repository.
  */
 @CacheableTask
-open class GithubArtifactDownload : DefaultTask() {
+public open class GithubArtifactDownload : DefaultTask() {
 
     /**
      * The repository user.
      */
     @get:Input
-    val user: Property<String> = project.objects.property(String::class.java)
+    public val user: Property<String> = project.objects.property(String::class.java)
 
     /**
      * The repository name.
      */
     @get:Input
-    val repo: Property<String> = project.objects.property(String::class.java)
+    public val repo: Property<String> = project.objects.property(String::class.java)
 
     /**
      * The name of the artifact.
      */
     @get:Input
-    val name: Property<String> = project.objects.property(String::class.java)
+    public val name: Property<String> = project.objects.property(String::class.java)
 
     /**
      * The release version.
      */
     @get:Input
-    val version: Property<String> = project.objects.property(String::class.java)
+    public val version: Property<String> = project.objects.property(String::class.java)
 
     /**
      * The output file.
@@ -70,14 +70,14 @@ open class GithubArtifactDownload : DefaultTask() {
      * *Default location is `{gradle-user-home}/caches/toxopid/github-artifacts/{user}/{repo}/{version}/{name}`.*
      */
     @get:OutputFile
-    val output: RegularFileProperty = project.objects.fileProperty()
+    public val output: RegularFileProperty = project.objects.fileProperty()
 
     init {
         output.convention { project.gradle.gradleUserHomeDir.resolve("caches/toxopid/github-artifacts/${user.get()}/${repo.get()}/${version.get()}/${name.get()}") }
     }
 
     @TaskAction
-    fun download() {
+    public fun download() {
         val url =
             URL("https://github.com/${user.get()}/${repo.get()}/releases/download/${version.get()}/${name.get()}")
         output.asFile.get().outputStream().use { o -> url.openStream().use { i -> i.copyTo(o) } }

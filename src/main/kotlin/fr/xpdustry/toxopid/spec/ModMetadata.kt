@@ -30,26 +30,26 @@ import groovy.json.JsonOutput
 import org.hjson.JsonObject
 import java.io.File
 
-data class ModMetadata(
-    var name: String = "",
-    var displayName: String = "",
-    var description: String = "",
-    var subtitle: String = "",
-    var author: String = "",
-    var version: String = "",
-    var main: String = "",
-    var repo: String = "",
-    var minGameVersion: String = Toxopid.DEFAULT_MINDUSTRY_VERSION,
-    var hidden: Boolean = false,
-    var java: Boolean = true,
-    var keepOutlines: Boolean = false,
-    var texturescale: Float = 1f,
-    var pregenerated: Boolean = false,
-    val dependencies: MutableList<String> = mutableListOf(),
-    val softDependencies: MutableList<String> = mutableListOf()
+public data class ModMetadata(
+    public var name: String = "",
+    public var displayName: String = "",
+    public var description: String = "",
+    public var subtitle: String = "",
+    public var author: String = "",
+    public var version: String = "",
+    public var main: String = "",
+    public var repo: String = "",
+    public var minGameVersion: String = Toxopid.DEFAULT_MINDUSTRY_VERSION,
+    public var hidden: Boolean = false,
+    public var java: Boolean = true,
+    public var keepOutlines: Boolean = false,
+    public var texturescale: Float = 1f,
+    public var pregenerated: Boolean = false,
+    public val dependencies: MutableList<String> = mutableListOf(),
+    public val softDependencies: MutableList<String> = mutableListOf()
 ) {
-    companion object {
-        fun fromJson(json: String) = JsonObject
+    public companion object {
+        public fun fromJson(json: String): ModMetadata = JsonObject
             .readHjson(json)
             .asObject()
             .run {
@@ -74,15 +74,14 @@ data class ModMetadata(
                         ?: mutableListOf()
                 )
             }
-
-        fun fromJson(file: File) = fromJson(file.readText())
+        public fun fromJson(file: File): ModMetadata = fromJson(file.readText())
     }
 
     /**
      * @param pretty whether the json string should be pretty printed or not.
      * @return a json representation of this [ModMetadata]
      */
-    fun toJson(pretty: Boolean = true): String {
+    public fun toJson(pretty: Boolean = true): String {
         val json = JsonOutput.toJson(this)
         return if (pretty) JsonOutput.prettyPrint(json) else json
     }

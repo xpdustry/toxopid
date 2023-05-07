@@ -29,7 +29,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 
-class ToxopidPlugin : Plugin<Project> {
+public class ToxopidPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(ToxopidBasePlugin::class.java)
         @Suppress("UNCHECKED_CAST")

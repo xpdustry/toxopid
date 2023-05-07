@@ -33,13 +33,14 @@ import fr.xpdustry.toxopid.spec.ModPlatform
 import net.kyori.mammoth.Extensions
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.dsl.RepositoryHandler
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.api.plugins.ExtensionContainer
 import java.net.URI
 
 /**
  * Adds the jitpack repository restricted to Anuke artifacts.
  */
-fun RepositoryHandler.anukenJitpack() = maven { repository ->
+public fun RepositoryHandler.anukenJitpack(): MavenArtifactRepository = maven { repository ->
     repository.name = "anuken-jitpack"
     repository.url = URI("https://www.jitpack.io")
     repository.mavenContent { content ->
@@ -58,20 +59,20 @@ fun RepositoryHandler.anukenJitpack() = maven { repository ->
  * - If [ModPlatform.HEADLESS] is present in the target platforms,
  *   `arc-backend-headless` and `mindustry-server` are added.
  */
-fun DependencyHandler.mindustryDependencies() {
+public fun DependencyHandler.mindustryDependencies() {
     mindustryCoreDependencies()
     if (extensions.toxopid.platforms.get().contains(ModPlatform.HEADLESS)) {
         mindustryHeadlessDependencies()
     }
 }
 
-fun DependencyHandler.mindustryCoreDependencies() {
+public fun DependencyHandler.mindustryCoreDependencies() {
     val version = extensions.toxopid.compileVersion.get()
     mindustryDependency("com.github.Anuken.Arc:arc-core:$version")
     mindustryDependency("com.github.Anuken.$mindustryRepository:core:$version")
 }
 
-fun DependencyHandler.mindustryHeadlessDependencies() {
+public fun DependencyHandler.mindustryHeadlessDependencies() {
     val version = extensions.toxopid.compileVersion.get()
     mindustryDependency("com.github.Anuken.Arc:backend-headless:$version")
     mindustryDependency("com.github.Anuken.$mindustryRepository:server:$version")

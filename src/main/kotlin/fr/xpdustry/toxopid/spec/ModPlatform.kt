@@ -25,6 +25,6 @@
  */
 package fr.xpdustry.toxopid.spec
 
-enum class ModPlatform {
+public enum class ModPlatform {
     DESKTOP, HEADLESS, ANDROID
 }
