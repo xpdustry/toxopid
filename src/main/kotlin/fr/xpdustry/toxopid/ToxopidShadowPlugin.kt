@@ -39,7 +39,7 @@ public class ToxopidShadowPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.withType(JavaPlugin::class.java) {
             project.tasks.withType(MindustryExec::class.java) {
-                it.mods.setFrom(project.tasks.named("shadowJar", Jar::class.java))
+                mods.setFrom(project.tasks.named("shadowJar", Jar::class.java))
             }
         }
     }

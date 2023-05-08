@@ -48,45 +48,45 @@ public class ToxopidBasePlugin : Plugin<Project> {
             "downloadMindustryClient",
             GithubArtifactDownload::class.java
         ) {
-            it.group = Toxopid.TASK_GROUP_NAME
-            it.user.set("Anuken")
-            it.repo.set("Mindustry")
-            it.name.set("Mindustry.jar")
-            it.version.set(extension.runtimeVersion)
+            group = Toxopid.TASK_GROUP_NAME
+            user.set("Anuken")
+            repo.set("Mindustry")
+            name.set("Mindustry.jar")
+            version.set(extension.runtimeVersion)
         }
 
         val downloadMindustryServer = project.tasks.register(
             "downloadMindustryServer",
             GithubArtifactDownload::class.java
         ) {
-            it.group = Toxopid.TASK_GROUP_NAME
-            it.user.set("Anuken")
-            it.repo.set("Mindustry")
-            it.name.set("server-release.jar")
-            it.version.set(extension.runtimeVersion)
+            group = Toxopid.TASK_GROUP_NAME
+            user.set("Anuken")
+            repo.set("Mindustry")
+            name.set("server-release.jar")
+            version.set(extension.runtimeVersion)
         }
 
         project.tasks.register("runMindustryClient", MindustryExec::class.java) {
-            it.group = Toxopid.TASK_GROUP_NAME
-            it.classpath(downloadMindustryClient)
-            it.mainClass.convention("mindustry.desktop.DesktopLauncher")
-            it.modsPath.convention("./mods")
-            it.standardInput = System.`in`
+            group = Toxopid.TASK_GROUP_NAME
+            classpath(downloadMindustryClient)
+            mainClass.convention("mindustry.desktop.DesktopLauncher")
+            modsPath.convention("./mods")
+            standardInput = System.`in`
         }
 
         project.tasks.register("runMindustryServer", MindustryExec::class.java) {
-            it.group = Toxopid.TASK_GROUP_NAME
-            it.classpath(downloadMindustryServer)
-            it.mainClass.convention("mindustry.server.ServerLauncher")
-            it.modsPath.convention("./config/mods")
-            it.standardInput = System.`in`
+            group = Toxopid.TASK_GROUP_NAME
+            classpath(downloadMindustryServer)
+            mainClass.convention("mindustry.server.ServerLauncher")
+            modsPath.convention("./config/mods")
+            standardInput = System.`in`
         }
 
         project.afterEvaluate {
             project.configurations.all {
-                it.resolutionStrategy.eachDependency { details ->
-                    if (details.requested.group == "com.github.Anuken.Arc") {
-                        details.useVersion(extension.compileVersion.get())
+                resolutionStrategy.eachDependency {
+                    if (requested.group == "com.github.Anuken.Arc") {
+                        useVersion(extension.compileVersion.get())
                     }
                 }
             }

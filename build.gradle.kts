@@ -9,6 +9,7 @@ plugins {
     id("net.kyori.indra.publishing.gradle-plugin") version "3.0.1"
     id("net.kyori.indra.licenser.spotless") version "3.0.1"
     groovy
+    `kotlin-dsl`
 }
 
 group = "fr.xpdustry"
@@ -24,7 +25,6 @@ dependencies {
     compileOnly(gradleApi())
     implementation("org.hjson:hjson:3.0.0")
     implementation("net.kyori:mammoth:1.3.1")
-    implementation(kotlin("stdlib-jdk8"))
 }
 
 signing {
@@ -102,10 +102,4 @@ indraSpotlessLicenser {
 tasks.javadocJar {
     dependsOn(tasks.dokkaHtml)
     from(tasks.dokkaHtml)
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
