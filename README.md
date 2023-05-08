@@ -48,7 +48,7 @@ The following examples assume you are using a kotlin build script.
         // Uses the Mindustry jitpack mirror for compilation,
         // since the main repository is not reliable.
         // Won't work with versions before v136.
-        compileWithJitpackMirror.set(true)
+        useMindustryMirror.set(true)
     }
     ```
 

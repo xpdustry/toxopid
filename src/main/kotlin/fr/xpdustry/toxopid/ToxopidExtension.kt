@@ -54,12 +54,12 @@ public open class ToxopidExtension(project: Project) {
      * or the []Jitpack specific mirror](https://github.com/Anuken/MindustryJitpack).
      * Is not set, the default value is false.
      */
-    public val compileWithJitpackMirror: Property<Boolean> = project.objects.property(Boolean::class.java)
+    public val useMindustryMirror: Property<Boolean> = project.objects.property(Boolean::class.java)
 
     init {
         compileVersion.convention("v${Toxopid.DEFAULT_MINDUSTRY_VERSION}")
         runtimeVersion.convention(project.provider(compileVersion::get))
         platforms.convention(setOf(ModPlatform.DESKTOP))
-        compileWithJitpackMirror.convention(false)
+        useMindustryMirror.convention(false)
     }
 }

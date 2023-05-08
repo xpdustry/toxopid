@@ -84,7 +84,7 @@ private fun DependencyHandler.mindustryDependency(dependency: String) {
 }
 
 private inline val DependencyHandler.mindustryRepository: String
-    get() = if (extensions.toxopid.compileWithJitpackMirror.get()) "MindustryJitpack" else "Mindustry"
+    get() = if (extensions.toxopid.useMindustryMirror.get()) "MindustryJitpack" else "Mindustry"
 
 private inline val ExtensionContainer.toxopid: ToxopidExtension
     get() = Extensions.findOrCreate(this, Toxopid.EXTENSION_NAME, ToxopidExtension::class.java)
