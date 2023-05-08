@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v3.2.0 - 2023-05-08
+
+### Changes
+
+- Change default Mindustry version to v143.
+
+### Added
+
+- Added option to use the Mindustry jitpack mirror for compilation.
+
+### Bugfixes
+
+- Fix a crash occurring when the shadow plugin is applied without the java plugin.
+
+### Chores
+
+- Bump mammoth version to 1.3.1.
+- Replaced Kotlin stdlib-jdk8 with bundled Gradle Kotlin dsl version.
+
 ## v3.1.0 - 2023-03-09
 
 ### Features
