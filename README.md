@@ -37,14 +37,18 @@ The following examples assume you are using a kotlin build script.
 
     toxopid {
         // The version with which your mod/plugin is compiled.
-        // If not set, will compile with v140 by default.
+        // If not set, will compile with v143 by default.
         compileVersion.set("v126") 
         // The version with which your mod/plugin is tested.
-        // If not set, defaults to compileVersion.
-        runtimeVersion.set("v135") 
+        // If not set, defaults to the value of compileVersion.
+        runtimeVersion.set("v143") 
         // The platforms you target, you can choose DESKTOP, HEADLESS or/and ANDROID.
         // If not set, will target DESKTOP by default.
         platforms.add(ModPlatform.HEADLESS)
+        // Uses the Mindustry jitpack mirror for compilation,
+        // since the main repository is not reliable.
+        // Won't work with versions before v136.
+        compileWithJitpackMirror.set(true)
     }
     ```
 
