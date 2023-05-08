@@ -2,7 +2,7 @@ This file is part of Toxopid, a Gradle plugin for Mindustry mods/plugins.
 
 MIT License
 
-Copyright (c) 2022 Xpdustry
+Copyright (c) 2023 Xpdustry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
