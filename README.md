@@ -1,6 +1,6 @@
 # Toxopid
 
-[![Mindustry 6.0 | 7.0 ](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0-00b0b3)](https://github.com/Anuken/Mindustry/releases)
+[![Mindustry 6.0 | 7.0](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0-00b0b3)](https://github.com/Anuken/Mindustry/releases)
 [![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/fr.xpdustry.toxopid?color=00b0b3&logoColor=00b0b3&label=Gradle)](https://plugins.gradle.org/plugin/fr.xpdustry.toxopid)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Xpdustry/Toxopid/build.yml?color=00b0b3&label=Build)](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml)
 [![Discord](https://img.shields.io/discord/653979433312452609?color=00b0b3&label=Discord)](https://discord.xpdustry.fr)
@@ -26,7 +26,7 @@ The following examples assume you are using a kotlin build script.
 
     ```gradle.kts
     plugins {
-        id("fr.xpdustry.toxopid") version "3.0.0"
+        id("fr.xpdustry.toxopid") version "3.2.0"
     }
     ```
 
