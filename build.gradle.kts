@@ -51,12 +51,12 @@ indra {
         minimumToolchain(17)
     }
 
-    publishSnapshotsTo("xpdustry", "https://maven.xpdustry.fr/snapshots")
-    publishReleasesTo("xpdustry", "https://maven.xpdustry.fr/releases")
+    publishSnapshotsTo("xpdustry", "https://maven.xpdustry.com/snapshots")
+    publishReleasesTo("xpdustry", "https://maven.xpdustry.com/releases")
 
     mitLicense()
 
-    github("Xpdustry", "Toxopid") {
+    github("xpdustry", "toxopid") {
         ci(true)
         issues(true)
         scm(true)
@@ -66,7 +66,7 @@ indra {
         pom {
             organization {
                 name.set("Xpdustry")
-                url.set("https://www.xpdustry.fr")
+                url.set("https://www.xpdustry.com")
             }
 
             developers {
@@ -84,7 +84,7 @@ kotlin {
 }
 
 indraPluginPublishing {
-    website("https://github.com/Xpdustry/Toxopid")
+    website("https://github.com/xpdustry/toxopid")
 
     plugin(
         "toxopid",

@@ -1,9 +1,9 @@
-# Toxopid
+# toxopid
 
 [![Mindustry 6.0 | 7.0 ](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0-00b0b3)](https://github.com/Anuken/Mindustry/releases)
 [![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/fr.xpdustry.toxopid?color=00b0b3&logoColor=00b0b3&label=Gradle)](https://plugins.gradle.org/plugin/fr.xpdustry.toxopid)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Xpdustry/Toxopid/build.yml?color=00b0b3&label=Build)](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml)
-[![Discord](https://img.shields.io/discord/653979433312452609?color=00b0b3&label=Discord)](https://discord.xpdustry.fr)
+[![Discord](https://img.shields.io/discord/653979433312452609?color=00b0b3&label=Discord)](https://discord.xpdustry.com)
 
 ## Description
 
@@ -13,8 +13,8 @@ It follows the gradle good practices as closely as possible for maximum efficien
 
 ## Links
 
-- [Javadoc](https://maven.xpdustry.fr/javadoc/releases/fr/xpdustry/toxopid/latest/)
-- [Snapshots](https://maven.xpdustry.fr/#/snapshots/fr/xpdustry/toxopid/)
+- [Javadoc](https://maven.xpdustry.com/javadoc/releases/fr/xpdustry/toxopid/latest/)
+- [Snapshots](https://maven.xpdustry.com/#/snapshots/fr/xpdustry/toxopid/)
 
 ## Usage
 
@@ -157,7 +157,7 @@ The following examples assume you are using a kotlin build script.
 
 ## Support
 
-If you need help, you can talk to the maintainers on the [Xpdustry Discord](https://discord.xpdustry.fr) in
+If you need help, you can talk to the maintainers on the [Xpdustry Discord](https://discord.xpdustry.com) in
 the `#support` channel.
 
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy), or [mgpp](https://github.com/PlumyGame/mgpp).
