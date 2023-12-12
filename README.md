@@ -3,13 +3,11 @@
 [![Mindustry 6.0 | 7.0](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0-00b0b3)](https://github.com/Anuken/Mindustry/releases)
 [![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/fr.xpdustry.toxopid?color=00b0b3&logoColor=00b0b3&label=Gradle)](https://plugins.gradle.org/plugin/fr.xpdustry.toxopid)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Xpdustry/Toxopid/build.yml?color=00b0b3&label=Build)](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml)
-[![Discord](https://img.shields.io/discord/653979433312452609?color=00b0b3&label=Discord)](https://discord.xpdustry.com)
+[![Discord](https://img.shields.io/discord/519293558599974912?color=00b0b3&label=Discord)](https://discord.xpdustry.com)
 
 ## Description
 
 A gradle plugin for building and testing mindustry mods/plugins.
-
-It follows the gradle good practices as closely as possible for maximum efficiency, control and ease of use.
 
 ## Links
 
@@ -26,7 +24,7 @@ The following examples assume you are using a kotlin build script.
 
     ```gradle.kts
     plugins {
-        id("fr.xpdustry.toxopid") version "3.2.0"
+        id("fr.xpdustry.toxopid") version "VERSION"
     }
     ```
 
@@ -45,10 +43,6 @@ The following examples assume you are using a kotlin build script.
         // The platforms you target, you can choose DESKTOP, HEADLESS or/and ANDROID.
         // If not set, will target DESKTOP by default.
         platforms.add(ModPlatform.HEADLESS)
-        // Uses the Mindustry jitpack mirror for compilation,
-        // since the main repository is not reliable.
-        // Won't work with versions before v136.
-        useMindustryMirror.set(true)
     }
     ```
 
@@ -61,6 +55,10 @@ The following examples assume you are using a kotlin build script.
     repositories {
         mavenCentral()
         anukenJitpack()
+        // If Jitpack does not work, replace it with
+        // maven("https://maven.xpdustry.com/mindustry")
+        // This repository contains mindustry artifacts built by xpdustry
+        // More info at https://github.com/xpdustry/mindustry-publish
     }
 
     dependencies {
@@ -123,10 +121,10 @@ The following examples assume you are using a kotlin build script.
   import fr.xpdustry.toxopid.task.GithubArtifactDownload
 
   val downloadMod = tasks.register<GithubArtifactDownload>("downloadMod") {
-      it.user.set("ExampleUser")
-      it.repo.set("ExampleMod")
-      it.name.set("ExampleMod.jar")
-      it.version.set("v1.0.0")
+      user.set("ExampleUser")
+      repo.set("ExampleMod")
+      name.set("ExampleMod.jar")
+      version.set("v1.0.0")
   }
   
   val localMod = project.file("./libs/LocalMod.jar")
@@ -157,7 +155,7 @@ The following examples assume you are using a kotlin build script.
 
 ## Support
 
-If you need help, you can talk to the maintainers on the [Xpdustry Discord](https://discord.xpdustry.com) in
-the `#support` channel.
+If you need help, you can talk to the maintainers on the
+[Chaotic Neutral Discord](https://discord.xpdustry.com) in the `#support` channel.
 
 > Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy), or [mgpp](https://github.com/PlumyGame/mgpp).
