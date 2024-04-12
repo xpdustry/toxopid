@@ -23,10 +23,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid
+package com.xpdustry.toxopid
 
-import fr.xpdustry.toxopid.task.GithubArtifactDownload
-import fr.xpdustry.toxopid.task.MindustryExec
+import com.xpdustry.toxopid.task.GithubArtifactDownload
+import com.xpdustry.toxopid.task.MindustryExec
 import net.kyori.mammoth.Extensions
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -48,7 +48,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
             "downloadMindustryClient",
             GithubArtifactDownload::class.java
         ) {
-            group = Toxopid.TASK_GROUP_NAME
+            group = com.xpdustry.toxopid.Toxopid.TASK_GROUP_NAME
             user.set("Anuken")
             repo.set("Mindustry")
             name.set("Mindustry.jar")
@@ -59,7 +59,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
             "downloadMindustryServer",
             GithubArtifactDownload::class.java
         ) {
-            group = Toxopid.TASK_GROUP_NAME
+            group = com.xpdustry.toxopid.Toxopid.TASK_GROUP_NAME
             user.set("Anuken")
             repo.set("Mindustry")
             name.set("server-release.jar")
@@ -67,7 +67,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
         }
 
         project.tasks.register("runMindustryClient", MindustryExec::class.java) {
-            group = Toxopid.TASK_GROUP_NAME
+            group = com.xpdustry.toxopid.Toxopid.TASK_GROUP_NAME
             classpath(downloadMindustryClient)
             mainClass.convention("mindustry.desktop.DesktopLauncher")
             modsPath.convention("./mods")
@@ -75,7 +75,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
         }
 
         project.tasks.register("runMindustryServer", MindustryExec::class.java) {
-            group = Toxopid.TASK_GROUP_NAME
+            group = com.xpdustry.toxopid.Toxopid.TASK_GROUP_NAME
             classpath(downloadMindustryServer)
             mainClass.convention("mindustry.server.ServerLauncher")
             modsPath.convention("./config/mods")

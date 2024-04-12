@@ -25,11 +25,11 @@
  */
 @file:JvmName("DependencyExtensions")
 
-package fr.xpdustry.toxopid.dsl
+package com.xpdustry.toxopid.dsl
 
-import fr.xpdustry.toxopid.Toxopid
-import fr.xpdustry.toxopid.ToxopidExtension
-import fr.xpdustry.toxopid.spec.ModPlatform
+import com.xpdustry.toxopid.Toxopid
+import com.xpdustry.toxopid.ToxopidExtension
+import com.xpdustry.toxopid.spec.ModPlatform
 import net.kyori.mammoth.Extensions
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.dsl.RepositoryHandler

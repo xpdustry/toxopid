@@ -23,22 +23,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid
+package com.xpdustry.toxopid.spec
 
-import fr.xpdustry.toxopid.task.MindustryExec
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.tasks.bundling.Jar
-
-/**
- * This plugin sets the output jar of the [Jar] task as the default artifact
- * for every mindustry exec task.
- */
-public class ToxopidJavaPlugin : Plugin<Project> {
-    override fun apply(project: Project) {
-        project.tasks.withType(MindustryExec::class.java) {
-            mods.setFrom(project.tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class.java))
-        }
-    }
+public enum class ModPlatform {
+    DESKTOP, HEADLESS, ANDROID
 }

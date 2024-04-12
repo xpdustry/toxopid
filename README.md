@@ -1,7 +1,7 @@
 # toxopid
 
 [![Mindustry 6.0 | 7.0](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0-00b0b3)](https://github.com/Anuken/Mindustry/releases)
-[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/fr.xpdustry.toxopid?color=00b0b3&logoColor=00b0b3&label=Gradle)](https://plugins.gradle.org/plugin/fr.xpdustry.toxopid)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.xpdustry.toxopid?color=00b0b3&logoColor=00b0b3&label=Gradle)](https://plugins.gradle.org/plugin/com.xpdustry.toxopid)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Xpdustry/Toxopid/build.yml?color=00b0b3&label=Build)](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml)
 [![Discord](https://img.shields.io/discord/519293558599974912?color=00b0b3&label=Discord)](https://discord.xpdustry.com)
 
@@ -24,14 +24,14 @@ The following examples assume you are using a kotlin build script.
 
     ```gradle.kts
     plugins {
-        id("fr.xpdustry.toxopid") version "VERSION"
+        id("com.xpdustry.toxopid") version "VERSION"
     }
     ```
 
 2. Set up Toxopid to fit your needs :
 
     ```gradle.kts
-    import fr.xpdustry.toxopid.spec.ModPlatform
+    import com.xpdustry.toxopid.spec.ModPlatform
 
     toxopid {
         // The version with which your mod/plugin is compiled.
@@ -49,8 +49,8 @@ The following examples assume you are using a kotlin build script.
 3. Automatically add Mindustry dependencies with :
 
     ```gradle.kts
-    import fr.xpdustry.toxopid.dsl.anukenJitpack
-    import fr.xpdustry.toxopid.dsl.mindustryDependencies
+    import com.xpdustry.toxopid.dsl.anukenJitpack
+    import com.xpdustry.toxopid.dsl.mindustryDependencies
 
     repositories {
         mavenCentral()
@@ -70,7 +70,7 @@ The following examples assume you are using a kotlin build script.
    Jar :
 
    ```gradle.kts
-   import fr.xpdustry.toxopid.spec.ModMetadata
+   import com.xpdustry.toxopid.spec.ModMetadata
 
    val metadata = ModMetadata.fromJson(project.file("mod.json"))
    // Setting the project version from the one located in "mod.json"
@@ -87,7 +87,7 @@ The following examples assume you are using a kotlin build script.
    or directly generate your `[mod|plugin].[h]json` from your build script and write it to the final Jar :
 
    ```gradle.kts
-   import fr.xpdustry.toxopid.spec.ModMetadata
+   import com.xpdustry.toxopid.spec.ModMetadata
 
    project.version  = "1.0.0"
    
@@ -118,7 +118,7 @@ The following examples assume you are using a kotlin build script.
   the `GithubArtifactDownload` task, or include it locally :
 
   ```gradle.kts
-  import fr.xpdustry.toxopid.task.GithubArtifactDownload
+  import com.xpdustry.toxopid.task.GithubArtifactDownload
 
   val downloadMod = tasks.register<GithubArtifactDownload>("downloadMod") {
       user.set("ExampleUser")
@@ -149,7 +149,7 @@ The following examples assume you are using a kotlin build script.
 - The internal tasks of Toxopid have been changed to use the new task classes. Change your build scripts accordingly if
   you happen to configure them.
 
-- `ModPlatform` and `ModMetadata` have been moved to the `fr.xpdustry.toxopid.spec` package.
+- `ModPlatform` and `ModMetadata` have been moved to the `com.xpdustry.toxopid.spec` package.
 
 - The extension methods have been moved to the `fr.xpdustry.toxopid.dsl` package.
 

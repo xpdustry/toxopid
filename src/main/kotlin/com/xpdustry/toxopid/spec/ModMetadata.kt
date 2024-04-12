@@ -23,9 +23,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid.spec
+package com.xpdustry.toxopid.spec
 
-import fr.xpdustry.toxopid.Toxopid
+import com.xpdustry.toxopid.Toxopid
 import groovy.json.JsonOutput
 import org.hjson.JsonObject
 import java.io.File

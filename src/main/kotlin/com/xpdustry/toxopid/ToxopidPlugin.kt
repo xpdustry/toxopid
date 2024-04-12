@@ -23,10 +23,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid
+package com.xpdustry.toxopid
 
-public object Toxopid {
-    public const val EXTENSION_NAME: String = "toxopid"
-    public const val TASK_GROUP_NAME: String = "toxopid"
-    public const val DEFAULT_MINDUSTRY_VERSION: String = "143"
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPlugin
+
+public class ToxopidPlugin : Plugin<Project> {
+    override fun apply(project: Project) {
+        project.plugins.apply(ToxopidBasePlugin::class.java)
+        project.plugins.withType(JavaPlugin::class.java) {
+            project.plugins.apply(ToxopidJavaPlugin::class.java)
+        }
+        project.plugins.withId("com.github.johnrengelman.shadow") {
+            project.plugins.apply(ToxopidShadowPlugin::class.java)
+        }
+    }
 }

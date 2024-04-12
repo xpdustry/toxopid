@@ -23,9 +23,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid
+package com.xpdustry.toxopid
 
-import fr.xpdustry.toxopid.spec.ModPlatform
+import com.xpdustry.toxopid.spec.ModPlatform
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty

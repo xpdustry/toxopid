@@ -23,7 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid.task
+package com.xpdustry.toxopid.task
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty

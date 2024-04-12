@@ -23,8 +23,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package fr.xpdustry.toxopid.spec
+package com.xpdustry.toxopid
 
-public enum class ModPlatform {
-    DESKTOP, HEADLESS, ANDROID
+public object Toxopid {
+    public const val EXTENSION_NAME: String = "toxopid"
+    public const val TASK_GROUP_NAME: String = "toxopid"
+    public const val DEFAULT_MINDUSTRY_VERSION: String = "143"
 }

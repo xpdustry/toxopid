@@ -11,7 +11,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "fr.xpdustry"
+group = "com.xpdustry"
 version = "4.0.0" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
 description = "Gradle plugin for building and testing mindustry mods/plugins."
 
@@ -84,7 +84,7 @@ indraPluginPublishing {
 
     plugin(
         "toxopid",
-        "fr.xpdustry.toxopid.ToxopidPlugin",
+        "com.xpdustry.toxopid.ToxopidPlugin",
         "Toxopid",
         project.description,
         listOf("mindustry", "testing", "boilerplate")
