@@ -29,6 +29,7 @@ import com.xpdustry.toxopid.spec.ModPlatform
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty
+import org.gradle.kotlin.dsl.create
 
 public open class ToxopidExtension(project: Project) {
     /**
@@ -49,9 +50,18 @@ public open class ToxopidExtension(project: Project) {
      */
     public val platforms: SetProperty<ModPlatform> = project.objects.setProperty(ModPlatform::class.java)
 
+    public val dependencies: ToxopidDependencies
+
     init {
         compileVersion.convention("v${Toxopid.DEFAULT_MINDUSTRY_VERSION}")
         runtimeVersion.convention(project.provider(compileVersion::get))
         platforms.convention(setOf(ModPlatform.DESKTOP))
+        dependencies =
+            ToxopidDependencies(
+                compileVersion.map { project.dependencies.create("com.github.Anuken.Mindustry", "core", it) },
+                compileVersion.map { project.dependencies.create("com.github.Anuken.Arc", "arc-core", it) },
+                compileVersion.map { project.dependencies.create("com.github.Anuken.Mindustry", "server", it) },
+                compileVersion.map { project.dependencies.create("com.github.Anuken.Arc", "backend-headless", it) },
+            )
     }
 }
