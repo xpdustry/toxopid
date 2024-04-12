@@ -42,6 +42,8 @@ import java.util.zip.ZipFile
 public open class MindustryExec : JavaExec() {
     public companion object {
         public val MOD_METADATA_FILE: Regex = Regex("(mod|plugin)\\.h?json")
+        public const val CLIENT_EXEC_TASK_NAME: String = "runMindustryClient"
+        public const val SERVER_EXEC_TASK_NAME: String = "runMindustryServer"
     }
 
     /**

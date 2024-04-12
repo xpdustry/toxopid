@@ -25,9 +25,9 @@
  */
 package com.xpdustry.toxopid
 
+import com.xpdustry.toxopid.extension.toxopid
 import com.xpdustry.toxopid.task.GithubArtifactDownload
 import com.xpdustry.toxopid.task.MindustryExec
-import net.kyori.mammoth.Extensions
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -36,14 +36,7 @@ import org.gradle.api.Project
  */
 public class ToxopidBasePlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        val extension =
-            Extensions.findOrCreate(
-                project.extensions,
-                Toxopid.EXTENSION_NAME,
-                ToxopidExtension::class.java,
-            )
-
-        project.dependencies.extensions.add(Toxopid.EXTENSION_NAME, extension)
+        project.dependencies.extensions.add(Toxopid.EXTENSION_NAME, project.extensions.toxopid)
 
         val downloadMindustryClient =
             project.tasks.register(
@@ -54,7 +47,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
                 user.set("Anuken")
                 repo.set("Mindustry")
                 name.set("Mindustry.jar")
-                version.set(extension.runtimeVersion)
+                version.set(project.extensions.toxopid.runtimeVersion)
             }
 
         val downloadMindustryServer =
@@ -66,10 +59,10 @@ public class ToxopidBasePlugin : Plugin<Project> {
                 user.set("Anuken")
                 repo.set("Mindustry")
                 name.set("server-release.jar")
-                version.set(extension.runtimeVersion)
+                version.set(project.extensions.toxopid.runtimeVersion)
             }
 
-        project.tasks.register("runMindustryClient", MindustryExec::class.java) {
+        project.tasks.register(MindustryExec.CLIENT_EXEC_TASK_NAME, MindustryExec::class.java) {
             group = Toxopid.TASK_GROUP_NAME
             classpath(downloadMindustryClient)
             mainClass.convention("mindustry.desktop.DesktopLauncher")
@@ -77,7 +70,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
             standardInput = System.`in`
         }
 
-        project.tasks.register("runMindustryServer", MindustryExec::class.java) {
+        project.tasks.register(MindustryExec.SERVER_EXEC_TASK_NAME, MindustryExec::class.java) {
             group = Toxopid.TASK_GROUP_NAME
             classpath(downloadMindustryServer)
             mainClass.convention("mindustry.server.ServerLauncher")
@@ -89,7 +82,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
             project.configurations.all {
                 resolutionStrategy.eachDependency {
                     if (requested.group == "com.github.Anuken.Arc") {
-                        useVersion(extension.compileVersion.get())
+                        useVersion(project.extensions.toxopid.compileVersion.get())
                     }
                 }
             }

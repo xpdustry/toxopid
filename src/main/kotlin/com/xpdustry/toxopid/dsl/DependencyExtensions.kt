@@ -27,14 +27,11 @@
 
 package com.xpdustry.toxopid.dsl
 
-import com.xpdustry.toxopid.Toxopid
-import com.xpdustry.toxopid.ToxopidExtension
+import com.xpdustry.toxopid.extension.toxopid
 import com.xpdustry.toxopid.spec.ModPlatform
-import net.kyori.mammoth.Extensions
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
-import org.gradle.api.plugins.ExtensionContainer
 import java.net.URI
 
 /**
@@ -83,6 +80,3 @@ private fun DependencyHandler.mindustryDependency(dependency: String) {
     add("compileOnly", dependency)
     add("testImplementation", dependency)
 }
-
-private inline val ExtensionContainer.toxopid: ToxopidExtension
-    get() = Extensions.findOrCreate(this, Toxopid.EXTENSION_NAME, ToxopidExtension::class.java)
