@@ -38,7 +38,7 @@ public open class ToxopidExtension(project: Project) {
     public val compileVersion: Property<String> = project.objects.property(String::class.java)
 
     /**
-     * Mindustry runtime version for [fr.xpdustry.toxopid.task.MindustryExec] tasks.
+     * Mindustry runtime version for [com.xpdustry.toxopid.task.MindustryExec] tasks.
      * If not set, fallbacks to [ToxopidExtension.compileVersion].
      */
     public val runtimeVersion: Property<String> = project.objects.property(String::class.java)
@@ -49,17 +49,9 @@ public open class ToxopidExtension(project: Project) {
      */
     public val platforms: SetProperty<ModPlatform> = project.objects.setProperty(ModPlatform::class.java)
 
-    /**
-     * Whether Toxopid should resolve the Mindustry compile artifact from the [Main repository](https://github.com/Anuken/Mindustry)
-     * or the []Jitpack specific mirror](https://github.com/Anuken/MindustryJitpack).
-     * Is not set, the default value is false.
-     */
-    public val useMindustryMirror: Property<Boolean> = project.objects.property(Boolean::class.java)
-
     init {
         compileVersion.convention("v${Toxopid.DEFAULT_MINDUSTRY_VERSION}")
         runtimeVersion.convention(project.provider(compileVersion::get))
         platforms.convention(setOf(ModPlatform.DESKTOP))
-        useMindustryMirror.convention(false)
     }
 }
