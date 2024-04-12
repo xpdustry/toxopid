@@ -78,7 +78,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
         }
 
         project.tasks.register("runMindustryServer", MindustryExec::class.java) {
-            group = com.xpdustry.toxopid.Toxopid.TASK_GROUP_NAME
+            group = Toxopid.TASK_GROUP_NAME
             classpath(downloadMindustryServer)
             mainClass.convention("mindustry.server.ServerLauncher")
             modsPath.convention("./config/mods")
