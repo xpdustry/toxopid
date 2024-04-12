@@ -1,6 +1,7 @@
 plugins {
     id("com.diffplug.spotless") version "6.25.0"
     kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
     id("org.jetbrains.dokka") version "1.9.20"
     `java-gradle-plugin`
     id("com.gradle.plugin-publish") version "1.2.1"
@@ -22,6 +23,7 @@ repositories {
 
 dependencies {
     compileOnly(gradleApi())
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("org.hjson:hjson:3.1.0")
     implementation("net.kyori:mammoth:1.3.1")
 }

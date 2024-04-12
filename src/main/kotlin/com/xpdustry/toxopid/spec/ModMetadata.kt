@@ -26,10 +26,16 @@
 package com.xpdustry.toxopid.spec
 
 import com.xpdustry.toxopid.Toxopid
-import groovy.json.JsonOutput
+import com.xpdustry.toxopid.extension.toKotlinJsonElement
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
 import org.hjson.JsonObject
 import java.io.File
 
+@Serializable
 public data class ModMetadata(
     public var name: String = "",
     public var displayName: String = "",
@@ -37,54 +43,35 @@ public data class ModMetadata(
     public var subtitle: String = "",
     public var author: String = "",
     public var version: String = "",
-    public var main: String = "",
-    public var repo: String = "",
+    @SerialName("main")
+    public var mainClass: String = "",
+    @SerialName("repo")
+    public var repository: String = "",
     public var minGameVersion: String = Toxopid.DEFAULT_MINDUSTRY_VERSION,
     public var hidden: Boolean = false,
     public var java: Boolean = true,
     public var keepOutlines: Boolean = false,
-    public var texturescale: Float = 1f,
+    @SerialName("texturescale")
+    public var textureScale: Float = 1f,
     public var pregenerated: Boolean = false,
     public val dependencies: MutableList<String> = mutableListOf(),
     public val softDependencies: MutableList<String> = mutableListOf(),
 ) {
     public companion object {
+        private val JSON =
+            Json {
+                prettyPrint = true
+                ignoreUnknownKeys = true
+            }
+
         public fun fromJson(json: String): ModMetadata =
-            JsonObject
-                .readHjson(json)
-                .asObject()
-                .run {
-                    ModMetadata(
-                        getString("name", ""),
-                        getString("displayName", ""),
-                        getString("description", ""),
-                        getString("subtitle", ""),
-                        getString("author", ""),
-                        getString("version", ""),
-                        getString("main", ""),
-                        getString("repo", ""),
-                        getString("minGameVersion", ""),
-                        getBoolean("hidden", false),
-                        getBoolean("java", true),
-                        getBoolean("keepOutlines", false),
-                        getFloat("texturescale", 1f),
-                        getBoolean("pregenerated", false),
-                        get("dependencies")?.asArray()?.map { it.asString() }?.toMutableList()
-                            ?: mutableListOf(),
-                        get("softDependencies")?.asArray()?.map { it.asString() }?.toMutableList()
-                            ?: mutableListOf(),
-                    )
-                }
+            JSON.decodeFromJsonElement<ModMetadata>(JsonObject.readHjson(json).toKotlinJsonElement())
 
         public fun fromJson(file: File): ModMetadata = fromJson(file.readText())
     }
 
     /**
-     * @param pretty whether the json string should be pretty printed or not.
-     * @return a json representation of this [ModMetadata]
+     * @return a pretty printed json representation of this [ModMetadata]
      */
-    public fun toJson(pretty: Boolean = true): String {
-        val json = JsonOutput.toJson(this)
-        return if (pretty) JsonOutput.prettyPrint(json) else json
-    }
+    public fun toJson(): String = JSON.encodeToString(this)
 }
