@@ -1,13 +1,13 @@
 plugins {
-    id("com.diffplug.spotless") version "6.11.0"
-    kotlin("jvm") version "1.6.20"
-    id("org.jetbrains.dokka") version "1.6.20"
+    id("com.diffplug.spotless") version "6.25.0"
+    kotlin("jvm") version "1.9.22"
+    id("org.jetbrains.dokka") version "1.9.20"
     `java-gradle-plugin`
-    id("com.gradle.plugin-publish") version "0.20.0"
-    id("net.kyori.indra") version "3.0.1"
-    id("net.kyori.indra.git") version "3.0.1"
-    id("net.kyori.indra.publishing.gradle-plugin") version "3.0.1"
-    id("net.kyori.indra.licenser.spotless") version "3.0.1"
+    id("com.gradle.plugin-publish") version "1.2.1"
+    id("net.kyori.indra") version "3.1.3"
+    id("net.kyori.indra.git") version "3.1.3"
+    id("net.kyori.indra.publishing.gradle-plugin") version "3.1.3"
+    id("net.kyori.indra.licenser.spotless") version "3.1.3"
     `kotlin-dsl`
 }
 
@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
     compileOnly(gradleApi())
-    implementation("org.hjson:hjson:3.0.0")
+    implementation("org.hjson:hjson:3.1.0")
     implementation("net.kyori:mammoth:1.3.1")
 }
 
@@ -87,7 +87,7 @@ indraPluginPublishing {
         "com.xpdustry.toxopid.ToxopidPlugin",
         "Toxopid",
         project.description,
-        listOf("mindustry", "testing", "boilerplate")
+        listOf("mindustry", "testing", "boilerplate"),
     )
 }
 
@@ -96,6 +96,5 @@ indraSpotlessLicenser {
 }
 
 tasks.javadocJar {
-    dependsOn(tasks.dokkaHtml)
     from(tasks.dokkaHtml)
 }

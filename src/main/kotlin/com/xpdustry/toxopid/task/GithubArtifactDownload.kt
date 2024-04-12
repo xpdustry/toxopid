@@ -39,7 +39,6 @@ import java.net.URL
  */
 @CacheableTask
 public open class GithubArtifactDownload : DefaultTask() {
-
     /**
      * The repository user.
      */
@@ -73,7 +72,11 @@ public open class GithubArtifactDownload : DefaultTask() {
     public val output: RegularFileProperty = project.objects.fileProperty()
 
     init {
-        output.convention { project.gradle.gradleUserHomeDir.resolve("caches/toxopid/github-artifacts/${user.get()}/${repo.get()}/${version.get()}/${name.get()}") }
+        output.convention {
+            project.gradle.gradleUserHomeDir.resolve(
+                "caches/toxopid/github-artifacts/${user.get()}/${repo.get()}/${version.get()}/${name.get()}",
+            )
+        }
     }
 
     @TaskAction

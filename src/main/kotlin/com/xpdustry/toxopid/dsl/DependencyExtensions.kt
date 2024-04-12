@@ -40,18 +40,19 @@ import java.net.URI
 /**
  * Adds the jitpack repository restricted to Anuke artifacts.
  */
-public fun RepositoryHandler.anukenJitpack(): MavenArtifactRepository = maven {
-    name = "anuken-jitpack"
-    url = URI("https://www.jitpack.io")
-    mavenContent {
-        includeGroupByRegex("^com\\.github\\.Anuken(\\.[\\w-]+)*$")
+public fun RepositoryHandler.anukenJitpack(): MavenArtifactRepository =
+    maven {
+        name = "anuken-jitpack"
+        url = URI("https://www.jitpack.io")
+        mavenContent {
+            includeGroupByRegex("^com\\.github\\.Anuken(\\.[\\w-]+)*$")
+        }
+        metadataSources {
+            gradleMetadata()
+            mavenPom()
+            artifact()
+        }
     }
-    metadataSources {
-        gradleMetadata()
-        mavenPom()
-        artifact()
-    }
-}
 
 /**
  * Adds mindustry artifacts as project dependencies :

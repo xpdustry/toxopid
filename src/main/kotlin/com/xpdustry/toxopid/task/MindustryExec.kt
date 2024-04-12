@@ -40,7 +40,6 @@ import java.util.zip.ZipFile
  * them in [MindustryExec.mods] and not directly in the [MindustryExec.workingDir].
  */
 public open class MindustryExec : JavaExec() {
-
     public companion object {
         public val MOD_METADATA_FILE: Regex = Regex("(mod|plugin)\\.h?json")
     }
@@ -93,7 +92,8 @@ public open class MindustryExec : JavaExec() {
         file.isDirectory && Files.walk(file.toPath()).anyMatch { MOD_METADATA_FILE.matches(it.fileName.toString()) }
 
     private fun isValidModArchive(file: File) =
-        file.isFile && (file.extension == "jar" || file.extension == "zip") && ZipFile(file).use { zip ->
-            zip.entries().asSequence().any { MOD_METADATA_FILE.matches(it.name) }
-        }
+        file.isFile && (file.extension == "jar" || file.extension == "zip") &&
+            ZipFile(file).use { zip ->
+                zip.entries().asSequence().any { MOD_METADATA_FILE.matches(it.name) }
+            }
 }

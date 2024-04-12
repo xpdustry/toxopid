@@ -46,34 +46,36 @@ public data class ModMetadata(
     public var texturescale: Float = 1f,
     public var pregenerated: Boolean = false,
     public val dependencies: MutableList<String> = mutableListOf(),
-    public val softDependencies: MutableList<String> = mutableListOf()
+    public val softDependencies: MutableList<String> = mutableListOf(),
 ) {
     public companion object {
-        public fun fromJson(json: String): ModMetadata = JsonObject
-            .readHjson(json)
-            .asObject()
-            .run {
-                ModMetadata(
-                    getString("name", ""),
-                    getString("displayName", ""),
-                    getString("description", ""),
-                    getString("subtitle", ""),
-                    getString("author", ""),
-                    getString("version", ""),
-                    getString("main", ""),
-                    getString("repo", ""),
-                    getString("minGameVersion", ""),
-                    getBoolean("hidden", false),
-                    getBoolean("java", true),
-                    getBoolean("keepOutlines", false),
-                    getFloat("texturescale", 1f),
-                    getBoolean("pregenerated", false),
-                    get("dependencies")?.asArray()?.map { it.asString() }?.toMutableList()
-                        ?: mutableListOf(),
-                    get("softDependencies")?.asArray()?.map { it.asString() }?.toMutableList()
-                        ?: mutableListOf()
-                )
-            }
+        public fun fromJson(json: String): ModMetadata =
+            JsonObject
+                .readHjson(json)
+                .asObject()
+                .run {
+                    ModMetadata(
+                        getString("name", ""),
+                        getString("displayName", ""),
+                        getString("description", ""),
+                        getString("subtitle", ""),
+                        getString("author", ""),
+                        getString("version", ""),
+                        getString("main", ""),
+                        getString("repo", ""),
+                        getString("minGameVersion", ""),
+                        getBoolean("hidden", false),
+                        getBoolean("java", true),
+                        getBoolean("keepOutlines", false),
+                        getFloat("texturescale", 1f),
+                        getBoolean("pregenerated", false),
+                        get("dependencies")?.asArray()?.map { it.asString() }?.toMutableList()
+                            ?: mutableListOf(),
+                        get("softDependencies")?.asArray()?.map { it.asString() }?.toMutableList()
+                            ?: mutableListOf(),
+                    )
+                }
+
         public fun fromJson(file: File): ModMetadata = fromJson(file.readText())
     }
 
