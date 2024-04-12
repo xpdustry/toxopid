@@ -32,10 +32,6 @@ import org.gradle.api.plugins.JavaPlugin
 public class ToxopidPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(ToxopidBasePlugin::class.java)
-        @Suppress("UNCHECKED_CAST")
-        project.plugins.apply(
-            Class.forName("fr.xpdustry.toxopid.ToxopidGroovyPlugin") as Class<Plugin<Project>>
-        )
         project.plugins.withType(JavaPlugin::class.java) {
             project.plugins.apply(ToxopidJavaPlugin::class.java)
         }

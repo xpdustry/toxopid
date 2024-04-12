@@ -8,7 +8,6 @@ plugins {
     id("net.kyori.indra.git") version "3.0.1"
     id("net.kyori.indra.publishing.gradle-plugin") version "3.0.1"
     id("net.kyori.indra.licenser.spotless") version "3.0.1"
-    groovy
     `kotlin-dsl`
 }
 
@@ -39,9 +38,6 @@ spotless {
     }
     kotlinGradle {
         ktlint()
-    }
-    groovy {
-        greclipse()
     }
 }
 

@@ -1,5 +1,0 @@
-# Does not work properly because of https://github.com/gradle/gradle/issues/2973
-moduleName=toxopid-extension-module
-moduleVersion=1.0.0
-extensionClasses=fr.xpdustry.toxopid.dsl.DependencyExtensions
-staticExtensionClasses=fr.xpdustry.toxopid.dsl.DependencyExtensions
