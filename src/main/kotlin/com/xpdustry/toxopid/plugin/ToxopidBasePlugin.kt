@@ -23,8 +23,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.xpdustry.toxopid
+package com.xpdustry.toxopid.plugin
 
+import com.xpdustry.toxopid.Toxopid
 import com.xpdustry.toxopid.extension.toxopid
 import com.xpdustry.toxopid.task.GithubArtifactDownload
 import com.xpdustry.toxopid.task.MindustryExec
