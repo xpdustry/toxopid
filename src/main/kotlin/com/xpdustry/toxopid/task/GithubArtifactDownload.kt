@@ -85,4 +85,9 @@ public open class GithubArtifactDownload : DefaultTask() {
             URL("https://github.com/${user.get()}/${repo.get()}/releases/download/${version.get()}/${name.get()}")
         output.asFile.get().outputStream().use { o -> url.openStream().use { i -> i.copyTo(o) } }
     }
+
+    public companion object {
+        public const val MINDUSTRY_DESKTOP_DOWNLOAD_TASK_NAME: String = "downloadMindustryDesktop"
+        public const val MINDUSTRY_SERVER_DOWNLOAD_TASK_NAME: String = "downloadMindustryServer"
+    }
 }

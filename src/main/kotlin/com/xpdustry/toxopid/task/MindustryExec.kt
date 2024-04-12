@@ -40,12 +40,6 @@ import java.util.zip.ZipFile
  * them in [MindustryExec.mods] and not directly in the [MindustryExec.workingDir].
  */
 public open class MindustryExec : JavaExec() {
-    public companion object {
-        public val MOD_METADATA_FILE: Regex = Regex("(mod|plugin)\\.h?json")
-        public const val CLIENT_EXEC_TASK_NAME: String = "runMindustryClient"
-        public const val SERVER_EXEC_TASK_NAME: String = "runMindustryServer"
-    }
-
     /**
      * The directory where the game loads the mods, relative to the [MindustryExec.getWorkingDir].
      *
@@ -98,4 +92,10 @@ public open class MindustryExec : JavaExec() {
             ZipFile(file).use { zip ->
                 zip.entries().asSequence().any { MOD_METADATA_FILE.matches(it.name) }
             }
+
+    public companion object {
+        public val MOD_METADATA_FILE: Regex = Regex("(mod|plugin)\\.h?json")
+        public const val DESKTOP_EXEC_TASK_NAME: String = "runMindustryDesktop"
+        public const val SERVER_EXEC_TASK_NAME: String = "runMindustryServer"
+    }
 }

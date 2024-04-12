@@ -40,7 +40,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
 
         val downloadMindustryClient =
             project.tasks.register(
-                "downloadMindustryClient",
+                GithubArtifactDownload.MINDUSTRY_DESKTOP_DOWNLOAD_TASK_NAME,
                 GithubArtifactDownload::class.java,
             ) {
                 group = Toxopid.TASK_GROUP_NAME
@@ -52,7 +52,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
 
         val downloadMindustryServer =
             project.tasks.register(
-                "downloadMindustryServer",
+                GithubArtifactDownload.MINDUSTRY_SERVER_DOWNLOAD_TASK_NAME,
                 GithubArtifactDownload::class.java,
             ) {
                 group = Toxopid.TASK_GROUP_NAME
@@ -62,7 +62,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
                 version.set(project.extensions.toxopid.runtimeVersion)
             }
 
-        project.tasks.register(MindustryExec.CLIENT_EXEC_TASK_NAME, MindustryExec::class.java) {
+        project.tasks.register(MindustryExec.DESKTOP_EXEC_TASK_NAME, MindustryExec::class.java) {
             group = Toxopid.TASK_GROUP_NAME
             classpath(downloadMindustryClient)
             mainClass.convention("mindustry.desktop.DesktopLauncher")

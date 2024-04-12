@@ -25,21 +25,32 @@
  */
 package com.xpdustry.toxopid
 
+import com.xpdustry.toxopid.extension.toxopid
+import com.xpdustry.toxopid.spec.ModPlatform
 import com.xpdustry.toxopid.task.MindustryExec
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.bundling.Jar
+import org.gradle.kotlin.dsl.named
 
 /**
- * This plugin overrides [ToxopidJavaPlugin] to set `shadowJar` task as the default artifact
- * for every mindustry exec task.
+ * If the [shadow plugin](https://github.com/johnrengelman/shadow) is present.
+ * This plugin replaces [ToxopidJavaPlugin] to set the `shadowJar` task as the default artifact
+ * for every eligible mindustry exec task.
  */
 public class ToxopidShadowPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.withType(JavaPlugin::class.java) {
-            project.tasks.withType(MindustryExec::class.java) {
-                mods.setFrom(project.tasks.named("shadowJar", Jar::class.java))
+            project.tasks.named<MindustryExec>(MindustryExec.DESKTOP_EXEC_TASK_NAME) {
+                if (extensions.toxopid.platforms.get().contains(ModPlatform.DESKTOP)) {
+                    mods.from(project.tasks.named("shadowJar", Jar::class.java))
+                }
+            }
+            project.tasks.named<MindustryExec>(MindustryExec.SERVER_EXEC_TASK_NAME) {
+                if (extensions.toxopid.platforms.get().contains(ModPlatform.HEADLESS)) {
+                    mods.from(project.tasks.named("shadowJar", Jar::class.java))
+                }
             }
         }
     }
