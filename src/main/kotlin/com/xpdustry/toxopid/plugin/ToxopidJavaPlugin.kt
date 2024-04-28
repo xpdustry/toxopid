@@ -41,12 +41,12 @@ import org.gradle.kotlin.dsl.named
 public class ToxopidJavaPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.tasks.named<MindustryExec>(MindustryExec.DESKTOP_EXEC_TASK_NAME) {
-            if (extensions.toxopid.platforms.get().contains(ModPlatform.DESKTOP)) {
+            if (project.toxopid.platforms.get().contains(ModPlatform.DESKTOP)) {
                 mods.from(project.tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class.java))
             }
         }
         project.tasks.named<MindustryExec>(MindustryExec.SERVER_EXEC_TASK_NAME) {
-            if (extensions.toxopid.platforms.get().contains(ModPlatform.HEADLESS)) {
+            if (project.toxopid.platforms.get().contains(ModPlatform.HEADLESS)) {
                 mods.from(project.tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class.java))
             }
         }

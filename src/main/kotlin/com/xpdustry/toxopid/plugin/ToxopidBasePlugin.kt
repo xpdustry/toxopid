@@ -37,7 +37,7 @@ import org.gradle.api.Project
  */
 public class ToxopidBasePlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.dependencies.extensions.add(Toxopid.EXTENSION_NAME, project.extensions.toxopid)
+        project.toxopid // Ensures the extension is created
 
         val downloadMindustryClient =
             project.tasks.register(
@@ -48,7 +48,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
                 user.set("Anuken")
                 repo.set("Mindustry")
                 name.set("Mindustry.jar")
-                version.set(project.extensions.toxopid.runtimeVersion)
+                version.set(project.toxopid.runtimeVersion)
             }
 
         val downloadMindustryServer =
@@ -60,7 +60,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
                 user.set("Anuken")
                 repo.set("Mindustry")
                 name.set("server-release.jar")
-                version.set(project.extensions.toxopid.runtimeVersion)
+                version.set(project.toxopid.runtimeVersion)
             }
 
         project.tasks.register(MindustryExec.DESKTOP_EXEC_TASK_NAME, MindustryExec::class.java) {
@@ -83,7 +83,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
             project.configurations.all {
                 resolutionStrategy.eachDependency {
                     if (requested.group == "com.github.Anuken.Arc") {
-                        useVersion(project.extensions.toxopid.compileVersion.get())
+                        useVersion(project.toxopid.compileVersion.get())
                     }
                 }
             }

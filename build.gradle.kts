@@ -25,7 +25,6 @@ dependencies {
     compileOnly(gradleApi())
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("org.hjson:hjson:3.1.0")
-    implementation("net.kyori:mammoth:1.3.1")
 }
 
 signing {

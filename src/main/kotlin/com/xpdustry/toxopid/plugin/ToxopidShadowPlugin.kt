@@ -43,12 +43,12 @@ public class ToxopidShadowPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.withType(JavaPlugin::class.java) {
             project.tasks.named<MindustryExec>(MindustryExec.DESKTOP_EXEC_TASK_NAME) {
-                if (extensions.toxopid.platforms.get().contains(ModPlatform.DESKTOP)) {
+                if (project.toxopid.platforms.get().contains(ModPlatform.DESKTOP)) {
                     mods.from(project.tasks.named("shadowJar", Jar::class.java))
                 }
             }
             project.tasks.named<MindustryExec>(MindustryExec.SERVER_EXEC_TASK_NAME) {
-                if (extensions.toxopid.platforms.get().contains(ModPlatform.HEADLESS)) {
+                if (project.toxopid.platforms.get().contains(ModPlatform.HEADLESS)) {
                     mods.from(project.tasks.named("shadowJar", Jar::class.java))
                 }
             }
