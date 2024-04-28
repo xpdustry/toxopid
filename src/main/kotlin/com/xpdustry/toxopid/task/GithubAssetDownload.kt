@@ -44,15 +44,15 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 /**
- * Downloads a release artifact from a GitHub repository.
+ * Downloads a release asset from a GitHub repository.
  */
 @CacheableTask
-public open class GithubArtifactDownload : DefaultTask() {
+public open class GithubAssetDownload : DefaultTask() {
     /**
-     * The repository user.
+     * The repository owner.
      */
     @get:Input
-    public val user: Property<String> = project.objects.property<String>()
+    public val owner: Property<String> = project.objects.property<String>()
 
     /**
      * The repository name.
@@ -61,10 +61,10 @@ public open class GithubArtifactDownload : DefaultTask() {
     public val repo: Property<String> = project.objects.property<String>()
 
     /**
-     * The name of the artifact.
+     * The name of the asset.
      */
     @get:Input
-    public val name: Property<String> = project.objects.property<String>()
+    public val asset: Property<String> = project.objects.property<String>()
 
     /**
      * The release version.
@@ -73,7 +73,7 @@ public open class GithubArtifactDownload : DefaultTask() {
     public val version: Property<String> = project.objects.property<String>()
 
     /**
-     * The GitHub token.
+     * The GitHub access token to use for downloading the asset.
      */
     @get:[Input Optional]
     public val token: Property<String> = project.objects.property<String>()
@@ -81,7 +81,7 @@ public open class GithubArtifactDownload : DefaultTask() {
     /**
      * The output file.
      *
-     * *Default location is `{gradle-user-home}/caches/toxopid/github-artifacts/{user}/{repo}/{version}/{name}`.*
+     * *Default location is `{gradle-user-home}/caches/toxopid/github-assets/{user}/{repo}/{version}/{name}`.*
      */
     @get:OutputFile
     public val output: RegularFileProperty = project.objects.fileProperty()
@@ -89,7 +89,7 @@ public open class GithubArtifactDownload : DefaultTask() {
     init {
         output.convention {
             project.gradle.gradleUserHomeDir.resolve(
-                "caches/toxopid/github-artifacts/${user.get()}/${repo.get()}/${version.get()}/${name.get()}",
+                "caches/toxopid/github-assets/${owner.get()}/${repo.get()}/${version.get()}/${asset.get()}",
             )
         }
     }
@@ -98,7 +98,9 @@ public open class GithubArtifactDownload : DefaultTask() {
     public fun download() {
         val release =
             HTTP.send(
-                HttpRequest.newBuilder(URI("https://api.github.com/repos/${user.get()}/${repo.get()}/releases/tags/${version.get()}"))
+                HttpRequest.newBuilder(
+                    URI("https://api.github.com/repos/${owner.get()}/${repo.get()}/releases/tags/${version.get()}"),
+                )
                     .header("Accept", "application/vnd.github+json")
                     .applyAuthorization()
                     .GET()
@@ -114,9 +116,9 @@ public open class GithubArtifactDownload : DefaultTask() {
         val asset =
             Json.parseToJsonElement(release.body())
                 .jsonObject["assets"]!!.jsonArray
-                .firstOrNull { it.jsonObject["name"]!!.jsonPrimitive.content == name.get() }
+                .firstOrNull { it.jsonObject["name"]!!.jsonPrimitive.content == asset.get() }
                 ?.jsonObject
-                ?: throw IllegalStateException("Failed to find asset named $name")
+                ?: throw IllegalStateException("Failed to find asset named $asset")
 
         val download =
             HTTP.send(
@@ -129,7 +131,7 @@ public open class GithubArtifactDownload : DefaultTask() {
             )
 
         if (download.statusCode() != 200) {
-            throw IllegalStateException("Failed to download artifact: (code=${download.statusCode()})")
+            throw IllegalStateException("Failed to download asset: (code=${download.statusCode()})")
         }
     }
 

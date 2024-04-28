@@ -27,7 +27,7 @@ package com.xpdustry.toxopid.plugin
 
 import com.xpdustry.toxopid.Toxopid
 import com.xpdustry.toxopid.extension.toxopid
-import com.xpdustry.toxopid.task.GithubArtifactDownload
+import com.xpdustry.toxopid.task.GithubAssetDownload
 import com.xpdustry.toxopid.task.MindustryExec
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -41,25 +41,25 @@ public class ToxopidBasePlugin : Plugin<Project> {
 
         val downloadMindustryClient =
             project.tasks.register(
-                GithubArtifactDownload.MINDUSTRY_DESKTOP_DOWNLOAD_TASK_NAME,
-                GithubArtifactDownload::class.java,
+                GithubAssetDownload.MINDUSTRY_DESKTOP_DOWNLOAD_TASK_NAME,
+                GithubAssetDownload::class.java,
             ) {
                 group = Toxopid.TASK_GROUP_NAME
-                user.set("Anuken")
+                owner.set("Anuken")
                 repo.set("Mindustry")
-                name.set("Mindustry.jar")
+                asset.set("Mindustry.jar")
                 version.set(project.toxopid.runtimeVersion)
             }
 
         val downloadMindustryServer =
             project.tasks.register(
-                GithubArtifactDownload.MINDUSTRY_SERVER_DOWNLOAD_TASK_NAME,
-                GithubArtifactDownload::class.java,
+                GithubAssetDownload.MINDUSTRY_SERVER_DOWNLOAD_TASK_NAME,
+                GithubAssetDownload::class.java,
             ) {
                 group = Toxopid.TASK_GROUP_NAME
-                user.set("Anuken")
+                owner.set("Anuken")
                 repo.set("Mindustry")
-                name.set("server-release.jar")
+                asset.set("server-release.jar")
                 version.set(project.toxopid.runtimeVersion)
             }
 
