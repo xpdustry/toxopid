@@ -44,7 +44,7 @@ spotless {
 
 indra {
     javaVersions {
-        target(8)
+        target(17)
         minimumToolchain(17)
     }
 
