@@ -48,7 +48,7 @@ public class ToxopidShadowPlugin : Plugin<Project> {
                 }
             }
             project.tasks.named<MindustryExec>(MindustryExec.SERVER_EXEC_TASK_NAME) {
-                if (project.toxopid.platforms.get().contains(ModPlatform.HEADLESS)) {
+                if (project.toxopid.platforms.get().contains(ModPlatform.SERVER)) {
                     mods.from(project.tasks.named("shadowJar", Jar::class.java))
                 }
             }
