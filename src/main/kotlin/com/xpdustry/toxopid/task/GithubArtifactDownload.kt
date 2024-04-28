@@ -25,14 +25,23 @@
  */
 package com.xpdustry.toxopid.task
 
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import java.net.URL
+import org.gradle.kotlin.dsl.property
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 
 /**
  * Downloads a release artifact from a GitHub repository.
@@ -43,25 +52,31 @@ public open class GithubArtifactDownload : DefaultTask() {
      * The repository user.
      */
     @get:Input
-    public val user: Property<String> = project.objects.property(String::class.java)
+    public val user: Property<String> = project.objects.property<String>()
 
     /**
      * The repository name.
      */
     @get:Input
-    public val repo: Property<String> = project.objects.property(String::class.java)
+    public val repo: Property<String> = project.objects.property<String>()
 
     /**
      * The name of the artifact.
      */
     @get:Input
-    public val name: Property<String> = project.objects.property(String::class.java)
+    public val name: Property<String> = project.objects.property<String>()
 
     /**
      * The release version.
      */
     @get:Input
-    public val version: Property<String> = project.objects.property(String::class.java)
+    public val version: Property<String> = project.objects.property<String>()
+
+    /**
+     * The GitHub token.
+     */
+    @get:[Input Optional]
+    public val token: Property<String> = project.objects.property<String>()
 
     /**
      * The output file.
@@ -81,13 +96,53 @@ public open class GithubArtifactDownload : DefaultTask() {
 
     @TaskAction
     public fun download() {
-        val url =
-            URL("https://github.com/${user.get()}/${repo.get()}/releases/download/${version.get()}/${name.get()}")
-        output.asFile.get().outputStream().use { o -> url.openStream().use { i -> i.copyTo(o) } }
+        val release =
+            HTTP.send(
+                HttpRequest.newBuilder(URI("https://api.github.com/repos/${user.get()}/${repo.get()}/releases/tags/${version.get()}"))
+                    .header("Accept", "application/vnd.github+json")
+                    .applyAuthorization()
+                    .GET()
+                    .build(),
+                HttpResponse.BodyHandlers.ofString(),
+            )
+
+        val json = Json.parseToJsonElement(release.body())
+        if (release.statusCode() != 200) {
+            throw IllegalStateException("Failed to get release: (code=${release.statusCode()}, message=${json.jsonObject["message"]})")
+        }
+
+        val asset =
+            Json.parseToJsonElement(release.body())
+                .jsonObject["assets"]!!.jsonArray
+                .firstOrNull { it.jsonObject["name"]!!.jsonPrimitive.content == name.get() }
+                ?.jsonObject
+                ?: throw IllegalStateException("Failed to find asset named $name")
+
+        val download =
+            HTTP.send(
+                HttpRequest.newBuilder(URI(asset["url"]!!.jsonPrimitive.content))
+                    .header("Accept", "application/octet-stream")
+                    .applyAuthorization()
+                    .GET()
+                    .build(),
+                HttpResponse.BodyHandlers.ofFile(output.asFile.get().toPath()),
+            )
+
+        if (download.statusCode() != 200) {
+            throw IllegalStateException("Failed to download artifact: (code=${download.statusCode()})")
+        }
     }
+
+    private fun HttpRequest.Builder.applyAuthorization(): HttpRequest.Builder =
+        apply {
+            if (token.isPresent) {
+                header("Authorization", "Bearer ${token.get()}")
+            }
+        }
 
     public companion object {
         public const val MINDUSTRY_DESKTOP_DOWNLOAD_TASK_NAME: String = "downloadMindustryDesktop"
         public const val MINDUSTRY_SERVER_DOWNLOAD_TASK_NAME: String = "downloadMindustryServer"
+        private val HTTP = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()
     }
 }
