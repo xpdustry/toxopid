@@ -36,13 +36,13 @@ import org.gradle.kotlin.dsl.property
 import org.gradle.kotlin.dsl.setProperty
 import javax.inject.Inject
 
-internal class ToxopidExtensionImpl
+internal open class ToxopidExtensionImpl
     @Inject
     constructor(objects: ObjectFactory, dependencies: DependencyHandler, providers: ProviderFactory) : ToxopidExtension {
-        override val compileVersion = objects.property<String>()
-        override val runtimeVersion = objects.property<String>()
-        override val platforms = objects.setProperty<ModPlatform>()
-        override val dependencies =
+        final override val compileVersion = objects.property<String>()
+        final override val runtimeVersion = objects.property<String>()
+        final override val platforms = objects.setProperty<ModPlatform>()
+        final override val dependencies =
             DependenciesImpl(
                 compileVersion.map { dependencies.create("com.github.Anuken.Mindustry", "core", it) },
                 compileVersion.map { dependencies.create("com.github.Anuken.Arc", "arc-core", it) },
