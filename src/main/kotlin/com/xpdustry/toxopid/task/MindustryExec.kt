@@ -30,9 +30,16 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.JavaExec
+import org.gradle.kotlin.dsl.property
 import java.io.File
-import java.nio.file.Files
+import java.nio.file.Path
 import java.util.zip.ZipFile
+import kotlin.io.path.createDirectories
+import kotlin.io.path.extension
+import kotlin.io.path.isDirectory
+import kotlin.io.path.isRegularFile
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.notExists
 
 /**
  * Starts a Mindustry instance, blocks the build process until closing.
@@ -46,7 +53,7 @@ public open class MindustryExec : JavaExec() {
      * **Only modify if you know what you are doing.**
      */
     @get:Input
-    public val modsPath: Property<String> = project.objects.property(String::class.java)
+    public val modsPath: Property<Path> = project.objects.property()
 
     /**
      * The mods to load.
@@ -62,17 +69,20 @@ public open class MindustryExec : JavaExec() {
         logger.info("Starting Mindustry instance in $workingDir")
         environment("MINDUSTRY_DATA_DIR", workingDir)
 
-        val modsDirectory = workingDir.resolve(modsPath.get())
-        modsDirectory.mkdirs()
+        val modsDirectory = workingDir.toPath().resolve(modsPath.get())
+        if (modsDirectory.notExists()) {
+            modsDirectory.createDirectories()
+        }
 
-        for (file in modsDirectory.listFiles()!!) {
-            if (isValidModArchive(file) || isValidModDirectory(file)) {
+        for (file in modsDirectory.listDirectoryEntries()) {
+            if (isValidMod(file)) {
                 logger.debug("Deleting mod: {}", file)
                 project.delete(file)
             }
         }
-        for (file in mods.files) {
-            if (isValidModArchive(file) || isValidModDirectory(file)) {
+
+        for (file in mods.files.map(File::toPath)) {
+            if (isValidMod(file)) {
                 logger.debug("Copying mod: {}", file)
                 project.copy {
                     from(file)
@@ -84,14 +94,17 @@ public open class MindustryExec : JavaExec() {
         super.exec()
     }
 
-    private fun isValidModDirectory(file: File) =
-        file.isDirectory && Files.walk(file.toPath()).anyMatch { MOD_METADATA_FILE.matches(it.fileName.toString()) }
-
-    private fun isValidModArchive(file: File) =
-        file.isFile && (file.extension == "jar" || file.extension == "zip") &&
-            ZipFile(file).use { zip ->
+    private fun isValidMod(file: Path): Boolean {
+        if (file.isDirectory()) {
+            return file.listDirectoryEntries().any { MOD_METADATA_FILE.matches(it.fileName.toString()) }
+        }
+        if (file.isRegularFile() && (file.extension == "jar" || file.extension == "zip")) {
+            return ZipFile(file.toFile()).use { zip ->
                 zip.entries().asSequence().any { MOD_METADATA_FILE.matches(it.name) }
             }
+        }
+        return false
+    }
 
     public companion object {
         public val MOD_METADATA_FILE: Regex = Regex("(mod|plugin)\\.h?json")

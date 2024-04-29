@@ -52,31 +52,31 @@ public open class GithubAssetDownload : DefaultTask() {
      * The repository owner.
      */
     @get:Input
-    public val owner: Property<String> = project.objects.property<String>()
+    public val owner: Property<String> = project.objects.property()
 
     /**
      * The repository name.
      */
     @get:Input
-    public val repo: Property<String> = project.objects.property<String>()
+    public val repo: Property<String> = project.objects.property()
 
     /**
      * The name of the asset.
      */
     @get:Input
-    public val asset: Property<String> = project.objects.property<String>()
+    public val asset: Property<String> = project.objects.property()
 
     /**
      * The release version.
      */
     @get:Input
-    public val version: Property<String> = project.objects.property<String>()
+    public val version: Property<String> = project.objects.property()
 
     /**
      * The GitHub access token to use for downloading the asset.
      */
     @get:[Input Optional]
-    public val token: Property<String> = project.objects.property<String>()
+    public val token: Property<String> = project.objects.property()
 
     /**
      * The output file.
