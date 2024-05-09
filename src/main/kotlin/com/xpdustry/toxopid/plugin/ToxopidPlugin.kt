@@ -30,6 +30,11 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.kotlin.dsl.hasPlugin
 
+/**
+ * The main plugin of toxopid. It applies the [base plugin](ToxopidBasePlugin) and
+ * either the [shadow toxopid plugin](ToxopidShadowPlugin) if the [shadow plugin](https://github.com/johnrengelman/shadow) is present,
+ * or the [java toxopid plugin](ToxopidJavaPlugin) if the java plugin is present.
+ */
 public class ToxopidPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(ToxopidBasePlugin::class.java)

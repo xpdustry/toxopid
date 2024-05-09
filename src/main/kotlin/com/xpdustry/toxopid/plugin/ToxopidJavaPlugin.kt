@@ -35,7 +35,7 @@ import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.named
 
 /**
- * This plugin sets the output jar of the [Jar] task as the default artifact
+ * This plugin sets the output of the `jar` task as the mod final jar
  * for every eligible mindustry exec task.
  */
 public class ToxopidJavaPlugin : Plugin<Project> {

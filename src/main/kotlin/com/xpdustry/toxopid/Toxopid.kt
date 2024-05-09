@@ -25,6 +25,9 @@
  */
 package com.xpdustry.toxopid
 
+/**
+ * Constants for Toxopid.
+ */
 public object Toxopid {
     public const val EXTENSION_NAME: String = "toxopid"
     public const val TASK_GROUP_NAME: String = "toxopid"

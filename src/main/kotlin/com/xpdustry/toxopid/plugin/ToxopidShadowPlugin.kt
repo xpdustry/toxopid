@@ -35,8 +35,8 @@ import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.named
 
 /**
- * If the [shadow plugin](https://github.com/johnrengelman/shadow) is present.
- * This plugin replaces [ToxopidJavaPlugin] to set the `shadowJar` task as the default artifact
+ * If the [shadow plugin](https://github.com/johnrengelman/shadow) is present,
+ * this plugin sets the output of the `shadowJar` task as the mod final jar
  * for every eligible mindustry exec task.
  */
 public class ToxopidShadowPlugin : Plugin<Project> {

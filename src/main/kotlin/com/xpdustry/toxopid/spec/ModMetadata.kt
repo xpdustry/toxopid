@@ -35,6 +35,9 @@ import kotlinx.serialization.json.decodeFromJsonElement
 import org.hjson.JsonObject
 import java.io.File
 
+/**
+ * Represents the metadata of a mod.
+ */
 @Serializable
 public data class ModMetadata(
     public var name: String = "",

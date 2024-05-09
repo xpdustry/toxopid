@@ -26,12 +26,12 @@ public interface ToxopidExtension {
     public val platforms: SetProperty<ModPlatform>
 
     /**
-     * Typesafe mindustry dependencies provider.
+     * Mindustry dependencies for the mod/plugin.
      */
     public val dependencies: Dependencies
 
     /**
-     * Typesafe mindustry dependencies holder.
+     * Typesafe mindustry dependencies provider.
      */
     public interface Dependencies {
         public val mindustryCore: Provider<Dependency>
