@@ -31,5 +31,4 @@ package com.xpdustry.toxopid.spec
 public enum class ModPlatform {
     DESKTOP,
     SERVER,
-    ANDROID,
 }
