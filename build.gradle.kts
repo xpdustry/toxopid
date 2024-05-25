@@ -8,7 +8,6 @@ plugins {
     id("net.kyori.indra") version "3.1.3"
     id("net.kyori.indra.git") version "3.1.3"
     id("net.kyori.indra.publishing.gradle-plugin") version "3.1.3"
-    id("net.kyori.indra.licenser.spotless") version "3.1.3"
     `kotlin-dsl`
 }
 
@@ -36,6 +35,7 @@ signing {
 spotless {
     kotlin {
         ktlint()
+        licenseHeaderFile(rootProject.file("HEADER.txt"))
     }
     kotlinGradle {
         ktlint()
@@ -90,10 +90,6 @@ indraPluginPublishing {
         project.description,
         listOf("mindustry", "testing", "boilerplate"),
     )
-}
-
-indraSpotlessLicenser {
-    licenseHeaderFile(rootProject.file("LICENSE_HEADER.md"))
 }
 
 tasks.javadocJar {
