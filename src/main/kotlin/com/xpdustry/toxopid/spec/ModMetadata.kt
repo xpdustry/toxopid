@@ -57,8 +57,8 @@ public data class ModMetadata(
     @SerialName("texturescale")
     public var textureScale: Float = 1f,
     public var pregenerated: Boolean = false,
-    public val dependencies: MutableList<String> = mutableListOf(),
-    public val softDependencies: MutableList<String> = mutableListOf(),
+    public val dependencies: MutableList<ModDependency> = mutableListOf(),
+    public val softDependencies: MutableList<ModDependency> = mutableListOf(),
 ) {
     public companion object {
         private val JSON =
