@@ -25,10 +25,6 @@
  */
 package com.xpdustry.toxopid.task
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
@@ -38,6 +34,7 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.property
+import org.hjson.JsonObject
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -108,21 +105,20 @@ public open class GithubAssetDownload : DefaultTask() {
                 HttpResponse.BodyHandlers.ofString(),
             )
 
-        val json = Json.parseToJsonElement(release.body())
+        val json = JsonObject.readJSON(release.body())
         if (release.statusCode() != 200) {
-            throw IllegalStateException("Failed to get release: (code=${release.statusCode()}, message=${json.jsonObject["message"]})")
+            throw IllegalStateException("Failed to get release: (code=${release.statusCode()}, message=${json.asObject()["message"]})")
         }
 
         val asset =
-            Json.parseToJsonElement(release.body())
-                .jsonObject["assets"]!!.jsonArray
-                .firstOrNull { it.jsonObject["name"]!!.jsonPrimitive.content == asset.get() }
-                ?.jsonObject
+            json.asObject()["assets"].asArray()
+                .map { it.asObject() }
+                .firstOrNull { it["name"].asString() == asset.get() }
                 ?: throw IllegalStateException("Failed to find asset named $asset")
 
         val download =
             HTTP.send(
-                HttpRequest.newBuilder(URI(asset["url"]!!.jsonPrimitive.content))
+                HttpRequest.newBuilder(URI(asset["url"].asString()))
                     .header("Accept", "application/octet-stream")
                     .applyAuthorization()
                     .GET()
