@@ -15,6 +15,11 @@ A gradle plugin for building and testing mindustry mods/plugins.
 - [Snapshots](https://maven.xpdustry.com/#/snapshots/com/xpdustry/toxopid/)
 - [Migration guide](MIGRATING.md)
 
+## Requirements
+
+- Gradle 8.8 or higher
+- Java 17 or higher
+
 ## Usage
 
 The following examples assume you are using a kotlin build script.
