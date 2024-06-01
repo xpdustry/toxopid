@@ -86,7 +86,7 @@ public class ToxopidJavaPlugin : Plugin<Project> {
         }
     }
 
-    private companion object {
-        private const val MERGE_JAR_TASK_NAME = "mergeJar"
+    public companion object {
+        public const val MERGE_JAR_TASK_NAME: String = "mergeJar"
     }
 }
