@@ -23,6 +23,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+@file:JvmName("DependencyExtensions")
+
 package com.xpdustry.toxopid.extension
 
 import org.gradle.api.artifacts.dsl.RepositoryHandler

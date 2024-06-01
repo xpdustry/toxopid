@@ -55,11 +55,13 @@ public data class ModMetadata(
         /**
          * @return a parsed [ModMetadata] from json
          */
+        @JvmStatic
         public fun fromJson(json: String): ModMetadata = fromJson(JsonObject.readHjson(json).asObject())
 
         /**
          * @return a parsed [ModMetadata] from a file
          */
+        @JvmStatic
         public fun fromJson(file: File): ModMetadata =
             file.reader()
                 .use { fromJson(JsonObject.readHjson(it).asObject()) }
@@ -67,6 +69,7 @@ public data class ModMetadata(
         /**
          * @return a pretty printed json representation of a [ModMetadata]
          */
+        @JvmStatic
         public fun toJson(
             metadata: ModMetadata,
             pretty: Boolean = true,

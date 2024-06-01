@@ -106,6 +106,7 @@ public open class MindustryExec : JavaExec() {
     }
 
     public companion object {
+        @JvmStatic
         public val MOD_METADATA_FILE: Regex = Regex("(mod|plugin)\\.h?json")
         public const val DESKTOP_EXEC_TASK_NAME: String = "runMindustryDesktop"
         public const val SERVER_EXEC_TASK_NAME: String = "runMindustryServer"

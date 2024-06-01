@@ -23,6 +23,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+@file:JvmName("TaskExtensions")
+
 package com.xpdustry.toxopid.extension
 
 import com.xpdustry.toxopid.task.GithubAssetDownload
