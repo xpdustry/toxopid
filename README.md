@@ -2,7 +2,7 @@
 
 [![Mindustry 6.0 | 7.0](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0-00b0b3)](https://github.com/Anuken/Mindustry/releases)
 [![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.xpdustry.toxopid?color=00b0b3&logoColor=00b0b3&label=Gradle)](https://plugins.gradle.org/plugin/com.xpdustry.toxopid)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Xpdustry/Toxopid/build.yml?color=00b0b3&label=Build)](https://github.com/Xpdustry/Toxopid/actions/workflows/build.yml)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Xpdustry/Toxopid/build.yml?color=00b0b3&label=Build)](https://github.com/xpdustry/toxopid/actions/workflows/build.yml)
 [![Discord](https://img.shields.io/discord/519293558599974912?color=00b0b3&label=Discord)](https://discord.xpdustry.com)
 
 ## Description
@@ -11,8 +11,9 @@ A gradle plugin for building and testing mindustry mods/plugins.
 
 ## Links
 
-- [Javadoc](https://maven.xpdustry.com/javadoc/releases/fr/xpdustry/toxopid/latest/)
-- [Snapshots](https://maven.xpdustry.com/#/snapshots/fr/xpdustry/toxopid/)
+- [Javadoc](https://maven.xpdustry.com/javadoc/releases/com/xpdustry/toxopid/latest/)
+- [Snapshots](https://maven.xpdustry.com/#/snapshots/com/xpdustry/toxopid/)
+- [Migration guide](MIGRATING.md)
 
 ## Usage
 
@@ -20,54 +21,57 @@ The following examples assume you are using a kotlin build script.
 
 ### Getting started
 
-1. Add the plugin to your build script :
+1. Add the plugin to your build script:
 
-    ```gradle.kts
-    plugins {
-        id("com.xpdustry.toxopid") version "VERSION"
-    }
-    ```
+   ```gradle.kts
+   plugins {
+     id("com.xpdustry.toxopid") version "VERSION"
+   }
+   ```
 
-2. Set up Toxopid to fit your needs :
+2. Set up Toxopid to fit your needs:
 
-    ```gradle.kts
-    import com.xpdustry.toxopid.spec.ModPlatform
+   ```gradle.kts
+   import com.xpdustry.toxopid.spec.ModPlatform
 
-    toxopid {
-        // The version with which your mod/plugin is compiled.
-        // If not set, will compile with v143 by default.
-        compileVersion.set("v126") 
-        // The version with which your mod/plugin is tested.
-        // If not set, defaults to the value of compileVersion.
-        runtimeVersion.set("v143") 
-        // The platforms you target, you can choose DESKTOP, HEADLESS or/and ANDROID.
-        // If not set, will target DESKTOP by default.
-        platforms.add(ModPlatform.HEADLESS)
-    }
-    ```
+   toxopid {
+     // The version with which your mod/plugin is compiled.
+     // If not set, will compile with v146 by default.
+     compileVersion = "v126"
+     // The version with which your mod/plugin is tested.
+     // If not set, defaults to the value of compileVersion.
+     runtimeVersion = "v146"
+     // The platforms you target, you can choose DESKTOP, SERVER or/and ANDROID.
+     // If not set, will target DESKTOP by default.
+     platforms = setOf(ModPlatform.DESKTOP, ModPlatform.SERVER)
+   }
+   ```
 
-3. Automatically add Mindustry dependencies with :
+3. Add Mindustry dependencies with:
 
-    ```gradle.kts
-    import com.xpdustry.toxopid.dsl.anukenJitpack
-    import com.xpdustry.toxopid.dsl.mindustryDependencies
+   ```gradle.kts
+   import com.xpdustry.toxopid.extension.anukeJitpack
+   import com.xpdustry.toxopid.extension.anukeXpdustry
+   import com.xpdustry.toxopid.extension.anukeZelaux
 
-    repositories {
-        mavenCentral()
-        anukenJitpack()
-        // If Jitpack does not work, replace it with
-        // maven("https://maven.xpdustry.com/mindustry")
-        // This repository contains mindustry artifacts built by xpdustry
-        // More info at https://github.com/xpdustry/mindustry-publish
-    }
+   repositories {
+     mavenCentral()
+     // You can choose between the following repositories to get mindustry artifacts:
+     // - jitpack is the offical maven repository of mindustry, but it breaks a lot 😡
+     anukeJitpack()
+     // - xpdustry is a repository maintained by us. More info at https://github.com/xpdustry/mindustry-publish
+     anukeXpdustry()
+     // - zelaux is a repository maintained by Zelaux. More info at https://github.com/Zelaux/MindustryRepo
+     anukeZelaux()
+   }
 
-    dependencies {
-        mindustryDependencies()
-    }
-    ```
+   dependencies {
+     compileOnly(toxopid.dependencies.mindustryCore)
+     compileOnly(toxopid.dependencies.arcCore)
+   }
+   ```
 
-4. Load the info of your `[mod|plugin].[h]json` in your build script with `ModMetadata` and include it in the final
-   Jar :
+4. Load the info of your `[mod|plugin].[h]json` in your build script with `ModMetadata`:
 
    ```gradle.kts
    import com.xpdustry.toxopid.spec.ModMetadata
@@ -75,16 +79,9 @@ The following examples assume you are using a kotlin build script.
    val metadata = ModMetadata.fromJson(project.file("mod.json"))
    // Setting the project version from the one located in "mod.json"
    project.version = metadata.version
-   
-   tasks.jar {
-       // Doing it in doFirst makes sure it's only executed when this task runs
-       doFirst {
-           from(file("mod.json"))
-       }
-   }
    ```
 
-   or directly generate your `[mod|plugin].[h]json` from your build script and write it to the final Jar :
+   or directly generate your `[mod|plugin].[h]json` from your build script and write it to the final Jar:
 
    ```gradle.kts
    import com.xpdustry.toxopid.spec.ModMetadata
@@ -92,66 +89,49 @@ The following examples assume you are using a kotlin build script.
    project.version  = "1.0.0"
    
    val metadata = ModMetadata(
-       name = "example",
-       version = project.version.toString(),
-       displayName = "Example",
-       description = "A very nice mod :)",
-       main = "org.example.mod.ModMain"
+     name = "example",
+     version = project.version.toString(),
+     displayName = "Example",
+     description = "A very nice mod :)",
+     mainClass = "org.example.mod.ModMain"
    )
    
    tasks.jar {
-       // Doing it in doFirst makes sure it's only executed when this task runs
-       doFirst {
-           val temp = temporaryDir.resolve("mod.json")
-           temp.writeText(metadata.toJson(true))
-           from(temp)
-       }
+     // Doing it in doFirst makes sure it's only executed when this task runs
+     doFirst {
+       val temp = temporaryDir.resolve("mod.json")
+       temp.writeText(Metadata.toJson(metadata, true))
+       from(temp)
+     }
    }
    ```
+   
+And voilà, you have a minimal toxopid setup for your mod/plugin.
 
 ### Features
 
-- You can run your mod/plugin in a Mindustry client or server locally with the `runMindustryClient` and
+- You can run your mod/plugin in a Mindustry client or server locally with the `runMindustryDesktop` and
   `runMindustryServer` tasks.
 
 - If your mod/plugin relies on another, you can download the dependency jar from GitHub with
-  the `GithubArtifactDownload` task, or include it locally :
+  the `GithubAssetDownload` task, or include it locally:
 
   ```gradle.kts
   import com.xpdustry.toxopid.task.GithubArtifactDownload
 
-  val downloadMod = tasks.register<GithubArtifactDownload>("downloadMod") {
-      user.set("ExampleUser")
-      repo.set("ExampleMod")
-      name.set("ExampleMod.jar")
-      version.set("v1.0.0")
+  val downloadMod = tasks.register<GithubAssetDownload>("downloadMod") {
+    owner = "ExampleUser"
+    repo = "ExampleMod"
+    asset = "ExampleMod.jar"
+    version = "v1.0.0"
   }
   
   val localMod = project.file("./libs/LocalMod.jar")
   
-  tasks.runMindustryClient {
-      // Don't forget to add your mod/plugin jar to the mods list
-      mods.setFrom(setOf(tasks.jar, downloadMod, localMod))
+  tasks.runMindustryDesktop {
+    mods.from(downloadMod, localMod)
   }
   ```
-
-### About migrating from Toxopid 2.x.x to 3.x.x
-
-- If you are using the `ModArtifactDownload`, rename it to `GithubDownloadArtifact` and add an explicit `name` as the
-  name of the downloaded artifact.
-
-- The `GithubArtifact` and `GithubDownload` classes have been removed. You won't have a problem if you followed the
-  depreciation warnings.
-
-- `MindustryExec` now extends `JavaExec` instead of extending `DefaultTask`. The API is mostly the same but now with
-  more control over the execution.
-
-- The internal tasks of Toxopid have been changed to use the new task classes. Change your build scripts accordingly if
-  you happen to configure them.
-
-- `ModPlatform` and `ModMetadata` have been moved to the `com.xpdustry.toxopid.spec` package.
-
-- The extension methods have been moved to the `fr.xpdustry.toxopid.dsl` package.
 
 ## Support
 
