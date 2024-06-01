@@ -34,7 +34,8 @@ import java.net.URI
  *
  * Provides mindustry, arc and [anuke rhino fork](https://github.com/Anuken/rhino).
  */
-public fun RepositoryHandler.anukeXpdustry(): MavenArtifactRepository = createAnukeRepository("xpdustry", "https://maven.xpdustry.com")
+public fun RepositoryHandler.anukeXpdustry(): MavenArtifactRepository =
+    createAnukeRepository("xpdustry", "https://maven.xpdustry.com/mindustry")
 
 /**
  * Add the [zelaux repository](https://github.com/Zelaux/MindustryRepo) restricted to Anuke artifacts.
