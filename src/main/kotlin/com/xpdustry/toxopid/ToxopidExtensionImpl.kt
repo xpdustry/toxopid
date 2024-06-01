@@ -30,7 +30,6 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Provider
-import org.gradle.api.provider.ProviderFactory
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.property
 import org.gradle.kotlin.dsl.setProperty
@@ -38,7 +37,7 @@ import javax.inject.Inject
 
 internal open class ToxopidExtensionImpl
     @Inject
-    constructor(objects: ObjectFactory, dependencies: DependencyHandler, providers: ProviderFactory) : ToxopidExtension {
+    constructor(objects: ObjectFactory, dependencies: DependencyHandler) : ToxopidExtension {
         final override val compileVersion = objects.property<String>()
         final override val runtimeVersion = objects.property<String>()
         final override val platforms = objects.setProperty<ModPlatform>()
@@ -52,7 +51,7 @@ internal open class ToxopidExtensionImpl
 
         init {
             compileVersion.convention("v${Toxopid.DEFAULT_MINDUSTRY_VERSION}")
-            runtimeVersion.convention(providers.provider(compileVersion::get))
+            runtimeVersion.convention(compileVersion)
             platforms.convention(setOf(ModPlatform.DESKTOP))
         }
 
