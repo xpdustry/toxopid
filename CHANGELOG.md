@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v4.0.0-rc.1 - 2024-06-01
+
+Initial release candidate for testing, consult [MIGRATING.md](https://github.com/xpdustry/toxopid/blob/master/MIGRATING.md) for more info.
+
 ## v3.2.0 - 2023-05-08
 
 ### Changes
