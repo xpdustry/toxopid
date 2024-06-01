@@ -86,7 +86,7 @@ indraPluginPublishing {
         "com.xpdustry.toxopid.plugin.ToxopidPlugin",
         "Toxopid",
         project.description,
-        listOf("mindustry", "testing", "boilerplate"),
+        listOf("mindustry", "testing"),
     )
 }
 
