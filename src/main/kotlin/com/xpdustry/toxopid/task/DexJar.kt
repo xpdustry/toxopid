@@ -33,6 +33,7 @@ import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Classpath
+import org.gradle.api.tasks.CompileClasspath
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
@@ -71,7 +72,7 @@ public open class DexJar : DefaultTask() {
     /**
      * The classpath of the [source] jar file.
      */
-    @get:[InputFiles Classpath]
+    @get:[InputFiles CompileClasspath]
     public val classpath: ConfigurableFileCollection = project.objects.fileCollection()
 
     init {
