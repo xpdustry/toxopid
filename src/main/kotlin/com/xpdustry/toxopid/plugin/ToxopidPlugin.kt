@@ -27,8 +27,7 @@ package com.xpdustry.toxopid.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPlugin
-import org.gradle.kotlin.dsl.hasPlugin
+import org.gradle.kotlin.dsl.apply
 
 /**
  * The main plugin of toxopid. It applies the [base plugin](ToxopidBasePlugin) and
@@ -37,11 +36,7 @@ import org.gradle.kotlin.dsl.hasPlugin
  */
 public class ToxopidPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.plugins.apply(ToxopidBasePlugin::class.java)
-        if (project.plugins.hasPlugin("com.github.johnrengelman.shadow")) {
-            project.plugins.apply(ToxopidShadowPlugin::class.java)
-        } else if (project.plugins.hasPlugin(JavaPlugin::class)) {
-            project.plugins.apply(ToxopidJavaPlugin::class.java)
-        }
+        project.plugins.apply(ToxopidBasePlugin::class)
+        project.plugins.apply(ToxopidJavaPlugin::class)
     }
 }

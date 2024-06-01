@@ -25,30 +25,68 @@
  */
 package com.xpdustry.toxopid.plugin
 
+import com.xpdustry.toxopid.Toxopid
+import com.xpdustry.toxopid.extension.getJarTask
 import com.xpdustry.toxopid.extension.toxopid
 import com.xpdustry.toxopid.spec.ModPlatform
+import com.xpdustry.toxopid.task.DexJar
 import com.xpdustry.toxopid.task.MindustryExec
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.bundling.Jar
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.withType
 
 /**
- * This plugin sets the output of the `jar` task as the mod final jar
- * for every eligible mindustry exec task.
+ * This plugin is responsible for handling the bundling of the mod jar:
+ *
+ * - If only the [java plugin](https://docs.gradle.org/current/userguide/java_plugin.html) is present, the `jar` task is used.
+ * - If the [shadow plugin](https://github.com/johnrengelman/shadow) is present alongside the java plugin, the `shadowJar` task is used.
+ *
+ * For each configured target platform [MindustryExec] tasks, the jar is added to the mods list.
+ *
+ * Finally, if android is in the target platforms, the jar is dexed and merged in the `mergeJar` task.
+ * If not, the `mergeJar` task is equivalent to the jar task.
  */
 public class ToxopidJavaPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.tasks.named<MindustryExec>(MindustryExec.DESKTOP_EXEC_TASK_NAME) {
-            if (project.toxopid.platforms.get().contains(ModPlatform.DESKTOP)) {
-                mods.from(project.tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class.java))
+        project.plugins.withType<JavaPlugin> {
+            val jar = project.getJarTask()
+
+            project.tasks.named<MindustryExec>(MindustryExec.DESKTOP_EXEC_TASK_NAME) {
+                if (project.toxopid.platforms.get().contains(ModPlatform.DESKTOP)) {
+                    mods.from(jar)
+                }
+            }
+
+            project.tasks.named<MindustryExec>(MindustryExec.SERVER_EXEC_TASK_NAME) {
+                if (project.toxopid.platforms.get().contains(ModPlatform.SERVER)) {
+                    mods.from(jar)
+                }
+            }
+
+            val dexJar =
+                project.tasks.register<DexJar>(DexJar.DEX_TASK_NAME) {
+                    group = Toxopid.TASK_GROUP_NAME
+                    source = jar.flatMap { it.archiveFile }
+                    classpath.from(project.configurations.named(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME))
+                    classpath.from(project.configurations.named(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME))
+                    onlyIf { ModPlatform.ANDROID in project.toxopid.platforms.get() }
+                }
+
+            project.tasks.register<Jar>(MERGE_JAR_TASK_NAME) {
+                group = Toxopid.TASK_GROUP_NAME
+                from(project.zipTree(dexJar.flatMap { it.output }))
+                from(project.zipTree(jar.flatMap { it.archiveFile }))
+                archiveClassifier.convention("merged")
             }
         }
-        project.tasks.named<MindustryExec>(MindustryExec.SERVER_EXEC_TASK_NAME) {
-            if (project.toxopid.platforms.get().contains(ModPlatform.SERVER)) {
-                mods.from(project.tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class.java))
-            }
-        }
+    }
+
+    private companion object {
+        private const val MERGE_JAR_TASK_NAME = "mergeJar"
     }
 }

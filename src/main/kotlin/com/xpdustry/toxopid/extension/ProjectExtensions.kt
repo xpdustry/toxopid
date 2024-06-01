@@ -29,9 +29,26 @@ import com.xpdustry.toxopid.Toxopid
 import com.xpdustry.toxopid.ToxopidExtension
 import com.xpdustry.toxopid.ToxopidExtensionImpl
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.TaskProvider
+import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.hasPlugin
+import org.gradle.kotlin.dsl.named
+
+private const val SHADOW_PLUGIN_ID = "com.github.johnrengelman.shadow"
+private const val SHADOW_JAR_TASK_NAME = "shadowJar"
 
 internal inline val Project.toxopid: ToxopidExtension
     get() =
         extensions.findByName(Toxopid.EXTENSION_NAME) as ToxopidExtension?
             ?: extensions.create(ToxopidExtension::class, Toxopid.EXTENSION_NAME, ToxopidExtensionImpl::class)
+
+internal fun Project.getJarTask(): TaskProvider<out Jar> =
+    if (plugins.hasPlugin(SHADOW_PLUGIN_ID)) {
+        tasks.named<Jar>(SHADOW_JAR_TASK_NAME)
+    } else if (plugins.hasPlugin(JavaPlugin::class)) {
+        tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
+    } else {
+        error("No valid jar task found")
+    }

@@ -107,14 +107,14 @@ public open class GithubAssetDownload : DefaultTask() {
 
         val json = JsonObject.readJSON(release.body())
         if (release.statusCode() != 200) {
-            throw IllegalStateException("Failed to get release: (code=${release.statusCode()}, message=${json.asObject()["message"]})")
+            error("Failed to get release: (code=${release.statusCode()}, message=${json.asObject()["message"]})")
         }
 
         val asset =
             json.asObject()["assets"].asArray()
                 .map { it.asObject() }
                 .firstOrNull { it["name"].asString() == asset.get() }
-                ?: throw IllegalStateException("Failed to find asset named $asset")
+                ?: error("Failed to find asset named $asset")
 
         val download =
             HTTP.send(
@@ -127,7 +127,7 @@ public open class GithubAssetDownload : DefaultTask() {
             )
 
         if (download.statusCode() != 200) {
-            throw IllegalStateException("Failed to download asset: (code=${download.statusCode()})")
+            error("Failed to download asset: (code=${download.statusCode()})")
         }
     }
 

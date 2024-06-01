@@ -43,7 +43,7 @@ import kotlin.io.path.notExists
 
 /**
  * Starts a Mindustry instance, blocks the build process until closing.
- * Every jar and zip mods are deleted every time its run so make sure you include
+ * Every jar and zip mods are deleted every time it runs so make sure you include
  * them in [MindustryExec.mods] and not directly in the [MindustryExec.workingDir].
  */
 public open class MindustryExec : JavaExec() {
