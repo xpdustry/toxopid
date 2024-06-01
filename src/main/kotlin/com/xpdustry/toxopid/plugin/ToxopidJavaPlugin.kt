@@ -38,7 +38,6 @@ import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.register
-import org.gradle.kotlin.dsl.withType
 
 /**
  * This plugin is responsible for handling the bundling of the mod jar:
@@ -53,35 +52,33 @@ import org.gradle.kotlin.dsl.withType
  */
 public class ToxopidJavaPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.plugins.withType<JavaPlugin> {
-            val jar = project.getJarTask()
+        val jar = project.getJarTask()
 
-            project.tasks.named<MindustryExec>(MindustryExec.DESKTOP_EXEC_TASK_NAME) {
-                if (project.toxopid.platforms.get().contains(ModPlatform.DESKTOP)) {
-                    mods.from(jar)
-                }
+        project.tasks.named<MindustryExec>(MindustryExec.DESKTOP_EXEC_TASK_NAME) {
+            if (project.toxopid.platforms.get().contains(ModPlatform.DESKTOP)) {
+                mods.from(jar)
             }
+        }
 
-            project.tasks.named<MindustryExec>(MindustryExec.SERVER_EXEC_TASK_NAME) {
-                if (project.toxopid.platforms.get().contains(ModPlatform.SERVER)) {
-                    mods.from(jar)
-                }
+        project.tasks.named<MindustryExec>(MindustryExec.SERVER_EXEC_TASK_NAME) {
+            if (project.toxopid.platforms.get().contains(ModPlatform.SERVER)) {
+                mods.from(jar)
             }
+        }
 
-            val dexJar =
-                project.tasks.register<DexJar>(DexJar.DEX_TASK_NAME) {
-                    group = Toxopid.TASK_GROUP_NAME
-                    source = jar.flatMap { it.archiveFile }
-                    classpath.from(project.configurations.named(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME))
-                    onlyIf { ModPlatform.ANDROID in project.toxopid.platforms.get() }
-                }
-
-            project.tasks.register<Jar>(MERGE_JAR_TASK_NAME) {
+        val dexJar =
+            project.tasks.register<DexJar>(DexJar.DEX_TASK_NAME) {
                 group = Toxopid.TASK_GROUP_NAME
-                from(project.zipTree(dexJar.flatMap { it.output }))
-                from(project.zipTree(jar.flatMap { it.archiveFile }))
-                archiveClassifier.convention("merged")
+                source = jar.flatMap { it.archiveFile }
+                classpath.from(project.configurations.named(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME))
+                onlyIf { ModPlatform.ANDROID in project.toxopid.platforms.get() }
             }
+
+        project.tasks.register<Jar>(MERGE_JAR_TASK_NAME) {
+            group = Toxopid.TASK_GROUP_NAME
+            from(project.zipTree(dexJar.flatMap { it.output }))
+            from(project.zipTree(jar.flatMap { it.archiveFile }))
+            archiveClassifier.convention("merged")
         }
     }
 

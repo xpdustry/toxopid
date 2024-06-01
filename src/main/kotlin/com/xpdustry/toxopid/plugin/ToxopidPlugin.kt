@@ -27,16 +27,19 @@ package com.xpdustry.toxopid.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPlugin
 import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.withType
 
 /**
  * The main plugin of toxopid. It applies the [base plugin](ToxopidBasePlugin) and
- * either the [shadow toxopid plugin](ToxopidShadowPlugin) if the [shadow plugin](https://github.com/johnrengelman/shadow) is present,
- * or the [java toxopid plugin](ToxopidJavaPlugin) if the java plugin is present.
+ * the [java plugin](ToxopidJavaPlugin) if the java plugin is present.
  */
 public class ToxopidPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(ToxopidBasePlugin::class)
-        project.plugins.apply(ToxopidJavaPlugin::class)
+        project.plugins.withType<JavaPlugin> {
+            project.plugins.apply(ToxopidJavaPlugin::class)
+        }
     }
 }
