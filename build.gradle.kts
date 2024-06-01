@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.xpdustry"
-version = "4.0.0-rc.1" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
+version = "4.0.0" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
 description = "Gradle plugin for building and testing mindustry mods/plugins."
 
 repositories {
@@ -60,14 +60,14 @@ indra {
     configurePublications {
         pom {
             organization {
-                name.set("Xpdustry")
-                url.set("https://www.xpdustry.com")
+                name = "Xpdustry"
+                url = "https://www.xpdustry.com"
             }
 
             developers {
                 developer {
-                    id.set("Phinner")
-                    timezone.set("Europe/Brussels")
+                    id = "Phinner"
+                    timezone = "Europe/Brussels"
                 }
             }
         }

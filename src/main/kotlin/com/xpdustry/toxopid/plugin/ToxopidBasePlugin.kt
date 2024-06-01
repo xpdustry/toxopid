@@ -33,6 +33,7 @@ import com.xpdustry.toxopid.task.GithubAssetDownload
 import com.xpdustry.toxopid.task.MindustryExec
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.register
 
 /**
@@ -44,18 +45,18 @@ public class ToxopidBasePlugin : Plugin<Project> {
 
         project.tasks.register<GithubAssetDownload>(GithubAssetDownload.MINDUSTRY_DESKTOP_DOWNLOAD_TASK_NAME) {
             group = Toxopid.TASK_GROUP_NAME
-            owner.set("Anuken")
-            repo.set("Mindustry")
-            asset.set("Mindustry.jar")
-            version.set(project.toxopid.runtimeVersion)
+            owner = "Anuken"
+            repo = "Mindustry"
+            asset = "Mindustry.jar"
+            version = project.toxopid.runtimeVersion
         }
 
         project.tasks.register<GithubAssetDownload>(GithubAssetDownload.MINDUSTRY_SERVER_DOWNLOAD_TASK_NAME) {
             group = Toxopid.TASK_GROUP_NAME
-            owner.set("Anuken")
-            repo.set("Mindustry")
-            asset.set("server-release.jar")
-            version.set(project.toxopid.runtimeVersion)
+            owner = "Anuken"
+            repo = "Mindustry"
+            asset = "server-release.jar"
+            version = project.toxopid.runtimeVersion
         }
 
         project.tasks.register<MindustryExec>(MindustryExec.DESKTOP_EXEC_TASK_NAME) {

@@ -46,6 +46,8 @@
     ModDependency("mod4", soft = true)
   )
   ```
+  
+- `MindustryExec#modsPath` has been changed to `MindustryExec#modsDir` which is now a directory property instead of a string.
 
 ## From Toxopid 2.x.x to 3.x.x
 
