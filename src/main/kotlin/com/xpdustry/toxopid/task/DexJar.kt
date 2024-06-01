@@ -26,10 +26,8 @@
 package com.xpdustry.toxopid.task
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.JavaVersion
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.RegularFileProperty
-import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Classpath
@@ -39,7 +37,6 @@ import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.property
 import java.io.File
 import kotlin.io.path.Path
@@ -82,10 +79,6 @@ public open class DexJar : DefaultTask() {
 
     @TaskAction
     public fun dex() {
-        if (project.extensions.getByType<JavaPluginExtension>().targetCompatibility > JavaVersion.VERSION_1_8) {
-            error("Dexing is only supported for Java 8 and below")
-        }
-
         val sdk =
             if (project.hasProperty("sdk.dir")) {
                 project.property("sdk.dir") as String
