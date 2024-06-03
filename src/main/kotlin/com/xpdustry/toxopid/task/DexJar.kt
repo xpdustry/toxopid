@@ -61,10 +61,12 @@ public open class DexJar : DefaultTask() {
     public val output: RegularFileProperty = project.objects.fileProperty()
 
     /**
-     * The minimum sdk version to target. **Only change if you know what you are doing.**
+     * The minimum sdk version to target.
+     *
+     * **Only change if you know what you are doing.**
      */
     @get:Input
-    public val minSdkVersion: Property<String> = project.objects.property()
+    public val minSdkVersion: Property<Int> = project.objects.property()
 
     /**
      * The classpath of the [source] jar file.
@@ -73,7 +75,7 @@ public open class DexJar : DefaultTask() {
     public val classpath: ConfigurableFileCollection = project.objects.fileCollection()
 
     init {
-        minSdkVersion.convention("14")
+        minSdkVersion.convention(14)
         output.convention { temporaryDir.resolve("dexed.jar") }
     }
 
@@ -96,30 +98,31 @@ public open class DexJar : DefaultTask() {
             )
         }
 
-        val root = Path(sdk)
         val (platform, version) =
-            root.resolve("platforms").listDirectoryEntries()
+            Path(sdk).resolve("platforms").listDirectoryEntries()
                 .map { it to it.fileName.toString().removePrefix("android-").toInt() }
                 .maxByOrNull { it.second }
                 ?: error("No Android SDK found")
 
         logger.info("Using Android SDK at {}", version)
 
-        val arguments = mutableListOf<String>()
-        arguments.add("--lib")
-        arguments.add(platform.resolve("android.jar").absolutePathString())
-        classpath.map { it.toPath().absolutePathString() }.forEach {
-            arguments.add("--classpath")
-            arguments.add(it)
-        }
-        arguments.add("--min-api")
-        arguments.add(minSdkVersion.get())
-        arguments.add("--output")
-        arguments.add(output.get().asFile.absolutePath)
-        arguments.add(source.get().asFile.absolutePath)
+        val arguments =
+            buildList<String> {
+                add("--lib")
+                add(platform.resolve("android.jar").absolutePathString())
+                classpath.forEach {
+                    add("--classpath")
+                    add(it.toPath().absolutePathString())
+                }
+                add("--min-api")
+                add(minSdkVersion.get().toString())
+                add("--output")
+                add(output.get().asFile.absolutePath)
+                add(source.get().asFile.absolutePath)
+            }
 
         val d8 =
-            root
+            Path(sdk)
                 .resolve("build-tools")
                 .listDirectoryEntries()
                 .filter { it.fileName.toString().startsWith(version.toString()) }
