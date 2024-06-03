@@ -26,10 +26,11 @@
 package com.xpdustry.toxopid.task
 
 import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.JavaExec
+import org.gradle.kotlin.dsl.property
 import java.io.File
 import java.nio.file.Path
 import java.util.zip.ZipFile
@@ -47,12 +48,12 @@ import kotlin.io.path.notExists
  */
 public open class MindustryExec : JavaExec() {
     /**
-     * The directory where the game loads the mods.
+     * The directory where the game loads the mods. Relative to [workingDir].
      *
      * **Only modify if you know what you are doing.**
      */
-    @get:InputDirectory
-    public val modsDir: DirectoryProperty = project.objects.directoryProperty()
+    @get:Input
+    public val modsDirPath: Property<String> = project.objects.property<String>()
 
     /**
      * The mods to load.
@@ -68,12 +69,12 @@ public open class MindustryExec : JavaExec() {
         logger.info("Starting Mindustry instance in $workingDir")
         environment("MINDUSTRY_DATA_DIR", workingDir)
 
-        val directory = modsDir.asFile.get().toPath()
-        if (directory.notExists()) {
-            directory.createDirectories()
+        val modsDir = workingDir.toPath().resolve(modsDirPath.get())
+        if (modsDir.notExists()) {
+            modsDir.createDirectories()
         }
 
-        for (file in directory.listDirectoryEntries()) {
+        for (file in modsDir.listDirectoryEntries()) {
             if (isValidMod(file)) {
                 logger.debug("Deleting mod: {}", file)
                 project.delete(file)

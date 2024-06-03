@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.xpdustry"
-version = "4.0.0-rc.2" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
+version = "4.0.0-rc.3" + if (indraGit.headTag() == null) "-SNAPSHOT" else ""
 description = "Gradle plugin for building and testing mindustry mods/plugins."
 
 repositories {

@@ -37,7 +37,7 @@ import org.gradle.kotlin.dsl.assign
 public fun MindustryExec.configureServer() {
     classpath(project.tasks.named(GithubAssetDownload.MINDUSTRY_SERVER_DOWNLOAD_TASK_NAME))
     mainClass = "mindustry.server.ServerLauncher"
-    modsDir = project.provider { workingDir.resolve("config").resolve("mods") }
+    modsDirPath = "./config/mods"
     standardInput = System.`in`
 }
 
@@ -47,5 +47,5 @@ public fun MindustryExec.configureServer() {
 public fun MindustryExec.configureDesktop() {
     classpath(project.tasks.named(GithubAssetDownload.MINDUSTRY_DESKTOP_DOWNLOAD_TASK_NAME))
     mainClass = "mindustry.desktop.DesktopLauncher"
-    modsDir = project.provider { workingDir.resolve("mods") }
+    modsDirPath = "./mods"
 }
