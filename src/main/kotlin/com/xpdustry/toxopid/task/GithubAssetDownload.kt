@@ -78,7 +78,7 @@ public open class GithubAssetDownload : DefaultTask() {
     /**
      * The output file.
      *
-     * *Default location is `{gradle-user-home}/caches/toxopid/github-assets/{user}/{repo}/{version}/{name}`.*
+     * *Default location is `{gradle-user-home}/caches/toxopid/github-assets/{owner}/{repo}/{version}/{asset}`.*
      */
     @get:OutputFile
     public val output: RegularFileProperty = project.objects.fileProperty()
