@@ -27,7 +27,7 @@ package com.xpdustry.toxopid.task
 
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.JavaExec
 import java.io.File
@@ -51,7 +51,7 @@ public open class MindustryExec : JavaExec() {
      *
      * **Only modify if you know what you are doing.**
      */
-    @get:Input
+    @get:InputDirectory
     public val modsDir: DirectoryProperty = project.objects.directoryProperty()
 
     /**
