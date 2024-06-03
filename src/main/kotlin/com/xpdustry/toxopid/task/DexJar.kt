@@ -76,7 +76,7 @@ public open class DexJar : DefaultTask() {
 
     init {
         minSdkVersion.convention(14)
-        output.convention { temporaryDir.resolve("dexed.jar") }
+        output.convention { temporaryDir.resolve("output.jar") }
     }
 
     @TaskAction

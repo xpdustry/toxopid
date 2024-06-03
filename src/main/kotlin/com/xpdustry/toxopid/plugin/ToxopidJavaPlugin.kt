@@ -78,7 +78,7 @@ public class ToxopidJavaPlugin : Plugin<Project> {
             group = Toxopid.TASK_GROUP_NAME
             from(project.zipTree(dexJar.flatMap { it.output }))
             from(project.zipTree(jar.flatMap { it.archiveFile }))
-            archiveClassifier.convention("merged")
+            archiveClassifier.convention("dexed")
         }
     }
 
