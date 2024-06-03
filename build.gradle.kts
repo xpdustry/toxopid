@@ -22,6 +22,7 @@ dependencies {
     compileOnly(gradleApi())
     implementation("org.hjson:hjson:3.1.0")
     implementation(kotlin("stdlib"))
+    testImplementation(kotlin("test"))
 }
 
 signing {
