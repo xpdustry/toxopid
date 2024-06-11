@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v4.0.1 - 2024-06-11
+
+### Fixes
+
+- Made `ModMetadata` and `ModDependency` serializable for task input compatibility.
+- Avoid re-downloading assets in `GithubAssetDownload`.
+- Remove android check for `dexTask`.
+
 ## v4.0.0-rc.2 - 2024-06-03
 
 Final release candidate, and also because initial RC failed to publish on Gradle.
