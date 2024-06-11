@@ -35,7 +35,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.register
-import org.gradle.kotlin.dsl.withType
 
 /**
  * Base plugin that sets up the standard toxopid tasks for mod/plugin testing.
@@ -68,12 +67,6 @@ public class ToxopidBasePlugin : Plugin<Project> {
         project.tasks.register<MindustryExec>(MindustryExec.SERVER_EXEC_TASK_NAME) {
             group = Toxopid.TASK_GROUP_NAME
             configureServer()
-        }
-
-        project.tasks.withType<GithubAssetDownload> {
-            onlyIf("Do not re-download if the asset already exists at the default location") {
-                output.isPresent || !output.asFile.get().exists()
-            }
         }
 
         project.afterEvaluate {

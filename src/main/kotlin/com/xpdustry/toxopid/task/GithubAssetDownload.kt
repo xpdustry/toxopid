@@ -35,6 +35,7 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.property
 import org.hjson.JsonObject
+import java.io.File
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -84,20 +85,19 @@ public open class GithubAssetDownload : DefaultTask() {
     public val output: RegularFileProperty = project.objects.fileProperty()
 
     init {
-        output.convention {
-            project.gradle.gradleUserHomeDir.resolve(
-                "caches/toxopid/github-assets/${owner.get()}/${repo.get()}/${version.get()}/${asset.get()}",
-            )
-        }
+        output.convention { getDefaultLocation() }
     }
 
     @TaskAction
     public fun download() {
+        if (output.asFile.get() == getDefaultLocation() && output.asFile.get().exists()) {
+            logger.debug("Skipping download of {} as it already exists at the default location", asset)
+            return
+        }
+
         val release =
             HTTP.send(
-                HttpRequest.newBuilder(
-                    URI("https://api.github.com/repos/${owner.get()}/${repo.get()}/releases/tags/${version.get()}"),
-                )
+                HttpRequest.newBuilder(URI("https://api.github.com/repos/${owner.get()}/${repo.get()}/releases/tags/${version.get()}"))
                     .header("Accept", "application/vnd.github+json")
                     .applyAuthorization()
                     .GET()
@@ -137,6 +137,11 @@ public open class GithubAssetDownload : DefaultTask() {
                 header("Authorization", "Bearer ${token.get()}")
             }
         }
+
+    private fun getDefaultLocation(): File =
+        project.gradle.gradleUserHomeDir.resolve(
+            "caches/toxopid/github-assets/${owner.get()}/${repo.get()}/${version.get()}/${asset.get()}",
+        )
 
     public companion object {
         public const val MINDUSTRY_DESKTOP_DOWNLOAD_TASK_NAME: String = "downloadMindustryDesktop"
