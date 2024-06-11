@@ -30,6 +30,7 @@ import org.hjson.JsonArray
 import org.hjson.JsonObject
 import org.hjson.Stringify
 import java.io.File
+import java.io.Serializable
 
 /**
  * Represents the metadata of a mod.
@@ -50,7 +51,7 @@ public data class ModMetadata(
     public var textureScale: Float = 1f,
     public var pregenerated: Boolean = false,
     public val dependencies: MutableList<ModDependency> = mutableListOf(),
-) {
+) : Serializable {
     public companion object {
         /**
          * @return a parsed [ModMetadata] from json
