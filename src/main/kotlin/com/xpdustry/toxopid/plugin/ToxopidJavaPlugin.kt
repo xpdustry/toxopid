@@ -71,7 +71,6 @@ public class ToxopidJavaPlugin : Plugin<Project> {
                 group = Toxopid.TASK_GROUP_NAME
                 source = jar.flatMap { it.archiveFile }
                 classpath.from(project.configurations.named(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME))
-                onlyIf { ModPlatform.ANDROID in project.toxopid.platforms.get() }
             }
 
         project.tasks.register<Jar>(MERGE_JAR_TASK_NAME) {
