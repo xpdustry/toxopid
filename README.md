@@ -101,13 +101,18 @@ The following examples assume you are using a kotlin build script.
      mainClass = "org.example.mod.ModMain"
    )
    
-   tasks.jar {
-     // Doing it in doFirst makes sure it's only executed when this task runs
-     doFirst {
-       val temp = temporaryDir.resolve("mod.json")
-       temp.writeText(Metadata.toJson(metadata, true))
-       from(temp)
+   val generateMetadataFile by tasks.registering {
+     // Regenerates the file if the metadata changes
+     inputs.property("metadata", metadata)
+     val output = temporaryDir.resolve("mod.json")
+     outputs.file(output)
+     doLast {
+       output.writeText(ModMetadata.toJson(metadata))
      }
+   }
+   
+   tasks.jar {
+     from(generateMetadataFile)
    }
    ```
    
