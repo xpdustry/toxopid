@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v4.0.2 - 2024-06-20
+
+### Fixes
+
+- Add support for [shadow maintained fork](https://plugins.gradle.org/plugin/io.github.goooler.shadow).
+
 ## v4.0.1 - 2024-06-11
 
 ### Fixes
