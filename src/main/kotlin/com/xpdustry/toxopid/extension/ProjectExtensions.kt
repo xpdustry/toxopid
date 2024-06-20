@@ -36,17 +36,14 @@ import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.hasPlugin
 import org.gradle.kotlin.dsl.named
 
-private const val SHADOW_PLUGIN_ID = "com.github.johnrengelman.shadow"
-private const val SHADOW_JAR_TASK_NAME = "shadowJar"
-
 internal inline val Project.toxopid: ToxopidExtension
     get() =
         extensions.findByName(Toxopid.EXTENSION_NAME) as ToxopidExtension?
             ?: extensions.create(ToxopidExtension::class, Toxopid.EXTENSION_NAME, ToxopidExtensionImpl::class)
 
 internal fun Project.getJarTask(): TaskProvider<out Jar> =
-    if (plugins.hasPlugin(SHADOW_PLUGIN_ID)) {
-        tasks.named<Jar>(SHADOW_JAR_TASK_NAME)
+    if (plugins.hasPlugin("com.github.johnrengelman.shadow") || plugins.hasPlugin("io.github.goooler.shadow")) {
+        tasks.named<Jar>("shadowJar")
     } else if (plugins.hasPlugin(JavaPlugin::class)) {
         tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
     } else {
