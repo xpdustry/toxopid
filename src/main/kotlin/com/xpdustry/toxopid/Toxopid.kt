@@ -25,6 +25,8 @@
  */
 package com.xpdustry.toxopid
 
+import java.net.http.HttpClient
+
 /**
  * Constants for Toxopid.
  */
@@ -32,4 +34,6 @@ public object Toxopid {
     public const val EXTENSION_NAME: String = "toxopid"
     public const val TASK_GROUP_NAME: String = "toxopid"
     public const val DEFAULT_MINDUSTRY_VERSION: String = "146"
+
+    internal val HTTP = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()
 }

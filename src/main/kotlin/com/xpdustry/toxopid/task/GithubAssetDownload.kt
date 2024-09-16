@@ -25,6 +25,7 @@
  */
 package com.xpdustry.toxopid.task
 
+import com.xpdustry.toxopid.Toxopid
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
@@ -37,7 +38,6 @@ import org.gradle.kotlin.dsl.property
 import org.hjson.JsonObject
 import java.io.File
 import java.net.URI
-import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
@@ -96,7 +96,7 @@ public open class GithubAssetDownload : DefaultTask() {
         }
 
         val release =
-            HTTP.send(
+            Toxopid.HTTP.send(
                 HttpRequest.newBuilder(URI("https://api.github.com/repos/${owner.get()}/${repo.get()}/releases/tags/${version.get()}"))
                     .header("Accept", "application/vnd.github+json")
                     .applyAuthorization()
@@ -117,7 +117,7 @@ public open class GithubAssetDownload : DefaultTask() {
                 ?: error("Failed to find asset named $asset")
 
         val download =
-            HTTP.send(
+            Toxopid.HTTP.send(
                 HttpRequest.newBuilder(URI(asset["url"].asString()))
                     .header("Accept", "application/octet-stream")
                     .applyAuthorization()
@@ -146,6 +146,5 @@ public open class GithubAssetDownload : DefaultTask() {
     public companion object {
         public const val MINDUSTRY_DESKTOP_DOWNLOAD_TASK_NAME: String = "downloadMindustryDesktop"
         public const val MINDUSTRY_SERVER_DOWNLOAD_TASK_NAME: String = "downloadMindustryServer"
-        private val HTTP = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()
     }
 }

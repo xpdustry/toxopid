@@ -25,6 +25,7 @@
  */
 package com.xpdustry.toxopid.task
 
+import com.xpdustry.toxopid.Toxopid
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.RegularFileProperty
@@ -35,10 +36,15 @@ import org.gradle.api.tasks.CompileClasspath
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.property
 import java.io.File
+import java.net.URI
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse.BodyHandlers
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.listDirectoryEntries
@@ -73,6 +79,12 @@ public open class DexJar : DefaultTask() {
      */
     @get:[InputFiles CompileClasspath]
     public val classpath: ConfigurableFileCollection = project.objects.fileCollection()
+
+    /**
+     * The version of d8 to use. If not set, the d8 tool from the selected local Android SDK will be used.
+     */
+    @get:[Input Optional]
+    public val d8Version: Property<String> = project.objects.property()
 
     init {
         minSdkVersion.convention(14)
@@ -121,21 +133,50 @@ public open class DexJar : DefaultTask() {
                 add(source.get().asFile.absolutePath)
             }
 
-        val d8 =
-            Path(sdk)
-                .resolve("build-tools")
-                .listDirectoryEntries()
-                .filter { it.fileName.toString().startsWith(version.toString()) }
-                .maxOrNull()
-                ?.resolve(if (System.getProperty("os.name").lowercase().contains("windows")) "d8.bat" else "d8")
-                ?.absolutePathString()
-                ?: error("No d8 found in Android SDK for version $version")
+        if (d8Version.isPresent) {
+            logger.info("Dexing jar using explicit d8 version: ${d8Version.get()}")
 
-        logger.info("Dexing jar with d8: $d8")
+            val r8lib = project.gradle.gradleUserHomeDir.resolve("caches/toxopid/r8/r8lib-${d8Version.get()}.jar")
+            r8lib.parentFile.mkdirs()
 
-        project.exec {
-            executable = d8
-            args = arguments
+            if (!r8lib.exists()) {
+                val response =
+                    Toxopid.HTTP.send(
+                        HttpRequest.newBuilder(URI("https://storage.googleapis.com/r8-releases/raw/${d8Version.get()}/r8lib.jar"))
+                            .GET()
+                            .build(),
+                        BodyHandlers.ofFile(r8lib.toPath()),
+                    )
+
+                if (response.statusCode() != 200) {
+                    error("Failed to download r8lib: (code=${response.statusCode()}, version=${d8Version.get()})")
+                }
+
+                logger.info("Downloaded r8 version ${d8Version.get()}")
+            }
+
+            project.javaexec {
+                mainClass = "com.android.tools.r8.D8"
+                classpath(r8lib)
+                args = arguments
+            }
+        } else {
+            val d8 =
+                Path(sdk)
+                    .resolve("build-tools")
+                    .listDirectoryEntries()
+                    .filter { it.fileName.toString().startsWith(version.toString()) }
+                    .maxOrNull()
+                    ?.resolve(if (System.getProperty("os.name").lowercase().contains("windows")) "d8.bat" else "d8")
+                    ?.absolutePathString()
+                    ?: error("No d8 found in Android SDK for version $version")
+
+            logger.info("Dexing jar using user d8: $d8")
+
+            project.exec {
+                executable = d8
+                args = arguments
+            }
         }
     }
 
