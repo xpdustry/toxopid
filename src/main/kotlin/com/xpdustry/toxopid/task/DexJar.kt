@@ -112,7 +112,7 @@ public open class DexJar : DefaultTask() {
 
         val (platform, version) =
             Path(sdk).resolve("platforms").listDirectoryEntries()
-                .map { it to it.fileName.toString().removePrefix("android-").toInt() }
+                .map { it to it.fileName.toString().removePrefix("android-").split("-")[0].toInt() }
                 .maxByOrNull { it.second }
                 ?: error("No Android SDK found")
 
