@@ -42,7 +42,10 @@ internal inline val Project.toxopid: ToxopidExtension
             ?: extensions.create(ToxopidExtension::class, Toxopid.EXTENSION_NAME, ToxopidExtensionImpl::class)
 
 internal fun Project.getJarTask(): TaskProvider<out Jar> =
-    if (plugins.hasPlugin("com.github.johnrengelman.shadow") || plugins.hasPlugin("io.github.goooler.shadow")) {
+    if (plugins.hasPlugin(
+            "com.github.johnrengelman.shadow",
+        ) || plugins.hasPlugin("io.github.goooler.shadow") || plugins.hasPlugin("com.gradleup.shadow")
+    ) {
         tasks.named<Jar>("shadowJar")
     } else if (plugins.hasPlugin(JavaPlugin::class)) {
         tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
