@@ -25,7 +25,7 @@
  */
 package com.xpdustry.toxopid.task
 
-import com.xpdustry.toxopid.Toxopid
+import com.xpdustry.toxopid.extension.HTTP
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
@@ -96,7 +96,7 @@ public open class GithubAssetDownload : DefaultTask() {
         }
 
         val release =
-            Toxopid.HTTP.send(
+            HTTP.send(
                 HttpRequest.newBuilder(URI("https://api.github.com/repos/${owner.get()}/${repo.get()}/releases/tags/${version.get()}"))
                     .header("Accept", "application/vnd.github+json")
                     .applyAuthorization()
@@ -117,7 +117,7 @@ public open class GithubAssetDownload : DefaultTask() {
                 ?: error("Failed to find asset named $asset")
 
         val download =
-            Toxopid.HTTP.send(
+            HTTP.send(
                 HttpRequest.newBuilder(URI(asset["url"].asString()))
                     .header("Accept", "application/octet-stream")
                     .applyAuthorization()

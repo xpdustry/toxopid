@@ -23,13 +23,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.xpdustry.toxopid
+package com.xpdustry.toxopid.extension
 
-/**
- * Constants for Toxopid.
- */
-public object Toxopid {
-    public const val EXTENSION_NAME: String = "toxopid"
-    public const val TASK_GROUP_NAME: String = "toxopid"
-    public const val DEFAULT_MINDUSTRY_VERSION: String = "146"
-}
+import java.net.http.HttpClient
+
+internal val HTTP = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()

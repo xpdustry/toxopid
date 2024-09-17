@@ -25,7 +25,7 @@
  */
 package com.xpdustry.toxopid.task
 
-import com.xpdustry.toxopid.Toxopid
+import com.xpdustry.toxopid.extension.HTTP
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.RegularFileProperty
@@ -36,18 +36,19 @@ import org.gradle.api.tasks.CompileClasspath
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.property
-import java.io.File
+import org.w3c.dom.Node
 import java.net.URI
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse.BodyHandlers
-import kotlin.io.path.Path
+import java.nio.file.FileSystems
+import java.nio.file.Path
+import javax.xml.parsers.DocumentBuilderFactory
 import kotlin.io.path.absolutePathString
-import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.copyTo
 
 /**
  * Dexes a jar file using d8. It does so by finding the latest Android SDK installed on the system and using the d8 tool from it.
@@ -81,103 +82,154 @@ public open class DexJar : DefaultTask() {
     public val classpath: ConfigurableFileCollection = project.objects.fileCollection()
 
     /**
-     * The version of d8 to use. If not set, the d8 tool from the selected local Android SDK will be used.
+     * The platform version to use. If not set, version 35 will be used.
      */
-    @get:[Input Optional]
-    public val d8Version: Property<String> = project.objects.property()
+    @get:Input
+    public val platformVersion: Property<String> = project.objects.property()
+
+    /**
+     * The version of r8 to use. If not set, version 8.5.10 will be used.
+     */
+    @get:Input
+    public val r8Version: Property<String> = project.objects.property()
 
     init {
         minSdkVersion.convention(14)
         output.convention { temporaryDir.resolve("output.jar") }
+        platformVersion.convention("35")
+        r8Version.convention("8.5.10")
     }
 
     @TaskAction
     public fun dex() {
-        val sdk =
-            if (project.hasProperty("sdk.dir")) {
-                project.property("sdk.dir") as String
-            } else {
-                System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
-            }
+        val platform = resolveAndroidPlatform()
+        val r8lib = resolveR8()
 
-        if (sdk == null || sdk.isEmpty() || !File(sdk).exists()) {
-            error(
-                """
-                No valid Android SDK found. Ensure that ANDROID_HOME is set to your Android SDK directory.
-                Note: if the gradle daemon has been started before ANDROID_HOME env variable was defined, it won't be able to read this variable.
-                In this case you have to run "./gradlew --stop" and try again
-                """.trimIndent(),
+        project.javaexec {
+            mainClass = "com.android.tools.r8.D8"
+            classpath(r8lib)
+            args =
+                buildList {
+                    add("--lib")
+                    add(platform.absolutePathString())
+                    classpath.forEach {
+                        add("--classpath")
+                        add(it.toPath().absolutePathString())
+                    }
+                    add("--min-api")
+                    add(minSdkVersion.get().toString())
+                    add("--output")
+                    add(output.get().asFile.absolutePath)
+                    add(source.get().asFile.absolutePath)
+                }
+        }
+    }
+
+    private fun resolveAndroidPlatform(): Path {
+        logger.debug("Resolving Android SDK")
+
+        val target = project.gradle.gradleUserHomeDir.resolve("caches/toxopid/android-platforms/android-${platformVersion.get()}.jar")
+        if (target.exists()) {
+            logger.debug("Using cached Android SDK at {}", target)
+            return target.toPath()
+        }
+
+        target.parentFile.mkdirs()
+
+        val repository =
+            HTTP.send(
+                HttpRequest.newBuilder(URI("https://dl.google.com/android/repository/repository2-3.xml"))
+                    .GET()
+                    .build(),
+                BodyHandlers.ofInputStream(),
             )
+
+        if (repository.statusCode() != 200) {
+            error("Failed to download google android repository listing: (code=${repository.statusCode()})")
         }
 
-        val (platform, version) =
-            Path(sdk).resolve("platforms").listDirectoryEntries()
-                .map { it to it.fileName.toString().removePrefix("android-").split("-")[0].toInt() }
-                .maxByOrNull { it.second }
-                ?: error("No Android SDK found")
-
-        logger.info("Using Android SDK at {}", version)
-
-        val arguments =
-            buildList<String> {
-                add("--lib")
-                add(platform.resolve("android.jar").absolutePathString())
-                classpath.forEach {
-                    add("--classpath")
-                    add(it.toPath().absolutePathString())
-                }
-                add("--min-api")
-                add(minSdkVersion.get().toString())
-                add("--output")
-                add(output.get().asFile.absolutePath)
-                add(source.get().asFile.absolutePath)
+        val document =
+            repository.body().use {
+                val factory = DocumentBuilderFactory.newInstance()
+                factory.isIgnoringComments = true
+                factory.newDocumentBuilder().parse(it)
             }
 
-        if (d8Version.isPresent) {
-            logger.info("Dexing jar using explicit d8 version: ${d8Version.get()}")
+        val packages = document.childNodes.item(0).getNodes("remotePackage")
+        logger.debug("Found ${packages.size} android packages: {}", packages.joinToString { it.attributes.getNamedItem("path").nodeValue })
+        val match =
+            packages.find { node ->
+                val path = node.attributes.getNamedItem("path").nodeValue
+                path.removePrefix("platforms;android-") == platformVersion.get()
+            } ?: error("No Android SDK found in google repository for version ${platformVersion.get()}")
 
-            val r8lib = project.gradle.gradleUserHomeDir.resolve("caches/toxopid/r8/r8lib-${d8Version.get()}.jar")
-            r8lib.parentFile.mkdirs()
+        val url = match["archives"]!!["archive"]!!["complete"]!!["url"]!!.textContent
+        logger.debug("Downloading Android SDK from $url")
 
-            if (!r8lib.exists()) {
-                val response =
-                    Toxopid.HTTP.send(
-                        HttpRequest.newBuilder(URI("https://storage.googleapis.com/r8-releases/raw/${d8Version.get()}/r8lib.jar"))
-                            .GET()
-                            .build(),
-                        BodyHandlers.ofFile(r8lib.toPath()),
-                    )
+        val platform =
+            HTTP.send(
+                HttpRequest.newBuilder(URI("https://dl.google.com/android/repository/$url"))
+                    .GET()
+                    .build(),
+                BodyHandlers.ofFile(temporaryDir.resolve("android-${platformVersion.get()}.zip").toPath()),
+            )
 
-                if (response.statusCode() != 200) {
-                    error("Failed to download r8lib: (code=${response.statusCode()}, version=${d8Version.get()})")
-                }
-
-                logger.info("Downloaded r8 version ${d8Version.get()}")
-            }
-
-            project.javaexec {
-                mainClass = "com.android.tools.r8.D8"
-                classpath(r8lib)
-                args = arguments
-            }
-        } else {
-            val d8 =
-                Path(sdk)
-                    .resolve("build-tools")
-                    .listDirectoryEntries()
-                    .filter { it.fileName.toString().startsWith(version.toString()) }
-                    .maxOrNull()
-                    ?.resolve(if (System.getProperty("os.name").lowercase().contains("windows")) "d8.bat" else "d8")
-                    ?.absolutePathString()
-                    ?: error("No d8 found in Android SDK for version $version")
-
-            logger.info("Dexing jar using user d8: $d8")
-
-            project.exec {
-                executable = d8
-                args = arguments
-            }
+        if (platform.statusCode() != 200) {
+            error("Failed to download android platform: (code=${platform.statusCode()})")
         }
+
+        FileSystems.newFileSystem(temporaryDir.resolve("android-${platformVersion.get()}.zip").toPath(), null as ClassLoader?).use {
+            it.getPath("android-${platformVersion.get()}", "android.jar").copyTo(target.toPath())
+        }
+
+        logger.debug("Downloaded Android SDK version ${platformVersion.get()}")
+        return target.toPath()
+    }
+
+    private fun Node.getNodes(name: String): List<Node> {
+        val children = childNodes
+        val list = mutableListOf<Node>()
+        repeat(children.length) {
+            val node = children.item(it)
+            if (node.nodeName == name) list += node
+        }
+        return list
+    }
+
+    private operator fun Node.get(name: String): Node? {
+        val children = childNodes
+        repeat(children.length) {
+            val node = children.item(it)
+            if (node.nodeName == name) return node
+        }
+        return null
+    }
+
+    private fun resolveR8(): Path {
+        logger.debug("Resolving R8")
+
+        val r8lib = project.gradle.gradleUserHomeDir.resolve("caches/toxopid/r8/r8lib-${r8Version.get()}.jar")
+        if (r8lib.exists()) {
+            logger.debug("Using cached r8lib at {}", r8lib)
+            return r8lib.toPath()
+        }
+
+        r8lib.parentFile.mkdirs()
+
+        val response =
+            HTTP.send(
+                HttpRequest.newBuilder(URI("https://storage.googleapis.com/r8-releases/raw/${r8Version.get()}/r8lib.jar"))
+                    .GET()
+                    .build(),
+                BodyHandlers.ofFile(r8lib.toPath()),
+            )
+
+        if (response.statusCode() != 200) {
+            error("Failed to download r8lib: (code=${response.statusCode()}, version=${r8Version.get()})")
+        }
+
+        logger.debug("Downloaded r8 version ${r8Version.get()}")
+        return r8lib.toPath()
     }
 
     public companion object {

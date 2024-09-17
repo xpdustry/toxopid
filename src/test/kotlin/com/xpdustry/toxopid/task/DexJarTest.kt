@@ -23,13 +23,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.xpdustry.toxopid
+package com.xpdustry.toxopid.task
 
-/**
- * Constants for Toxopid.
- */
-public object Toxopid {
-    public const val EXTENSION_NAME: String = "toxopid"
-    public const val TASK_GROUP_NAME: String = "toxopid"
-    public const val DEFAULT_MINDUSTRY_VERSION: String = "146"
+import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
+import java.nio.file.Path
+import kotlin.io.path.writeText
+import kotlin.test.assertEquals
+
+class DexJarTest {
+    @TempDir
+    lateinit var directory: Path
+
+    @Test
+    fun `test dex and merge`() {
+        directory.resolve("build.gradle.kts").writeText(
+            """
+            import com.xpdustry.toxopid.spec.ModPlatform
+
+            plugins {
+                java
+                id("com.xpdustry.toxopid")
+            }
+            
+            toxopid {
+                platforms = setOf(ModPlatform.DESKTOP, ModPlatform.ANDROID, ModPlatform.SERVER)
+            }
+            """.trimIndent(),
+        )
+
+        val runner =
+            GradleRunner.create()
+                .withProjectDir(directory.toFile())
+                .withArguments("mergeJar")
+                .withPluginClasspath()
+                .build()
+
+        assertEquals(runner.task(":mergeJar")!!.outcome, TaskOutcome.SUCCESS)
+        assertEquals(runner.task(":dexJar")!!.outcome, TaskOutcome.SUCCESS)
+    }
 }
