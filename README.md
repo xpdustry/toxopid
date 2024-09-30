@@ -142,6 +142,25 @@ And voilà, you have a minimal toxopid setup for your mod/plugin.
     mods.from(downloadMod, localMod)
   }
   ```
+  
+- Android support is available with the `ModPlatform.ANDROID` platform, downloading Android studio is not required:
+
+  ```gradle.kts
+  toxopid {
+    platforms = setOf(ModPlatform.DESKTOP, ModPlatform.ANDROID)
+  }
+  
+  java {
+    // Target Java 8 for Android
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+  }
+  
+  tasks.build {
+    // Use mergeJar instead of jar or shadowJar, it will contain the dexed classes
+    dependsOn(tasks.mergeJar)
+  }
+  ```
 
 ## Support
 
