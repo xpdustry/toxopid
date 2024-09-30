@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v4.1.0 - 2024-09-30
 
-## Features
+### Features
 
 - Dexing with `DexJar` no longer requires Android studio installed, android platform and R8 are downloaded at runtime.
 - Allow the use of an explicit R8 and android platform version for `DexJar`.
