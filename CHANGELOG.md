@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v4.1.0 - 2024-09-30
+
+## Features
+
+- Dexing with `DexJar` no longer requires Android studio installed, android platform and R8 are downloaded at runtime.
+- Allow the use of an explicit R8 and android platform version for `DexJar`.
+- Added support for [gradleup's shadow](https://github.com/GradleUp/shadow), the official successor of shadow.
+
+### Chores
+
+- Upgraded Gradle to `v8.10.2`.
+
 ## v4.0.2 - 2024-06-20
 
 ### Fixes
