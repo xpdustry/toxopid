@@ -97,7 +97,7 @@ public open class DexJar : DefaultTask() {
         minSdkVersion.convention(14)
         output.convention { temporaryDir.resolve("output.jar") }
         platformVersion.convention("35")
-        r8Version.convention("8.5.10")
+        r8Version.convention("8.5.35")
     }
 
     @TaskAction
