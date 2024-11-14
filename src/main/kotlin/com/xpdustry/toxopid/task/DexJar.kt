@@ -112,9 +112,9 @@ public open class DexJar : DefaultTask() {
                 buildList {
                     add("--lib")
                     add(platform.absolutePathString())
-                    classpath.forEach {
+                    this@DexJar.classpath.forEach { file ->
                         add("--classpath")
-                        add(it.toPath().absolutePathString())
+                        add(file.absolutePath)
                     }
                     add("--min-api")
                     add(minSdkVersion.get().toString())
