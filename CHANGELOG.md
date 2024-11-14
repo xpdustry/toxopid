@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v4.1.1 - 2024-11-14
+
+### Fixes
+
+- Fix R8 overriding `DexJar` classpath, causing warnings.
+
 ## v4.1.0 - 2024-09-30
 
 ### Features
