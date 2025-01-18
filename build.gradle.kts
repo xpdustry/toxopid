@@ -22,7 +22,8 @@ dependencies {
     compileOnly(gradleApi())
     implementation("org.hjson:hjson:3.1.0")
     implementation(kotlin("stdlib"))
-    testImplementation(kotlin("test"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 signing {

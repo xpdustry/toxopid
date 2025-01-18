@@ -28,6 +28,7 @@ package com.xpdustry.toxopid.task
 import java.io.File
 import java.nio.file.Path
 import java.util.zip.ZipFile
+import javax.inject.Inject
 import kotlin.io.path.createDirectories
 import kotlin.io.path.extension
 import kotlin.io.path.isDirectory
@@ -35,6 +36,8 @@ import kotlin.io.path.isRegularFile
 import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.notExists
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.FileSystemOperations
+import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
@@ -45,16 +48,17 @@ import org.gradle.kotlin.dsl.property
  * Starts a Mindustry instance, blocks the build process until closing. Every jar and zip mods are deleted every time it
  * runs so make sure you include them in [MindustryExec.mods] and not directly in the [MindustryExec.workingDir].
  */
-public open class MindustryExec : JavaExec() {
+public open class MindustryExec @Inject constructor(objects: ObjectFactory, private val fs: FileSystemOperations) :
+    JavaExec() {
     /**
      * The directory where the game loads the mods. Relative to [workingDir].
      *
      * **Only modify if you know what you are doing.**
      */
-    @get:Input public val modsDirPath: Property<String> = project.objects.property<String>()
+    @get:Input public val modsDirPath: Property<String> = objects.property<String>()
 
     /** The mods to load. */
-    @get:InputFiles public val mods: ConfigurableFileCollection = project.objects.fileCollection()
+    @get:InputFiles public val mods: ConfigurableFileCollection = objects.fileCollection()
 
     init {
         workingDir = temporaryDir
@@ -72,14 +76,14 @@ public open class MindustryExec : JavaExec() {
         for (file in modsDir.listDirectoryEntries()) {
             if (isValidMod(file)) {
                 logger.debug("Deleting mod: {}", file)
-                project.delete(file)
+                fs.delete { delete(file) }
             }
         }
 
         for (file in mods.files.map(File::toPath)) {
             if (isValidMod(file)) {
                 logger.debug("Copying mod: {}", file)
-                project.copy {
+                fs.copy {
                     from(file)
                     into(modsDir)
                 }

@@ -27,9 +27,9 @@ package com.xpdustry.toxopid.task
 
 import java.nio.file.Path
 import kotlin.io.path.writeText
-import kotlin.test.assertEquals
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
@@ -63,7 +63,7 @@ class DexJarTest {
                 .withPluginClasspath()
                 .build()
 
-        assertEquals(runner.task(":mergeJar")!!.outcome, TaskOutcome.SUCCESS)
-        assertEquals(runner.task(":dexJar")!!.outcome, TaskOutcome.SUCCESS)
+        Assertions.assertEquals(runner.task(":mergeJar")!!.outcome, TaskOutcome.SUCCESS)
+        Assertions.assertEquals(runner.task(":dexJar")!!.outcome, TaskOutcome.SUCCESS)
     }
 }

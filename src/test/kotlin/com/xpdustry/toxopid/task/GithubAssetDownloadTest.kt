@@ -28,9 +28,9 @@ package com.xpdustry.toxopid.task
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.writeText
-import kotlin.test.assertEquals
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
@@ -43,18 +43,18 @@ class GithubAssetDownloadTest {
             .resolve("build.gradle.kts")
             .writeText(
                 """
-            plugins {
-                id("com.xpdustry.toxopid")
-            }
-            
-            toxopid {
-                runtimeVersion = "v126"
-            }
-            
-            tasks.downloadMindustryServer {
-                output = rootProject.file("server.jar")
-            }
-            """
+                plugins {
+                    id("com.xpdustry.toxopid")
+                }
+                
+                toxopid {
+                    runtimeVersion = "v126"
+                }
+                
+                tasks.downloadMindustryServer {
+                    output = rootProject.file("server.jar")
+                }
+                """
                     .trimIndent()
             )
 
@@ -65,7 +65,7 @@ class GithubAssetDownloadTest {
                 .withPluginClasspath()
                 .build()
 
-        assertEquals(runner.task(":downloadMindustryServer")!!.outcome, TaskOutcome.SUCCESS)
-        assert(directory.resolve("server.jar").exists())
+        Assertions.assertEquals(runner.task(":downloadMindustryServer")!!.outcome, TaskOutcome.SUCCESS)
+        Assertions.assertTrue(directory.resolve("server.jar").exists())
     }
 }

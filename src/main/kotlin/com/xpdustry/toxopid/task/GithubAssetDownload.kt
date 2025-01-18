@@ -30,42 +30,47 @@ import java.io.File
 import java.net.URI
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import javax.inject.Inject
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
+import org.gradle.initialization.GradleUserHomeDirProvider
 import org.gradle.kotlin.dsl.property
 import org.hjson.JsonObject
 
 /** Downloads a release asset from a GitHub repository. */
 @CacheableTask
-public open class GithubAssetDownload : DefaultTask() {
+public open class GithubAssetDownload
+@Inject
+constructor(objects: ObjectFactory, private val home: GradleUserHomeDirProvider) : DefaultTask() {
     /** The repository owner. */
-    @get:Input public val owner: Property<String> = project.objects.property()
+    @get:Input public val owner: Property<String> = objects.property()
 
     /** The repository name. */
-    @get:Input public val repo: Property<String> = project.objects.property()
+    @get:Input public val repo: Property<String> = objects.property()
 
     /** The name of the asset. */
-    @get:Input public val asset: Property<String> = project.objects.property()
+    @get:Input public val asset: Property<String> = objects.property()
 
     /** The release version. */
-    @get:Input public val version: Property<String> = project.objects.property()
+    @get:Input public val version: Property<String> = objects.property()
 
     /** The GitHub access token to use for downloading the asset. */
     @get:[Input Optional]
-    public val token: Property<String> = project.objects.property()
+    public val token: Property<String> = objects.property()
 
     /**
      * The output file.
      *
      * *Default location is `{gradle-user-home}/caches/toxopid/github-assets/{owner}/{repo}/{version}/{asset}`.*
      */
-    @get:OutputFile public val output: RegularFileProperty = project.objects.fileProperty()
+    @get:OutputFile public val output: RegularFileProperty = objects.fileProperty()
 
     init {
         output.convention { getDefaultLocation() }
@@ -124,7 +129,7 @@ public open class GithubAssetDownload : DefaultTask() {
     }
 
     private fun getDefaultLocation(): File =
-        project.gradle.gradleUserHomeDir.resolve(
+        home.gradleUserHomeDirectory.resolve(
             "caches/toxopid/github-assets/${owner.get()}/${repo.get()}/${version.get()}/${asset.get()}"
         )
 
