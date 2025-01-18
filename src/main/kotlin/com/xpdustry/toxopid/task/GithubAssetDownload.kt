@@ -26,6 +26,10 @@
 package com.xpdustry.toxopid.task
 
 import com.xpdustry.toxopid.extension.HTTP
+import java.io.File
+import java.net.URI
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
@@ -36,43 +40,23 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.property
 import org.hjson.JsonObject
-import java.io.File
-import java.net.URI
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 
-/**
- * Downloads a release asset from a GitHub repository.
- */
+/** Downloads a release asset from a GitHub repository. */
 @CacheableTask
 public open class GithubAssetDownload : DefaultTask() {
-    /**
-     * The repository owner.
-     */
-    @get:Input
-    public val owner: Property<String> = project.objects.property()
+    /** The repository owner. */
+    @get:Input public val owner: Property<String> = project.objects.property()
 
-    /**
-     * The repository name.
-     */
-    @get:Input
-    public val repo: Property<String> = project.objects.property()
+    /** The repository name. */
+    @get:Input public val repo: Property<String> = project.objects.property()
 
-    /**
-     * The name of the asset.
-     */
-    @get:Input
-    public val asset: Property<String> = project.objects.property()
+    /** The name of the asset. */
+    @get:Input public val asset: Property<String> = project.objects.property()
 
-    /**
-     * The release version.
-     */
-    @get:Input
-    public val version: Property<String> = project.objects.property()
+    /** The release version. */
+    @get:Input public val version: Property<String> = project.objects.property()
 
-    /**
-     * The GitHub access token to use for downloading the asset.
-     */
+    /** The GitHub access token to use for downloading the asset. */
     @get:[Input Optional]
     public val token: Property<String> = project.objects.property()
 
@@ -81,8 +65,7 @@ public open class GithubAssetDownload : DefaultTask() {
      *
      * *Default location is `{gradle-user-home}/caches/toxopid/github-assets/{owner}/{repo}/{version}/{asset}`.*
      */
-    @get:OutputFile
-    public val output: RegularFileProperty = project.objects.fileProperty()
+    @get:OutputFile public val output: RegularFileProperty = project.objects.fileProperty()
 
     init {
         output.convention { getDefaultLocation() }
@@ -97,7 +80,9 @@ public open class GithubAssetDownload : DefaultTask() {
 
         val release =
             HTTP.send(
-                HttpRequest.newBuilder(URI("https://api.github.com/repos/${owner.get()}/${repo.get()}/releases/tags/${version.get()}"))
+                HttpRequest.newBuilder(
+                        URI("https://api.github.com/repos/${owner.get()}/${repo.get()}/releases/tags/${version.get()}")
+                    )
                     .header("Accept", "application/vnd.github+json")
                     .applyAuthorization()
                     .GET()
@@ -111,10 +96,11 @@ public open class GithubAssetDownload : DefaultTask() {
         }
 
         val asset =
-            json.asObject()["assets"].asArray()
+            json
+                .asObject()["assets"]
+                .asArray()
                 .map { it.asObject() }
-                .firstOrNull { it["name"].asString() == asset.get() }
-                ?: error("Failed to find asset named $asset")
+                .firstOrNull { it["name"].asString() == asset.get() } ?: error("Failed to find asset named $asset")
 
         val download =
             HTTP.send(
@@ -131,16 +117,15 @@ public open class GithubAssetDownload : DefaultTask() {
         }
     }
 
-    private fun HttpRequest.Builder.applyAuthorization(): HttpRequest.Builder =
-        apply {
-            if (token.isPresent) {
-                header("Authorization", "Bearer ${token.get()}")
-            }
+    private fun HttpRequest.Builder.applyAuthorization(): HttpRequest.Builder = apply {
+        if (token.isPresent) {
+            header("Authorization", "Bearer ${token.get()}")
         }
+    }
 
     private fun getDefaultLocation(): File =
         project.gradle.gradleUserHomeDir.resolve(
-            "caches/toxopid/github-assets/${owner.get()}/${repo.get()}/${version.get()}/${asset.get()}",
+            "caches/toxopid/github-assets/${owner.get()}/${repo.get()}/${version.get()}/${asset.get()}"
         )
 
     public companion object {

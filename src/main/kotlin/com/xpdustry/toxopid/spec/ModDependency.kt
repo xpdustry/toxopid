@@ -27,10 +27,5 @@ package com.xpdustry.toxopid.spec
 
 import java.io.Serializable
 
-/**
- * Represents a mod dependency.
- */
-public data class ModDependency(
-    val name: String,
-    val soft: Boolean = false,
-) : Serializable
+/** Represents a mod dependency. */
+public data class ModDependency(val name: String, val soft: Boolean = false) : Serializable

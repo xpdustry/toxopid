@@ -25,12 +25,6 @@
  */
 package com.xpdustry.toxopid.task
 
-import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.JavaExec
-import org.gradle.kotlin.dsl.property
 import java.io.File
 import java.nio.file.Path
 import java.util.zip.ZipFile
@@ -40,11 +34,16 @@ import kotlin.io.path.isDirectory
 import kotlin.io.path.isRegularFile
 import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.notExists
+import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.JavaExec
+import org.gradle.kotlin.dsl.property
 
 /**
- * Starts a Mindustry instance, blocks the build process until closing.
- * Every jar and zip mods are deleted every time it runs so make sure you include
- * them in [MindustryExec.mods] and not directly in the [MindustryExec.workingDir].
+ * Starts a Mindustry instance, blocks the build process until closing. Every jar and zip mods are deleted every time it
+ * runs so make sure you include them in [MindustryExec.mods] and not directly in the [MindustryExec.workingDir].
  */
 public open class MindustryExec : JavaExec() {
     /**
@@ -52,14 +51,10 @@ public open class MindustryExec : JavaExec() {
      *
      * **Only modify if you know what you are doing.**
      */
-    @get:Input
-    public val modsDirPath: Property<String> = project.objects.property<String>()
+    @get:Input public val modsDirPath: Property<String> = project.objects.property<String>()
 
-    /**
-     * The mods to load.
-     */
-    @get:InputFiles
-    public val mods: ConfigurableFileCollection = project.objects.fileCollection()
+    /** The mods to load. */
+    @get:InputFiles public val mods: ConfigurableFileCollection = project.objects.fileCollection()
 
     init {
         workingDir = temporaryDir
@@ -107,8 +102,7 @@ public open class MindustryExec : JavaExec() {
     }
 
     public companion object {
-        @JvmStatic
-        public val MOD_METADATA_FILE: Regex = Regex("(mod|plugin)\\.h?json")
+        @JvmStatic public val MOD_METADATA_FILE: Regex = Regex("(mod|plugin)\\.h?json")
         public const val DESKTOP_EXEC_TASK_NAME: String = "runMindustryDesktop"
         public const val SERVER_EXEC_TASK_NAME: String = "runMindustryServer"
     }

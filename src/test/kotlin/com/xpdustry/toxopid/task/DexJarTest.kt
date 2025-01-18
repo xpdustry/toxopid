@@ -25,34 +25,36 @@
  */
 package com.xpdustry.toxopid.task
 
+import java.nio.file.Path
+import kotlin.io.path.writeText
+import kotlin.test.assertEquals
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.nio.file.Path
-import kotlin.io.path.writeText
-import kotlin.test.assertEquals
 
 class DexJarTest {
-    @TempDir
-    lateinit var directory: Path
+    @TempDir lateinit var directory: Path
 
     @Test
     fun `test dex and merge`() {
-        directory.resolve("build.gradle.kts").writeText(
-            """
-            import com.xpdustry.toxopid.spec.ModPlatform
-
-            plugins {
-                java
-                id("com.xpdustry.toxopid")
-            }
-            
-            toxopid {
-                platforms = setOf(ModPlatform.DESKTOP, ModPlatform.ANDROID, ModPlatform.SERVER)
-            }
-            """.trimIndent(),
-        )
+        directory
+            .resolve("build.gradle.kts")
+            .writeText(
+                """
+                import com.xpdustry.toxopid.spec.ModPlatform
+    
+                plugins {
+                    java
+                    id("com.xpdustry.toxopid")
+                }
+                
+                toxopid {
+                    platforms = setOf(ModPlatform.DESKTOP, ModPlatform.ANDROID, ModPlatform.SERVER)
+                }
+                """
+                    .trimIndent()
+            )
 
         val runner =
             GradleRunner.create()

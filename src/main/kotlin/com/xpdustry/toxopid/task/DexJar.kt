@@ -26,6 +26,14 @@
 package com.xpdustry.toxopid.task
 
 import com.xpdustry.toxopid.extension.HTTP
+import java.net.URI
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse.BodyHandlers
+import java.nio.file.FileSystems
+import java.nio.file.Path
+import javax.xml.parsers.DocumentBuilderFactory
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.copyTo
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.RegularFileProperty
@@ -41,57 +49,36 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.property
 import org.w3c.dom.Node
-import java.net.URI
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse.BodyHandlers
-import java.nio.file.FileSystems
-import java.nio.file.Path
-import javax.xml.parsers.DocumentBuilderFactory
-import kotlin.io.path.absolutePathString
-import kotlin.io.path.copyTo
 
 /**
- * Dexes a jar file using d8. It does so by finding the latest Android SDK installed on the system and using the d8 tool from it.
+ * Dexes a jar file using d8. It does so by finding the latest Android SDK installed on the system and using the d8 tool
+ * from it.
  */
 @CacheableTask
 public open class DexJar : DefaultTask() {
-    /**
-     * The source jar file to dex.
-     */
+    /** The source jar file to dex. */
     @get:[InputFile Classpath]
     public val source: RegularFileProperty = project.objects.fileProperty()
 
-    /**
-     * The output dexed jar file.
-     */
-    @get:OutputFile
-    public val output: RegularFileProperty = project.objects.fileProperty()
+    /** The output dexed jar file. */
+    @get:OutputFile public val output: RegularFileProperty = project.objects.fileProperty()
 
     /**
      * The minimum sdk version to target.
      *
      * **Only change if you know what you are doing.**
      */
-    @get:Input
-    public val minSdkVersion: Property<Int> = project.objects.property()
+    @get:Input public val minSdkVersion: Property<Int> = project.objects.property()
 
-    /**
-     * The classpath of the [source] jar file.
-     */
+    /** The classpath of the [source] jar file. */
     @get:[InputFiles CompileClasspath]
     public val classpath: ConfigurableFileCollection = project.objects.fileCollection()
 
-    /**
-     * The platform version to use. If not set, version 35 will be used.
-     */
-    @get:Input
-    public val platformVersion: Property<String> = project.objects.property()
+    /** The platform version to use. If not set, version 35 will be used. */
+    @get:Input public val platformVersion: Property<String> = project.objects.property()
 
-    /**
-     * The version of r8 to use. If not set, version 8.5.10 will be used.
-     */
-    @get:Input
-    public val r8Version: Property<String> = project.objects.property()
+    /** The version of r8 to use. If not set, version 8.5.10 will be used. */
+    @get:Input public val r8Version: Property<String> = project.objects.property()
 
     init {
         minSdkVersion.convention(14)
@@ -108,27 +95,29 @@ public open class DexJar : DefaultTask() {
         project.javaexec {
             mainClass = "com.android.tools.r8.D8"
             classpath(r8lib)
-            args =
-                buildList {
-                    add("--lib")
-                    add(platform.absolutePathString())
-                    this@DexJar.classpath.forEach { file ->
-                        add("--classpath")
-                        add(file.absolutePath)
-                    }
-                    add("--min-api")
-                    add(minSdkVersion.get().toString())
-                    add("--output")
-                    add(output.get().asFile.absolutePath)
-                    add(source.get().asFile.absolutePath)
+            args = buildList {
+                add("--lib")
+                add(platform.absolutePathString())
+                this@DexJar.classpath.forEach { file ->
+                    add("--classpath")
+                    add(file.absolutePath)
                 }
+                add("--min-api")
+                add(minSdkVersion.get().toString())
+                add("--output")
+                add(output.get().asFile.absolutePath)
+                add(source.get().asFile.absolutePath)
+            }
         }
     }
 
     private fun resolveAndroidPlatform(): Path {
         logger.debug("Resolving Android SDK")
 
-        val target = project.gradle.gradleUserHomeDir.resolve("caches/toxopid/android-platforms/android-${platformVersion.get()}.jar")
+        val target =
+            project.gradle.gradleUserHomeDir.resolve(
+                "caches/toxopid/android-platforms/android-${platformVersion.get()}.jar"
+            )
         if (target.exists()) {
             logger.debug("Using cached Android SDK at {}", target)
             return target.toPath()
@@ -138,9 +127,7 @@ public open class DexJar : DefaultTask() {
 
         val repository =
             HTTP.send(
-                HttpRequest.newBuilder(URI("https://dl.google.com/android/repository/repository2-3.xml"))
-                    .GET()
-                    .build(),
+                HttpRequest.newBuilder(URI("https://dl.google.com/android/repository/repository2-3.xml")).GET().build(),
                 BodyHandlers.ofInputStream(),
             )
 
@@ -156,7 +143,10 @@ public open class DexJar : DefaultTask() {
             }
 
         val packages = document.childNodes.item(0).getNodes("remotePackage")
-        logger.debug("Found ${packages.size} android packages: {}", packages.joinToString { it.attributes.getNamedItem("path").nodeValue })
+        logger.debug(
+            "Found ${packages.size} android packages: {}",
+            packages.joinToString { it.attributes.getNamedItem("path").nodeValue },
+        )
         val match =
             packages.find { node ->
                 val path = node.attributes.getNamedItem("path").nodeValue
@@ -168,9 +158,7 @@ public open class DexJar : DefaultTask() {
 
         val platform =
             HTTP.send(
-                HttpRequest.newBuilder(URI("https://dl.google.com/android/repository/$url"))
-                    .GET()
-                    .build(),
+                HttpRequest.newBuilder(URI("https://dl.google.com/android/repository/$url")).GET().build(),
                 BodyHandlers.ofFile(temporaryDir.resolve("android-${platformVersion.get()}.zip").toPath()),
             )
 
@@ -178,9 +166,11 @@ public open class DexJar : DefaultTask() {
             error("Failed to download android platform: (code=${platform.statusCode()})")
         }
 
-        FileSystems.newFileSystem(temporaryDir.resolve("android-${platformVersion.get()}.zip").toPath(), null as ClassLoader?).use {
-            it.getPath("android-${platformVersion.get()}", "android.jar").copyTo(target.toPath())
-        }
+        FileSystems.newFileSystem(
+                temporaryDir.resolve("android-${platformVersion.get()}.zip").toPath(),
+                null as ClassLoader?,
+            )
+            .use { it.getPath("android-${platformVersion.get()}", "android.jar").copyTo(target.toPath()) }
 
         logger.debug("Downloaded Android SDK version ${platformVersion.get()}")
         return target.toPath()
@@ -218,7 +208,9 @@ public open class DexJar : DefaultTask() {
 
         val response =
             HTTP.send(
-                HttpRequest.newBuilder(URI("https://storage.googleapis.com/r8-releases/raw/${r8Version.get()}/r8lib.jar"))
+                HttpRequest.newBuilder(
+                        URI("https://storage.googleapis.com/r8-releases/raw/${r8Version.get()}/r8lib.jar")
+                    )
                     .GET()
                     .build(),
                 BodyHandlers.ofFile(r8lib.toPath()),

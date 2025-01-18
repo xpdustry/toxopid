@@ -25,9 +25,7 @@
  */
 package com.xpdustry.toxopid.spec
 
-/**
- * The platform a mod is targeted for.
- */
+/** The platform a mod is targeted for. */
 public enum class ModPlatform {
     DESKTOP,
     SERVER,

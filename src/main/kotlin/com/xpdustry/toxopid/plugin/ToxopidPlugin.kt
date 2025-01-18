@@ -32,14 +32,12 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.withType
 
 /**
- * The main plugin of toxopid. It applies the [base plugin](ToxopidBasePlugin) and
- * the [java plugin](ToxopidJavaPlugin) if the java plugin is present.
+ * The main plugin of toxopid. It applies the [base plugin](ToxopidBasePlugin) and the [java plugin](ToxopidJavaPlugin)
+ * if the java plugin is present.
  */
 public class ToxopidPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.plugins.apply(ToxopidBasePlugin::class)
-        project.plugins.withType<JavaPlugin> {
-            project.plugins.apply(ToxopidJavaPlugin::class)
-        }
+        project.plugins.withType<JavaPlugin> { project.plugins.apply(ToxopidJavaPlugin::class) }
     }
 }

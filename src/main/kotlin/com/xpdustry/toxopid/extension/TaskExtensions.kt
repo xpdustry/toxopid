@@ -31,9 +31,7 @@ import com.xpdustry.toxopid.task.GithubAssetDownload
 import com.xpdustry.toxopid.task.MindustryExec
 import org.gradle.kotlin.dsl.assign
 
-/**
- * Configures a [MindustryExec] task to run a Mindustry server.
- */
+/** Configures a [MindustryExec] task to run a Mindustry server. */
 public fun MindustryExec.configureServer() {
     classpath(project.tasks.named(GithubAssetDownload.MINDUSTRY_SERVER_DOWNLOAD_TASK_NAME))
     mainClass = "mindustry.server.ServerLauncher"
@@ -41,9 +39,7 @@ public fun MindustryExec.configureServer() {
     standardInput = System.`in`
 }
 
-/**
- * Configures a [MindustryExec] task to run a Mindustry desktop instance.
- */
+/** Configures a [MindustryExec] task to run a Mindustry desktop instance. */
 public fun MindustryExec.configureDesktop() {
     classpath(project.tasks.named(GithubAssetDownload.MINDUSTRY_DESKTOP_DOWNLOAD_TASK_NAME))
     mainClass = "mindustry.desktop.DesktopLauncher"

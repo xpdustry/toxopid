@@ -27,9 +27,9 @@
 
 package com.xpdustry.toxopid.extension
 
+import java.net.URI
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
-import java.net.URI
 
 /**
  * Adds the [xpdustry repository](https://maven.xpdustry.com/#/mindustry) restricted to Anuke artifacts.
@@ -52,17 +52,13 @@ public fun RepositoryHandler.anukeZelaux(): MavenArtifactRepository =
  *
  * Provides any published anuke artifact, but fails sometimes. Use as a fallback.
  */
-public fun RepositoryHandler.anukeJitpack(): MavenArtifactRepository = createAnukeRepository("jitpack", "https://www.jitpack.io")
+public fun RepositoryHandler.anukeJitpack(): MavenArtifactRepository =
+    createAnukeRepository("jitpack", "https://www.jitpack.io")
 
-private fun RepositoryHandler.createAnukeRepository(
-    name: String,
-    uri: String,
-) = maven {
+private fun RepositoryHandler.createAnukeRepository(name: String, uri: String) = maven {
     this.name = "anuke-$name"
     url = URI(uri)
-    mavenContent {
-        includeGroupByRegex("^com\\.github\\.Anuken(\\.[\\w-]+)*$")
-    }
+    mavenContent { includeGroupByRegex("^com\\.github\\.Anuken(\\.[\\w-]+)*$") }
     metadataSources {
         gradleMetadata()
         mavenPom()

@@ -41,14 +41,15 @@ import org.gradle.kotlin.dsl.register
 
 /**
  * This plugin is responsible for handling the bundling of the mod jar:
- *
- * - If only the [java plugin](https://docs.gradle.org/current/userguide/java_plugin.html) is present, the `jar` task is used.
- * - If the [shadow plugin](https://github.com/johnrengelman/shadow) is present alongside the java plugin, the `shadowJar` task is used.
+ * - If only the [java plugin](https://docs.gradle.org/current/userguide/java_plugin.html) is present, the `jar` task is
+ *   used.
+ * - If the [shadow plugin](https://github.com/johnrengelman/shadow) is present alongside the java plugin, the
+ *   `shadowJar` task is used.
  *
  * For each configured target platform [MindustryExec] tasks, the jar is added to the mods list.
  *
- * Finally, if android is in the target platforms, the jar is dexed and merged in the `mergeJar` task.
- * If not, the `mergeJar` task is equivalent to the jar task.
+ * Finally, if android is in the target platforms, the jar is dexed and merged in the `mergeJar` task. If not, the
+ * `mergeJar` task is equivalent to the jar task.
  */
 public class ToxopidJavaPlugin : Plugin<Project> {
     override fun apply(project: Project) {

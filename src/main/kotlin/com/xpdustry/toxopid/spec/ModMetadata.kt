@@ -26,15 +26,13 @@
 package com.xpdustry.toxopid.spec
 
 import com.xpdustry.toxopid.Toxopid
+import java.io.File
+import java.io.Serializable
 import org.hjson.JsonArray
 import org.hjson.JsonObject
 import org.hjson.Stringify
-import java.io.File
-import java.io.Serializable
 
-/**
- * Represents the metadata of a mod.
- */
+/** Represents the metadata of a mod. */
 public data class ModMetadata(
     public var name: String = "",
     public var displayName: String = "",
@@ -53,28 +51,17 @@ public data class ModMetadata(
     public val dependencies: MutableList<ModDependency> = mutableListOf(),
 ) : Serializable {
     public companion object {
-        /**
-         * @return a parsed [ModMetadata] from json
-         */
-        @JvmStatic
-        public fun fromJson(json: String): ModMetadata = fromJson(JsonObject.readHjson(json).asObject())
+        /** @return a parsed [ModMetadata] from json */
+        @JvmStatic public fun fromJson(json: String): ModMetadata = fromJson(JsonObject.readHjson(json).asObject())
 
-        /**
-         * @return a parsed [ModMetadata] from a file
-         */
+        /** @return a parsed [ModMetadata] from a file */
         @JvmStatic
         public fun fromJson(file: File): ModMetadata =
-            file.reader()
-                .use { fromJson(JsonObject.readHjson(it).asObject()) }
+            file.reader().use { fromJson(JsonObject.readHjson(it).asObject()) }
 
-        /**
-         * @return a pretty printed json representation of a [ModMetadata]
-         */
+        /** @return a pretty printed json representation of a [ModMetadata] */
         @JvmStatic
-        public fun toJson(
-            metadata: ModMetadata,
-            pretty: Boolean = true,
-        ): String =
+        public fun toJson(metadata: ModMetadata, pretty: Boolean = true): String =
             JsonObject()
                 .add("name", metadata.name)
                 .add("displayName", metadata.displayName)
@@ -92,15 +79,11 @@ public data class ModMetadata(
                 .add("pregenerated", metadata.pregenerated)
                 .add(
                     "dependencies",
-                    JsonArray().apply {
-                        metadata.dependencies.filter { !it.soft }.forEach { add(it.name) }
-                    },
+                    JsonArray().apply { metadata.dependencies.filter { !it.soft }.forEach { add(it.name) } },
                 )
                 .add(
                     "softDependencies",
-                    JsonArray().apply {
-                        metadata.dependencies.filter { it.soft }.forEach { add(it.name) }
-                    },
+                    JsonArray().apply { metadata.dependencies.filter { it.soft }.forEach { add(it.name) } },
                 )
                 .toString(if (pretty) Stringify.FORMATTED else Stringify.PLAIN)
 
@@ -121,16 +104,11 @@ public data class ModMetadata(
                 textureScale = json.getFloat("texturescale", 1f),
                 pregenerated = json.getBoolean("pregenerated", false),
                 dependencies =
-                    (
-                        json.readDependencies("dependencies", false) +
-                            json.readDependencies("softDependencies", true)
-                    ).toMutableList(),
+                    (json.readDependencies("dependencies", false) + json.readDependencies("softDependencies", true))
+                        .toMutableList(),
             )
 
-        private fun JsonObject.readDependencies(
-            name: String,
-            soft: Boolean,
-        ): List<ModDependency> {
+        private fun JsonObject.readDependencies(name: String, soft: Boolean): List<ModDependency> {
             val dependencies = get(name) ?: return emptyList()
             return dependencies.asArray().map {
                 if (it.isString) ModDependency(it.asString(), soft) else error("Unexpected dependency: $it")

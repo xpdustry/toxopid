@@ -25,23 +25,24 @@
  */
 package com.xpdustry.toxopid.task
 
-import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.writeText
 import kotlin.test.assertEquals
+import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 class GithubAssetDownloadTest {
-    @TempDir
-    lateinit var directory: Path
+    @TempDir lateinit var directory: Path
 
     @Test
     fun `test mindustry server download`() {
-        directory.resolve("build.gradle.kts").writeText(
-            """
+        directory
+            .resolve("build.gradle.kts")
+            .writeText(
+                """
             plugins {
                 id("com.xpdustry.toxopid")
             }
@@ -53,8 +54,9 @@ class GithubAssetDownloadTest {
             tasks.downloadMindustryServer {
                 output = rootProject.file("server.jar")
             }
-            """.trimIndent(),
-        )
+            """
+                    .trimIndent()
+            )
 
         val runner =
             GradleRunner.create()
