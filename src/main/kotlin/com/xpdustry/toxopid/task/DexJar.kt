@@ -51,7 +51,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.initialization.GradleUserHomeDirProvider
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.property
-import org.gradle.process.internal.ExecActionFactory
+import org.gradle.process.ExecOperations
 import org.w3c.dom.Node
 
 /**
@@ -61,7 +61,7 @@ import org.w3c.dom.Node
 @CacheableTask
 public open class DexJar
 @Inject
-constructor(objects: ObjectFactory, private val home: GradleUserHomeDirProvider, private val exec: ExecActionFactory) :
+constructor(objects: ObjectFactory, private val home: GradleUserHomeDirProvider, private val exec: ExecOperations) :
     DefaultTask() {
     /** The source jar file to dex. */
     @get:[InputFile Classpath]
@@ -98,23 +98,23 @@ constructor(objects: ObjectFactory, private val home: GradleUserHomeDirProvider,
     public fun dex() {
         val platform = resolveAndroidPlatform()
         val r8lib = resolveR8()
-        val action = exec.newJavaExecAction()
-        action.mainClass = "com.android.tools.r8.D8"
-        action.classpath(r8lib)
-        action.args = buildList {
-            add("--lib")
-            add(platform.absolutePathString())
-            this@DexJar.classpath.forEach { file ->
-                add("--classpath")
-                add(file.absolutePath)
+        exec.javaexec {
+            mainClass = "com.android.tools.r8.D8"
+            classpath(r8lib)
+            args = buildList {
+                add("--lib")
+                add(platform.absolutePathString())
+                this@DexJar.classpath.forEach { file ->
+                    add("--classpath")
+                    add(file.absolutePath)
+                }
+                add("--min-api")
+                add(minSdkVersion.get().toString())
+                add("--output")
+                add(output.get().asFile.absolutePath)
+                add(source.get().asFile.absolutePath)
             }
-            add("--min-api")
-            add(minSdkVersion.get().toString())
-            add("--output")
-            add(output.get().asFile.absolutePath)
-            add(source.get().asFile.absolutePath)
         }
-        action.execute().rethrowFailure()
     }
 
     private fun resolveAndroidPlatform(): Path {
