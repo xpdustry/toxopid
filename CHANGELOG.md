@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v4.1.2 - 2025-01-24
+
+### Fixes
+
+- Fixed depreciation warnings for Gradle 9 and 10.
+
+### Chores
+
+- Updated build dependencies.
+- Updated default version of R8 to `v8.7.18` for `DexJar`.
+
 ## v4.1.1 - 2024-11-14
 
 ### Fixes
