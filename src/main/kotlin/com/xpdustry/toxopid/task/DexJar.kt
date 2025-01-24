@@ -91,7 +91,7 @@ constructor(objects: ObjectFactory, private val home: GradleUserHomeDirProvider,
         minSdkVersion.convention(14)
         output.convention { temporaryDir.resolve("output.jar") }
         platformVersion.convention("35")
-        r8Version.convention("8.5.35")
+        r8Version.convention("8.7.18")
     }
 
     @TaskAction
