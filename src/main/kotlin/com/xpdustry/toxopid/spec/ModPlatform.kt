@@ -27,7 +27,10 @@ package com.xpdustry.toxopid.spec
 
 /** The platform a mod is targeted for. */
 public enum class ModPlatform {
+    /** For mods able to run on desktop (Linux, Windows, Mac). */
     DESKTOP,
+    /** For plugins, or mods that are multiplayer compatible. */
     SERVER,
+    /** For mods able to run on android. You must target java 8. */
     ANDROID,
 }

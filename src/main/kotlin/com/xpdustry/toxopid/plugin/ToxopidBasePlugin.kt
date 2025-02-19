@@ -36,7 +36,11 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.register
 
-/** Base plugin that sets up the standard toxopid tasks for mod/plugin testing. */
+/**
+ * Base plugin that sets up the standard toxopid tasks for mod/plugin testing.
+ *
+ * It also makes sure the Arc version is the same as the Mindustry version.
+ */
 public class ToxopidBasePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.toxopid // Ensures the extension is created
