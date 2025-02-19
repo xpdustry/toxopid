@@ -94,10 +94,10 @@ public data class ModMetadata(
                 description = json.getString("description", ""),
                 subtitle = json.getString("subtitle", ""),
                 author = json.getString("author", ""),
-                version = json.getString("version", ""),
+                version = json.getStringOrInt("version", ""),
                 mainClass = json.getString("main", ""),
                 repository = json.getString("repo", ""),
-                minGameVersion = json.getString("minGameVersion", Toxopid.DEFAULT_MINDUSTRY_VERSION),
+                minGameVersion = json.getStringOrInt("minGameVersion", Toxopid.DEFAULT_MINDUSTRY_VERSION),
                 hidden = json.getBoolean("hidden", false),
                 java = json.getBoolean("java", true),
                 keepOutlines = json.getBoolean("keepOutlines", false),
@@ -112,6 +112,16 @@ public data class ModMetadata(
             val dependencies = get(name) ?: return emptyList()
             return dependencies.asArray().map {
                 if (it.isString) ModDependency(it.asString(), soft) else error("Unexpected dependency: $it")
+            }
+        }
+
+        private fun JsonObject.getStringOrInt(name: String, def: String): String {
+            val value = get(name)
+            return when {
+                value == null -> def
+                value.isString -> value.asString()
+                value.isNumber -> value.toString()
+                else -> error("$name is not a string nor number: $value")
             }
         }
     }
