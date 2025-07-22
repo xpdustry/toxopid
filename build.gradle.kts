@@ -1,5 +1,5 @@
 plugins {
-    id("com.diffplug.spotless") version "7.0.2"
+    id("com.diffplug.spotless") version "7.2.1"
     id("org.jetbrains.dokka") version "1.9.20"
     `java-gradle-plugin`
     id("com.gradle.plugin-publish") version "1.3.1"
