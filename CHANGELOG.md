@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v4.2.0 - 2026-01-21
+
+### Bugfixes
+
+- Use single string dependency notation in ToxopidExtension to fix depreciation warnings for Gradle 10.
+- Made ModMetadata [h]json parser more lenient for integral types.
+
+### Maintenance
+
+- Updated R8 and Android platform version to be in line with Mindustry and support Kotlin 2.3.
+- Raised default Mindustry version to v154.
+- Documentation improvements.
+
 ## v4.1.2 - 2025-01-24
 
 ### Fixes
