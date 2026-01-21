@@ -31,7 +31,6 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Provider
-import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.property
 import org.gradle.kotlin.dsl.setProperty
 
@@ -42,10 +41,10 @@ internal open class ToxopidExtensionImpl @Inject constructor(objects: ObjectFact
     final override val platforms = objects.setProperty<ModPlatform>()
     final override val dependencies =
         DependenciesImpl(
-            compileVersion.map { dependencies.create("com.github.Anuken.Mindustry", "core", it) },
-            compileVersion.map { dependencies.create("com.github.Anuken.Arc", "arc-core", it) },
-            compileVersion.map { dependencies.create("com.github.Anuken.Mindustry", "server", it) },
-            compileVersion.map { dependencies.create("com.github.Anuken.Arc", "backend-headless", it) },
+            compileVersion.map { dependencies.create("com.github.Anuken.Mindustry:core:$it") },
+            compileVersion.map { dependencies.create("com.github.Anuken.Arc:arc-core:$it") },
+            compileVersion.map { dependencies.create("com.github.Anuken.Mindustry:server:$it") },
+            compileVersion.map { dependencies.create("com.github.Anuken.Arc:backend-headless:$it") },
         )
 
     init {
