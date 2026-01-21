@@ -29,5 +29,5 @@ package com.xpdustry.toxopid
 public object Toxopid {
     public const val EXTENSION_NAME: String = "toxopid"
     public const val TASK_GROUP_NAME: String = "toxopid"
-    public const val DEFAULT_MINDUSTRY_VERSION: String = "146"
+    public const val DEFAULT_MINDUSTRY_VERSION: String = "154"
 }
