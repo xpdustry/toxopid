@@ -81,17 +81,17 @@ constructor(objects: ObjectFactory, private val home: GradleUserHomeDirProvider,
     @get:[InputFiles CompileClasspath]
     public val classpath: ConfigurableFileCollection = objects.fileCollection()
 
-    /** The platform version to use. If not set, version 35 will be used. */
+    /** The platform version to use. If not set, version 36 will be used. */
     @get:Input public val platformVersion: Property<String> = objects.property()
 
-    /** The version of r8 to use. If not set, version 8.5.10 will be used. */
+    /** The version of r8 to use. If not set, version 8.13.19 will be used. */
     @get:Input public val r8Version: Property<String> = objects.property()
 
     init {
         minSdkVersion.convention(14)
         output.convention { temporaryDir.resolve("output.jar") }
-        platformVersion.convention("35")
-        r8Version.convention("8.7.18")
+        platformVersion.convention("36")
+        r8Version.convention("8.13.19")
     }
 
     @TaskAction
