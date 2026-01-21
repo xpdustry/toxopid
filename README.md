@@ -1,13 +1,13 @@
 # toxopid
 
-[![Mindustry 6.0 | 7.0](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0-00b0b3)](https://github.com/Anuken/Mindustry/releases)
-[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.xpdustry.toxopid?color=00b0b3&logoColor=00b0b3&label=Gradle)](https://plugins.gradle.org/plugin/com.xpdustry.toxopid)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Xpdustry/Toxopid/build.yml?color=00b0b3&label=Build)](https://github.com/xpdustry/toxopid/actions/workflows/build.yml)
-[![Discord](https://img.shields.io/discord/519293558599974912?color=00b0b3&label=Discord)](https://discord.xpdustry.com)
+[![Mindustry 6.0 | 7.0 | 8.0](https://img.shields.io/badge/Mindustry-6.0%20%7C%207.0%20%7C%208.0-008080)](https://github.com/Anuken/Mindustry/releases)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.xpdustry.toxopid?color=008080&logoColor=008080&label=Gradle)](https://plugins.gradle.org/plugin/com.xpdustry.toxopid)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Xpdustry/Toxopid/build.yml?color=008080&label=Build)](https://github.com/xpdustry/toxopid/actions/workflows/build.yml)
+[![Discord](https://img.shields.io/discord/519293558599974912?color=008080&label=Discord)](https://discord.xpdustry.com)
 
 ## Description
 
-A gradle plugin for building and testing mindustry mods/plugins.
+A Gradle plugin for building and testing mindustry mods/plugins.
 
 ## Links
 
@@ -167,4 +167,4 @@ And voilà, you have a minimal toxopid setup for your mod/plugin.
 If you need help, you can talk to the maintainers on the
 [Chaotic Neutral Discord](https://discord.xpdustry.com) in the `#support` channel.
 
-> Also, checkout [Mindeploy](https://github.com/NiChrosia/Mindeploy), or [mgpp](https://github.com/PlumyGame/mgpp).
+> Also, check out [Mindeploy](https://github.com/NiChrosia/Mindeploy), or [mgpp](https://github.com/PlumyGame/mgpp).
