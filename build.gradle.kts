@@ -1,11 +1,11 @@
 plugins {
-    id("com.diffplug.spotless") version "7.0.2"
-    id("org.jetbrains.dokka") version "1.9.20"
+    id("com.diffplug.spotless") version "8.2.1"
+    id("org.jetbrains.dokka") version "2.1.0"
     `java-gradle-plugin`
-    id("com.gradle.plugin-publish") version "1.3.1"
-    id("net.kyori.indra") version "3.1.3"
-    id("net.kyori.indra.git") version "3.1.3"
-    id("net.kyori.indra.publishing.gradle-plugin") version "3.1.3"
+    id("com.gradle.plugin-publish") version "2.0.0"
+    id("net.kyori.indra") version "4.0.0"
+    id("net.kyori.indra.git") version "4.0.0"
+    id("net.kyori.indra.publishing.gradle-plugin") version "4.0.0"
     `kotlin-dsl`
 }
 
