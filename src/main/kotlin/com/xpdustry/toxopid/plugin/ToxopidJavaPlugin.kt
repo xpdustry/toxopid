@@ -70,12 +70,14 @@ public class ToxopidJavaPlugin : Plugin<Project> {
         val dexJar =
             project.tasks.register<DexJar>(DexJar.DEX_TASK_NAME) {
                 group = Toxopid.TASK_GROUP_NAME
+                description = "Dex the jar file for android."
                 source = jar.flatMap { it.archiveFile }
                 classpath.from(project.configurations.named(JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME))
             }
 
         project.tasks.register<Jar>(MERGE_JAR_TASK_NAME) {
             group = Toxopid.TASK_GROUP_NAME
+            description = "Merges the jar file with the dex classes of ${DexJar.DEX_TASK_NAME}."
             from(project.zipTree(dexJar.flatMap { it.output }))
             from(project.zipTree(jar.flatMap { it.archiveFile }))
             archiveClassifier.convention("dexed")

@@ -47,6 +47,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
 
         project.tasks.register<GithubAssetDownload>(GithubAssetDownload.MINDUSTRY_DESKTOP_DOWNLOAD_TASK_NAME) {
             group = Toxopid.TASK_GROUP_NAME
+            description = "Downloads the Mindustry desktop jar from GitHub."
             owner = "Anuken"
             repo = "Mindustry"
             asset = "Mindustry.jar"
@@ -55,6 +56,7 @@ public class ToxopidBasePlugin : Plugin<Project> {
 
         project.tasks.register<GithubAssetDownload>(GithubAssetDownload.MINDUSTRY_SERVER_DOWNLOAD_TASK_NAME) {
             group = Toxopid.TASK_GROUP_NAME
+            description = "Downloads the Mindustry server jar from GitHub."
             owner = "Anuken"
             repo = "Mindustry"
             asset = "server-release.jar"
@@ -63,11 +65,13 @@ public class ToxopidBasePlugin : Plugin<Project> {
 
         project.tasks.register<MindustryExec>(MindustryExec.DESKTOP_EXEC_TASK_NAME) {
             group = Toxopid.TASK_GROUP_NAME
+            description = "Starts a Mindustry desktop instance locally locally."
             configureDesktop()
         }
 
         project.tasks.register<MindustryExec>(MindustryExec.SERVER_EXEC_TASK_NAME) {
             group = Toxopid.TASK_GROUP_NAME
+            description = "Starts a Mindustry server instance locally."
             configureServer()
         }
 
