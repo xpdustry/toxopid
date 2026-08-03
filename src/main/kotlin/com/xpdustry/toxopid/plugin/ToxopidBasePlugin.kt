@@ -71,12 +71,10 @@ public class ToxopidBasePlugin : Plugin<Project> {
             configureServer()
         }
 
-        project.afterEvaluate {
-            project.configurations.all {
-                resolutionStrategy.eachDependency {
-                    if (requested.group == "com.github.Anuken.Arc") {
-                        useVersion(project.toxopid.compileVersion.get())
-                    }
+        project.configurations.configureEach {
+            resolutionStrategy.eachDependency {
+                if (requested.group == "com.github.Anuken.Arc") {
+                    useVersion(project.toxopid.compileVersion.get())
                 }
             }
         }
